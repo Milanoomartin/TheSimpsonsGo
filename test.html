@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#ffd521">
 <title>D'oh-nut Album — The Simpsons Sticker Tracker</title>
+<!-- SUPABASE CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ============================================================
@@ -242,6 +243,13 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .dupzone input::-webkit-outer-spin-button,.dupzone input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .dupzone input.has{border-color:var(--good);color:var(--good)}
 
+/* Special override for 6-star regular stickers */
+.card.star-6 {
+  border-color: #111820 !important; 
+  background: #ffffff !important;
+  box-shadow: 3px 4px 0px rgba(0,0,0,0.6), inset 0 0 0 4px #ffffff !important;
+}
+
 /* ----- generic cards/grids ----- */
 .cards-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .panel{background:var(--pnl);border:2px solid var(--ln);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
@@ -443,6 +451,7 @@ header { border-bottom: 4px solid #111820 !important; }
   <span class="star">✦</span><span class="star">★</span><span class="star">✦</span>
 </div>
 
+<!-- AUTH OVERLAY -->
 <div id="auth-overlay" style="position:fixed; inset:0; z-index:9999; background:var(--bg); display:none; align-items:center; justify-content:center; padding:20px;">
   <div class="panel" style="max-width:400px; width:100%; padding:30px; text-align:center; background:var(--pnl);">
     <h1 style="font-size:2rem; margin-bottom:10px; font-weight:900;">🍩 D'oh-nut Auth</h1>
@@ -501,7 +510,7 @@ header { border-bottom: 4px solid #111820 !important; }
       <button class="tool-btn" data-action="goto-page" data-page="accounts"><span class="ti">👨‍👩‍👧‍👦</span>Accounts</button>
       <button class="tool-btn" data-action="goto-page" data-page="progress"><span class="ti">📊</span>Progress</button>
       <button class="tool-btn" data-action="goto-page" data-page="vault"><span class="ti">⭐</span>Star Vault</button>
-      <button class="tool-btn" data-action="goto-page" data-page="trades"><span class="ti">🔄</span>Trade Planner</button>
+      <button class="tool-btn" data-action="goto-page" data-page="trades"><span class="ti">🌍</span>Community Hub</button>
       <button class="tool-btn" data-action="goto-page" data-page="settings"><span class="ti">⚙️</span>Settings</button>
       <div class="tool-sep"></div>
       <div class="theme-mini">
@@ -519,7 +528,7 @@ header { border-bottom: 4px solid #111820 !important; }
 "use strict";
 
 /* ============================================================
-   SUPABASE INTEGRATION
+   SUPABASE INTEGRATION & NETWORK LOGIC
    ============================================================ */
 const SUPABASE_URL = "https://dvybpbfwkwnvxdosvsxj.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_SK5m4nhUdE_7R1bgyKXXug_RE3AoBy3";
@@ -527,6 +536,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let activeSessionUser = null;
 let currentCloudSheetId = null;
+let myWebFriendCode = null;
 let isDemoModeActive = localStorage.getItem("dohnut_demo_active") === "true";
 let saveTimeout;
 
@@ -565,21 +575,67 @@ function activateDemoMode() {
   fullRender();
 }
 
+async function initializeWebAccount() {
+  if (isDemoModeActive || !activeSessionUser) return;
+  const { data: webAcc } = await supabaseClient
+    .from('web_accounts')
+    .select('web_friend_code, is_super_admin')
+    .eq('id', activeSessionUser.id)
+    .single();
+
+  if (webAcc) {
+    myWebFriendCode = webAcc.web_friend_code;
+  } else {
+    const { data: newAcc } = await supabaseClient
+      .from('web_accounts')
+      .insert({ id: activeSessionUser.id })
+      .select('web_friend_code')
+      .single();
+    if (newAcc) myWebFriendCode = newAcc.web_friend_code;
+  }
+}
+
+function copyWebCode() {
+  if (!myWebFriendCode) return;
+  navigator.clipboard.writeText(myWebFriendCode).then(() => { toast("Web Code copied! 📋"); });
+}
+
+async function sendFriendRequest() {
+  const targetCode = document.getElementById('add-friend-input').value.trim();
+  if (!targetCode) { toast("Enter a Web Code first! ⚠️"); return; }
+  if (targetCode === myWebFriendCode) { toast("You can't add yourself! 🍩"); return; }
+
+  const { data: targetUser } = await supabaseClient
+    .from('web_accounts')
+    .select('id')
+    .eq('web_friend_code', targetCode)
+    .single();
+
+  if (!targetUser) { toast("No player found with that code. 🕵️‍♂️"); return; }
+
+  const { error: insertErr } = await supabaseClient
+    .from('friendships')
+    .insert({ user_a: activeSessionUser.id, user_b: targetUser.id, status: 'pending' });
+
+  if (insertErr) { toast("Request already exists! ⏳"); } 
+  else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; }
+}
+
 async function handleSession(session) {
   if (!session) return;
   activeSessionUser = session.user;
   document.getElementById("auth-overlay").style.display = "none";
   toast("Connected to Cloud ☁️");
   
-  // Pull data from Supabase
-  const { data, error } = await supabaseClient.from('tracker_sheets').select('*').eq('user_id', activeSessionUser.id).single();
+  await initializeWebAccount();
+
+  const { data } = await supabaseClient.from('tracker_sheets').select('*').eq('user_id', activeSessionUser.id).single();
   if (data) {
     currentCloudSheetId = data.id;
     if(data.accounts) state.accounts = data.accounts;
     if(data.inventory) state.inv = data.inventory;
     if(data.trades) state.trades = data.trades;
   } else {
-    // New user, create row
     const { data: newSheet } = await supabaseClient.from('tracker_sheets').insert({
       user_id: activeSessionUser.id,
       user_email: activeSessionUser.email,
@@ -598,25 +654,20 @@ window.addEventListener("DOMContentLoaded", async () => {
      fullRender();
      return;
   }
-  
   const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    handleSession(session);
-  } else {
-    document.getElementById("auth-overlay").style.display = "flex";
-  }
+  if (session) handleSession(session);
+  else document.getElementById("auth-overlay").style.display = "flex";
 
   supabaseClient.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') handleSession(session);
     if (event === 'SIGNED_OUT') {
-      activeSessionUser = null;
+      activeSessionUser = null; myWebFriendCode = null;
       document.getElementById("auth-overlay").style.display = "flex";
-      state.accounts = []; state.inv = {}; state.trades = []; // wipe local visual memory
+      state.accounts = []; state.inv = {}; state.trades = []; 
       fullRender();
     }
   });
 });
-
 
 /* ============================================================
    ALBUM DATA
@@ -645,7 +696,6 @@ const ALBUM = [
   {"id":21,"name":"Iconic Moments","stickers":[{"name": "Sun Blocker", "stars": 4, "isGold": true},{"name": "Homer's Hoagie", "stars": 4, "isGold": true},{"name": "Step on a Rake", "stars": 5, "isGold": false},{"name": "Do it For Her", "stars": 5, "isGold": false},{"name": "Mr. Sparkle", "stars": 5, "isGold": true},{"name": "Mr. Snrub", "stars": 5, "isGold": true},{"name": "Guy Incognito", "stars": 5, "isGold": true},{"name": "Gorge Jump", "stars": 5, "isGold": true},{"name": "Classy Marge", "stars": 6, "isGold": false}]}
 ];
 
-/* ---- derive flat lookups + stable ids ---- */
 const STICKERS = [];
 const SBYID = {};
 ALBUM.forEach(set=>{
@@ -659,13 +709,11 @@ const TOTAL = STICKERS.length;
 const TOTAL_GOLD = STICKERS.filter(s=>s.isGold).length;
 const TOTAL_STARS = STICKERS.reduce((a,s)=>a+s.stars,0);
 
-/* ---- theme catalogue ---- */
 const THEMES = [
   {id:"springfield",name:"Springfield (Day)",emoji:"☀️",c:["#79c0ff","#ffd521","#3f9bd6"]},
   {id:"night",name:"Springfield (Night)",emoji:"🌙",c:["#1a2b4c","#ffd521","#0f172a"]}
 ];
 
-/* ---- vault reward tiers ---- */
 const VAULT_TIERS = [
   {name:"Buzz Cola Vault",emoji:"🥤",need:250,color:"#ff8c1a"},
   {name:"Squishee Vault",emoji:"🧊",need:450,color:"#2f9be0"},
@@ -718,15 +766,23 @@ function freshState(){
 let state = freshState();
 try { 
   const ls = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
-  state = { ...state, ...ls }; // Load local layout settings
+  state = { ...state, ...ls }; 
 } catch(e){}
 
-let plan = [];                 // smart-planner preview
-let calRef = new Date();       // calendar month cursor
+let plan = [];                 
+let calRef = new Date();       
 let filters = {need:false,dupes:false,star:"all",gold:"all",q:""};
 let navQuery = "";
 
-// Universal Save Router
+// Tracks which portal tab is currently active
+let activeCommunityTab = 'network';
+
+// Function to switch tabs and re-render
+function switchCommunityTab(tabName) {
+  activeCommunityTab = tabName;
+  renderContent();
+}
+
 function save(){ 
   try{ localStorage.setItem(LS_KEY, JSON.stringify({ settings: state.settings, page: state.page, ...(isDemoModeActive ? state : {}) })); } catch(e){} 
   if (isDemoModeActive) return;
@@ -740,11 +796,10 @@ function save(){
         trades: state.trades,
         updated_at: new Date().toISOString()
       }).eq('id', currentCloudSheetId);
-    }, 1000); // 1 sec debounce to prevent DB spam
+    }, 1000);
   }
 }
 
-/* ---- inventory helpers ---- */
 function getCount(acc,sid){ return (state.inv[acc] && state.inv[acc][sid]) || 0; }
 function setCount(acc,sid,n){
   n = Math.max(0,Math.floor(n||0));
@@ -769,9 +824,6 @@ function todayStr(){ return fmtDate(new Date()); }
 function fmtDate(d){ const z=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate()); }
 function prettyDate(s){ const [y,m,d]=s.split("-"); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]+" "+ (+d); }
 
-/* ============================================================
-   THEME
-   ============================================================ */
 function applyTheme(id){
   document.documentElement.setAttribute("data-theme",id);
   state.settings.theme=id; save();
@@ -786,9 +838,6 @@ function renderSwatches(){
   }).join("");
 }
 
-/* ============================================================
-   HEADER / EVENT BADGES
-   ============================================================ */
 function renderBadges(){
   const el=document.getElementById("evtBadges");
   let h="";
@@ -797,9 +846,6 @@ function renderBadges(){
   el.innerHTML=h;
 }
 
-/* ============================================================
-   LEFT NAV — set list
-   ============================================================ */
 function renderSetList(){
   const list=document.getElementById("setList");
   const q=navQuery.trim().toLowerCase();
@@ -826,9 +872,6 @@ function renderSetList(){
   list.innerHTML=html;
 }
 
-/* ============================================================
-   ROUTER
-   ============================================================ */
 function gotoPage(p){
   state.page=p; save();
   document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
@@ -848,9 +891,6 @@ function renderContent(){
   }
 }
 
-/* ============================================================
-   VIEW: ALBUM
-   ============================================================ */
 function matchesGlobal(s){
   if(filters.star!=="all" && s.stars!==+filters.star) return false;
   if(filters.gold==="gold" && !s.isGold) return false;
@@ -860,8 +900,8 @@ function matchesGlobal(s){
 }
 function matchesForAccount(s,accId){
   if(!matchesGlobal(s)) return false;
-  if(filters.need && getCount(accId,s.id)>0) return false;   // need-only: this account lacks it
-  if(filters.dupes && dupesOf(accId,s.id)===0) return false;  // dupes-only: this account has extras
+  if(filters.need && getCount(accId,s.id)>0) return false;   
+  if(filters.dupes && dupesOf(accId,s.id)===0) return false;  
   return true;
 }
 function filterBarHtml(){
@@ -889,7 +929,7 @@ function viewAlbum(){
   let blocks="";
   ALBUM.forEach(set=>{
     const perAcc = state.accounts.map(a=>({a, list:set.stickers.filter(s=>matchesForAccount(s,a.id))}));
-    if(!perAcc.some(p=>p.list.length>0)) return;   // hide set if no account has a matching sticker
+    if(!perAcc.some(p=>p.list.length>0)) return;   
     blocks += setBlockHtml(set,perAcc);
   });
   if(!blocks) blocks=`<div class="empty"><span class="em">🔍</span><h3>Nothing matches those filters</h3>
@@ -935,7 +975,8 @@ function setBlockHtml(set,perAcc){
 }
 function cardHtml(a,s){
   const c=getCount(a.id,s.id), have=c>0, d=Math.max(0,c-1);
-  return `<div class="card ${have?"have":"missing"} ${s.isGold?"gold":""}" data-action="sticker" data-acc="${a.id}" data-sid="${s.id}" title="${esc(s.name)} — ${esc(a.name)}">
+  const starClass = s.stars === 6 ? "star-6" : ""; 
+  return `<div class="card ${have?"have":"missing"} ${s.isGold?"gold":""} ${starClass}" data-action="sticker" data-acc="${a.id}" data-sid="${s.id}" title="${esc(s.name)} — ${esc(a.name)}">
     <span class="have-badge">✓</span>
     <span class="cic">${iconFor(s)}</span>
     <span class="cstars">${starStr(s.stars)}</span>
@@ -1025,7 +1066,6 @@ function viewAccounts(){
 function viewProgress(){
   let head=`<div class="page-head"><span class="ph-emoji">📊</span><h1>Progress</h1></div>`;
   if(state.accounts.length===0) return head+emptyAccounts();
-  // KPI roll-up
   const totCells = state.accounts.length*TOTAL;
   let owned=0; state.accounts.forEach(a=>owned+=ownedTotal(a.id));
   const kpi=`<div class="kpi">
@@ -1034,7 +1074,6 @@ function viewProgress(){
     <div class="box"><div class="v">${Math.round(owned/Math.max(1,totCells)*100)}%</div><div class="l">Collective complete</div></div>
     <div class="box"><div class="v">${state.accounts.reduce((a,x)=>a+vaultTotal(x.id),0)}</div><div class="l">Total vault ⭐</div></div>
   </div>`;
-  // per account ring + per-set bars
   let accPanels = state.accounts.map(a=>{
     const o=ownedTotal(a.id), pct=Math.round(o/TOTAL*100);
     let setBars=ALBUM.map(set=>{
@@ -1097,18 +1136,140 @@ function viewVault(){
 }
 
 /* ============================================================
-   VIEW: TRADE PLANNER
+   VIEW: COMMUNITY & TRADES (Portal / Tabbed Hub)
    ============================================================ */
 function viewTrades(){
-  let head=`<div class="page-head"><span class="ph-emoji">🔄</span><h1>Trade Planner</h1></div>`;
-  if(state.accounts.length<2) return head+`<div class="empty"><span class="em">🤝</span><h3>Need 2+ accounts to trade</h3>
-    <button class="btn" data-action="goto-page" data-page="accounts">➕ Add Accounts</button></div>`;
+  let head=`<div class="page-head"><span class="ph-emoji">🌍</span><h1>Community Hub</h1></div>`;
 
+  if(state.accounts.length===0 && !isDemoModeActive) {
+    return head+`<div class="empty"><span class="em">🤝</span><h3>Add an Account to Connect</h3>
+      <button class="btn" data-action="goto-page" data-page="accounts">➕ Add Accounts</button></div>`;
+  }
+
+  // --- PORTAL NAVIGATION BAR ---
+  const portalTabs = `
+    <div style="background: var(--pnl); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 12px; margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; box-shadow: 3px 4px 0px rgba(0,0,0,0.6);">
+      <button class="btn ${activeCommunityTab === 'network' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('network')" style="flex: 1; min-width: 120px;">📇 Network</button>
+      <button class="btn ${activeCommunityTab === 'search' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('search')" style="flex: 1; min-width: 120px;">🌍 Trade Search</button>
+      <button class="btn ${activeCommunityTab === 'events' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('events')" style="flex: 1; min-width: 120px;">🏆 Events</button>
+      <button class="btn ${activeCommunityTab === 'local' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('local')" style="flex: 1; min-width: 120px;">🏠 Local Planner</button>
+    </div>
+  `;
+
+  // --- UI PANELS ---
+  const safetyBanner = `
+    <div class="panel" style="background: #fff3cd; border-color: #d99a00; margin-bottom: 16px;">
+      <h3 style="margin:0 0 8px; color: #856404; display:flex; align-items:center; gap:8px;">
+        <span>⚠️</span> Trade Safety Notice
+      </h3>
+      <p style="margin:0; font-size:0.85rem; font-weight:700; color: #856404;">
+        Please communicate trade plans in the official Monopoly Go Chat app so any disputes can be handled directly by the game's support team. Always utilize the in-game "Safe Exchange" feature!
+      </p>
+    </div>`;
+
+  const friendRolodex = `
+    <div class="panel" style="margin-bottom:16px;" id="friend-rolodex">
+      <h2>📇 Friend Rolodex</h2>
+      <p class="page-sub" style="margin:0 0 12px">Manage your network. Share your Web Code to let others view your linked game accounts.</p>
+      
+      <div class="kpi" style="margin-bottom:12px;">
+        <div class="box" style="flex: 1; text-align: center; padding: 12px;">
+          <div class="l">Your Web Code</div>
+          <div class="v" id="my-web-code" style="font-size:1.4rem; font-family: monospace; letter-spacing: 2px; color: var(--acc2);">${myWebFriendCode || 'SYNCING...'}</div>
+          <button class="btn sm ghost" onclick="copyWebCode()" style="margin-top:8px;">📋 Copy</button>
+        </div>
+        
+        <div class="box" style="flex: 2; padding: 12px;">
+          <div class="l" style="margin-bottom: 6px;">Add a Friend</div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <input type="text" id="add-friend-input" placeholder="Enter Web Code..." style="flex:1; min-width:120px; border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 8px 12px; font-family: inherit; font-weight:700; outline:none;">
+            <button class="btn" onclick="sendFriendRequest()">➕ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row" style="padding:10px 0; border-top: 3px solid var(--ink);">
+        <div class="sr-label">🌐 MGO Code Visibility<small>Who can see your Monopoly Go invite link?</small></div>
+        <select class="field" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 6px 10px; font-family: inherit; font-weight:700; background: var(--pnl2);">
+          <option value="public">Public (Community Board)</option>
+          <option value="friends">Friends Only</option>
+          <option value="hidden">Hidden</option>
+        </select>
+      </div>
+      
+      <div class="setting-row" style="padding:10px 0; border-bottom: 3px solid var(--ink);">
+        <div class="sr-label">📖 Album Visibility<small>Who can view your sticker progress?</small></div>
+        <select class="field" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 6px 10px; font-family: inherit; font-weight:700; background: var(--pnl2);">
+          <option value="public">Public</option>
+          <option value="friends">Friends Only</option>
+          <option value="hidden">Hidden</option>
+        </select>
+      </div>
+
+      <h3 style="margin: 16px 0 8px; font-size: 1.05rem;">👥 Your Network</h3>
+      <ul class="trade-list" id="friends-list">
+        <!-- Static Example Visuals for demonstration -->
+        <li class="trade-row" style="background: var(--chip); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
+          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#4aa3d4;">🛹</span>
+          <span style="font-weight:800; font-size:0.9rem; flex:1;">Bart_Sk8er</span>
+          <span class="auto-tag" style="background:var(--goldDeep);">Pending</span>
+          <button class="btn sm" style="margin-left:6px;">Accept</button>
+          <button class="btn sm danger">✕</button>
+        </li>
+        <li class="trade-row" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
+          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#9b59b6;">🎷</span>
+          <span style="font-weight:800; font-size:0.9rem; flex:1;">Jazz_Lisa</span>
+          <span style="font-size:0.75rem; font-weight:900; color:var(--mut);">Friends</span>
+          <button class="btn sm ghost" style="margin-left:8px;">Manage</button>
+        </li>
+      </ul>
+    </div>`;
+
+  const communityHub = `
+    <div class="panel" style="margin-bottom:16px;">
+      <h2>🌍 Community Trade Search</h2>
+      <div style="display:flex; gap:10px; margin-bottom: 12px;">
+        <input type="text" placeholder="I am looking for..." class="field" style="flex:1; border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 8px 12px; font-family: inherit; font-weight:700; outline:none;">
+        <button class="btn alt">Search</button>
+      </div>
+      
+      <div class="trade-row" style="background: var(--chip); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
+        <div style="flex:1;">
+          <div style="font-weight:900; font-size:1.1rem;">HomerS_99 <span style="font-size:0.7rem; background:var(--acc); padding:2px 6px; border-radius:10px; color:var(--accInk);">Trade Score: 98</span></div>
+          <div style="font-size:0.8rem; font-weight:700; color:var(--mut);">Has: "Worst Sticker Ever" | Needs: "Baby on Board"</div>
+        </div>
+        <button class="btn" style="padding: 6px 12px;">Send Request</button>
+      </div>
+    </div>`;
+
+  const eventPartner = `
+    <div class="panel" style="margin-bottom:16px;">
+      <h2>🏆 Partner & Team Events</h2>
+      <div class="form-grid">
+        <div class="field">
+          <span>Event Type</span>
+          <select style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; font-weight: 700;">
+            <option>Racers</option>
+            <option>Partner Build</option>
+            <option>Adventure Club</option>
+            <option>Community Chest</option>
+          </select>
+          <small style="font-size: 0.65rem; color: var(--mut); font-weight: 800;">Note: You must reach Board 4 to unlock Racers, Build, and Adventure events.</small>
+        </div>
+        <div class="field">
+          <span>Slots Needed</span>
+          <input type="number" min="1" max="3" value="3" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; font-weight: 700;">
+        </div>
+        <button class="btn">Create Post</button>
+      </div>
+    </div>`;
+
+  // --- LOCAL PLANNER PANELS ---
   const accOpts=state.accounts.map(a=>`<option value="${a.id}">${a.emoji} ${esc(a.name)}</option>`).join("");
   const setOpts=ALBUM.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
   const regLimit = state.settings.tradeFest?state.settings.tradeFestLimit:state.settings.regularLimit;
 
-  const events=`<div class="panel" style="margin-bottom:16px">
+  const eventsPanel=`<div class="panel" style="margin-bottom:16px">
     <h2>🎟️ Event Modes</h2>
     <div class="setting-row" style="border:none;padding:6px 0">
       <div class="sr-label">⚡ Gold Blitz<small>Temporarily allow trading gold stickers (limit ${state.settings.goldBlitzLimit}/day)</small></div>
@@ -1121,19 +1282,19 @@ function viewTrades(){
     <div style="font-size:.8rem;color:var(--mut);font-weight:700">Current daily send limit: <b>${regLimit}</b> regular${state.settings.goldBlitz?` · <b>${state.settings.goldBlitzLimit}</b> gold ⚡`:""}</div>
   </div>`;
 
-  const form=`<div class="panel" style="margin-bottom:16px">
-    <h2>✍️ Manual Trade</h2>
+  const manualForm=`<div class="panel" style="margin-bottom:16px">
+    <h2>✍️ Manual Local Trade</h2>
     <div class="form-grid">
-      <div class="field"><span>Sender</span><select id="t-from">${accOpts}</select></div>
-      <div class="field"><span>Receiver</span><select id="t-to">${accOpts}</select></div>
-      <div class="field"><span>Set</span><select id="t-set" data-action="trade-set">${setOpts}</select></div>
-      <div class="field"><span>Sticker</span><select id="t-stk"></select></div>
-      <div class="field"><span>Date</span><input type="date" id="t-date" value="${todayStr()}"></div>
+      <div class="field"><span>Sender</span><select id="t-from" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">${accOpts}</select></div>
+      <div class="field"><span>Receiver</span><select id="t-to" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">${accOpts}</select></div>
+      <div class="field"><span>Set</span><select id="t-set" data-action="trade-set" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">${setOpts}</select></div>
+      <div class="field"><span>Sticker</span><select id="t-stk" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;"></select></div>
+      <div class="field"><span>Date</span><input type="date" id="t-date" value="${todayStr()}" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;"></div>
       <button class="btn" data-action="add-trade">➕ Add</button>
     </div>
   </div>`;
 
-  const smart=`<div class="panel" style="margin-bottom:16px">
+  const smartPlanner=`<div class="panel" style="margin-bottom:16px">
     <h2>🧠 Smart Planner</h2>
     <p class="page-sub" style="margin:0 0 10px">Scans every account for dupes that another account needs, prioritises set-completing &amp; vault-balancing trades, and schedules them within daily send limits.</p>
     <button class="btn" data-action="gen-plan">⚡ Generate Plan</button>
@@ -1145,12 +1306,26 @@ function viewTrades(){
   const sorted=[...state.trades].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
   let list = sorted.length? `<ul class="trade-list">`+sorted.map(t=>tradeRowHtml(t)).join("")+`</ul>`
     : `<div class="empty" style="padding:24px"><span class="em">📭</span>No trades scheduled yet.</div>`;
-  const listPanel=`<div class="panel" style="margin-bottom:16px"><h2>📋 Scheduled Trades</h2>${list}</div>`;
+  const listPanel=`<div class="panel" style="margin-bottom:16px"><h2>📋 Scheduled Local Trades</h2>${list}</div>`;
 
   const calPanel=`<div class="panel"><h2>📅 Calendar</h2>${calendarHtml()}</div>`;
 
-  return head+events+form+smart+listPanel+calPanel;
+  // --- RENDER LOGIC ---
+  let activeContent = '';
+  
+  if (activeCommunityTab === 'network') {
+    activeContent = friendRolodex;
+  } else if (activeCommunityTab === 'search') {
+    activeContent = safetyBanner + communityHub;
+  } else if (activeCommunityTab === 'events') {
+    activeContent = eventPartner;
+  } else if (activeCommunityTab === 'local') {
+    activeContent = eventsPanel + manualForm + smartPlanner + listPanel + calPanel;
+  }
+
+  return head + portalTabs + activeContent;
 }
+
 function tradeRowHtml(t){
   const f=accById(t.from),to=accById(t.to),s=SBYID[t.sid];
   if(!f||!to||!s) return "";
@@ -1187,7 +1362,6 @@ function populateStickerSelect(setId){
   stk.innerHTML=set.stickers.map(s=>`<option value="${s.id}">${esc(s.name)} (${starStr(s.stars)})${s.isGold?" ✨":""}</option>`).join("");
 }
 
-/* ---- calendar ---- */
 function calendarHtml(){
   const y=calRef.getFullYear(),m=calRef.getMonth();
   const monthName=["January","February","March","April","May","June","July","August","September","October","November","December"][m];
@@ -1619,7 +1793,6 @@ function fullRender(){
   renderContent();
 }
 applyTheme(state.settings.theme||"springfield");
-// Intentionally not calling fullRender() here; it happens via the Auth listener on load.
 </script>
 </body>
 </html>
