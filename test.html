@@ -142,7 +142,7 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .set-item.active{background:var(--chip);box-shadow:inset 3px 0 0 var(--acc)}
 .set-emoji{font-size:1.25rem;width:26px;text-align:center;flex:0 0 auto}
 .set-meta{flex:1;min-width:0}
-.set-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.set-meta .set-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .set-bar{height:6px;border-radius:6px;background:var(--ln);margin-top:4px;overflow:hidden}
 .set-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--gold));border-radius:6px;transition:width .5s cubic-bezier(.2,.9,.3,1)}
 .set-pct{font-size:.66rem;font-weight:800;color:var(--mut);flex:0 0 auto}
@@ -408,7 +408,6 @@ input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:
    ============================================================ */
 body { font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", sans-serif !important; }
 
-/* Hardcoded dark ink for borders so they stay visible in Night mode */
 .panel, .setblock, .card, .acct-col, .filterbar, .searchbox input, .field input, .field select, .modal, .theme-card, .ring::before {
   border: 3px solid #111820 !important;
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
@@ -540,6 +539,18 @@ let myWebFriendCode = null;
 let isDemoModeActive = localStorage.getItem("dohnut_demo_active") === "true";
 let saveTimeout;
 
+// Tracks which portal tab is currently active
+let activeCommunityTab = 'network';
+
+// Function to switch tabs and re-render
+function switchCommunityTab(tabName) {
+  activeCommunityTab = tabName;
+  renderContent();
+  if(tabName === 'network') {
+    fetchFriendsList();
+  }
+}
+
 async function loginWithProvider(providerName) {
   await supabaseClient.auth.signInWithOAuth({
     provider: providerName,
@@ -618,7 +629,87 @@ async function sendFriendRequest() {
     .insert({ user_a: activeSessionUser.id, user_b: targetUser.id, status: 'pending' });
 
   if (insertErr) { toast("Request already exists! ⏳"); } 
-  else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; }
+  else { 
+    toast("Friend request sent! 📨"); 
+    document.getElementById('add-friend-input').value = "";
+    fetchFriendsList();
+  }
+}
+
+async function fetchFriendsList() {
+  if (isDemoModeActive || !activeSessionUser) return;
+  
+  const { data: friendships, error } = await supabaseClient
+    .from('friendships')
+    .select(`
+      id,
+      status,
+      user_a,
+      user_b,
+      web_accounts!friendships_user_a_fkey(web_friend_code),
+      web_accounts!friendships_user_b_fkey(web_friend_code)
+    `)
+    .or(`user_a.eq.${activeSessionUser.id},user_b.eq.${activeSessionUser.id}`);
+
+  const container = document.getElementById('friends-list');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!friendships || friendships.length === 0) {
+    container.innerHTML = '<div style="color:var(--mut); font-weight:700; padding:10px;">Your Rolodex is empty!</div>';
+    return;
+  }
+
+  friendships.forEach(f => {
+    const isIncoming = f.user_b === activeSessionUser.id && f.status === 'pending';
+    const friendCode = f.user_a === activeSessionUser.id ? f.web_accounts_user_b_fkey.web_friend_code : f.web_accounts_user_a_fkey.web_friend_code;
+    
+    const li = document.createElement('li');
+    li.className = 'trade-row';
+    li.style.cssText = isIncoming 
+      ? "background: var(--chip); border: 3px solid #111820; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; margin-bottom:8px;"
+      : "border: 3px solid #111820; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; margin-bottom:8px;";
+
+    if (f.status === 'pending') {
+      if (isIncoming) {
+        li.innerHTML = `
+          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#e8a13a;">🍩</span>
+          <span style="font-weight:800; font-size:0.9rem; flex:1;">Player (${friendCode})</span>
+          <span class="auto-tag" style="background:var(--acc); color:var(--accInk);">Incoming</span>
+          <button class="btn sm" onclick="updateFriendStatus('${f.id}', 'accepted')" style="margin-left:6px;">Accept</button>
+          <button class="btn sm danger" onclick="updateFriendStatus('${f.id}', 'blocked')">✕</button>
+        `;
+      } else {
+        li.innerHTML = `
+          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#5d7689;">☁️</span>
+          <span style="font-weight:800; font-size:0.9rem; flex:1;">Sent to (${friendCode})</span>
+          <span class="auto-tag" style="background:var(--goldDeep);">Sent</span>
+        `;
+      }
+    } else if (f.status === 'accepted') {
+      li.innerHTML = `
+        <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#54bf3a;">🛹</span>
+        <span style="font-weight:800; font-size:0.9rem; flex:1;">Friend (${friendCode})</span>
+        <span style="font-size:0.75rem; font-weight:900; color:var(--mut);">Connected</span>
+        <button class="btn sm ghost" style="margin-left:8px;">View Album</button>
+      `;
+    }
+    container.appendChild(li);
+  });
+}
+
+async function updateFriendStatus(friendshipId, newStatus) {
+  const { error } = await supabaseClient
+    .from('friendships')
+    .update({ status: newStatus })
+    .eq('id', friendshipId);
+
+  if (!error) {
+    toast(newStatus === 'accepted' ? "Friend request accepted! 🎉" : "Request updated.");
+    fetchFriendsList();
+  } else {
+    toast("Action failed. ❌");
+  }
 }
 
 async function handleSession(session) {
@@ -646,6 +737,7 @@ async function handleSession(session) {
     if(newSheet) currentCloudSheetId = newSheet.id;
   }
   fullRender();
+  fetchFriendsList();
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
@@ -752,390 +844,6 @@ function iconFor(s){
 function starStr(n){ return "★".repeat(n); }
 
 /* ============================================================
-   STATE (Hybrid Cloud/Local)
-   ============================================================ */
-const LS_KEY = "dohnut_album_v1";
-function freshState(){
-  return {
-    accounts:[], inv:{}, trades:[],
-    settings:{ theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false, navAuto:true },
-    page:"album"
-  };
-}
-
-let state = freshState();
-try { 
-  const ls = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
-  state = { ...state, ...ls }; 
-} catch(e){}
-
-let plan = [];                 
-let calRef = new Date();       
-let filters = {need:false,dupes:false,star:"all",gold:"all",q:""};
-let navQuery = "";
-
-// Tracks which portal tab is currently active
-let activeCommunityTab = 'network';
-
-// Function to switch tabs and re-render
-function switchCommunityTab(tabName) {
-  activeCommunityTab = tabName;
-  renderContent();
-}
-
-function save(){ 
-  try{ localStorage.setItem(LS_KEY, JSON.stringify({ settings: state.settings, page: state.page, ...(isDemoModeActive ? state : {}) })); } catch(e){} 
-  if (isDemoModeActive) return;
-
-  if (currentCloudSheetId && activeSessionUser) {
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(async () => {
-      await supabaseClient.from('tracker_sheets').update({
-        accounts: state.accounts,
-        inventory: state.inv,
-        trades: state.trades,
-        updated_at: new Date().toISOString()
-      }).eq('id', currentCloudSheetId);
-    }, 1000);
-  }
-}
-
-function getCount(acc,sid){ return (state.inv[acc] && state.inv[acc][sid]) || 0; }
-function setCount(acc,sid,n){
-  n = Math.max(0,Math.floor(n||0));
-  if(!state.inv[acc]) state.inv[acc]={};
-  if(n===0) delete state.inv[acc][sid]; else state.inv[acc][sid]=n;
-  save();
-}
-function dupesOf(acc,sid){ return Math.max(0,getCount(acc,sid)-1); }
-function ownedInSet(acc,setId){
-  const set = ALBUM.find(s=>s.id===setId);
-  return set.stickers.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0);
-}
-function ownedTotal(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0); }
-function ownedGold(acc){ return STICKERS.reduce((a,s)=>a+(s.isGold&&getCount(acc,s.id)>0?1:0),0); }
-function starsCollected(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?s.stars:0),0); }
-function dupStarValue(s,d){ return d*s.stars*(s.isGold?2:1); }
-function vaultTotal(acc){ return STICKERS.reduce((a,s)=>a+dupStarValue(s,dupesOf(acc,s.id)),0); }
-function accById(id){ return state.accounts.find(a=>a.id===id); }
-function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
-function todayStr(){ return fmtDate(new Date()); }
-function fmtDate(d){ const z=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate()); }
-function prettyDate(s){ const [y,m,d]=s.split("-"); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]+" "+ (+d); }
-
-function applyTheme(id){
-  document.documentElement.setAttribute("data-theme",id);
-  state.settings.theme=id; save();
-  renderSwatches();
-  if(state.page==="settings") renderContent();
-}
-function renderSwatches(){
-  const row=document.getElementById("swatchRow");
-  row.innerHTML = THEMES.map(t=>{
-    const grad=`linear-gradient(135deg,${t.c[0]} 40%,${t.c[1]} 40% 70%,${t.c[2]} 70%)`;
-    return `<div class="swatch ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" title="${t.name}" style="background:${grad}"></div>`;
-  }).join("");
-}
-
-function renderBadges(){
-  const el=document.getElementById("evtBadges");
-  let h="";
-  if(state.settings.goldBlitz) h+=`<span class="evt-badge">⚡ GOLD BLITZ</span>`;
-  if(state.settings.tradeFest) h+=`<span class="evt-badge fest">🎉 TRADE FEST</span>`;
-  el.innerHTML=h;
-}
-
-function renderSetList(){
-  const list=document.getElementById("setList");
-  const q=navQuery.trim().toLowerCase();
-  const accs=state.accounts;
-  let html="";
-  ALBUM.forEach(set=>{
-    const matchSet = !q || set.name.toLowerCase().includes(q)
-       || set.stickers.some(s=>s.name.toLowerCase().includes(q));
-    if(!matchSet) return;
-    let owned=0,cap=Math.max(1,accs.length)*set.stickers.length;
-    accs.forEach(a=>owned+=ownedInSet(a.id,set.id));
-    const pct = accs.length? Math.round(owned/cap*100):0;
-    const done = accs.length>0 && pct===100;
-    html+=`<div class="set-item ${done?"done":""}" data-action="goto-set" data-set="${set.id}">
-      <span class="set-emoji">${SET_EMOJI[set.id]||"🎴"}</span>
-      <span class="set-meta">
-        <span class="set-name">${esc(set.name)}</span>
-        <span class="set-bar"><i style="width:${pct}%"></i></span>
-      </span>
-      <span class="set-pct">${pct}%</span>
-    </div>`;
-  });
-  if(!html) html=`<div class="empty" style="padding:30px 10px"><span class="em">🔍</span>No matches</div>`;
-  list.innerHTML=html;
-}
-
-function gotoPage(p){
-  state.page=p; save();
-  document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
-  renderContent();
-  document.getElementById("main").scrollTop=0;
-  closeDrawers();
-}
-function renderContent(){
-  const c=document.getElementById("content");
-  switch(state.page){
-    case "album": c.innerHTML=viewAlbum(); requestAnimationFrame(updateScrollButtons); break;
-    case "accounts": c.innerHTML=viewAccounts(); break;
-    case "progress": c.innerHTML=viewProgress(); break;
-    case "vault": c.innerHTML=viewVault(); break;
-    case "trades": c.innerHTML=viewTrades(); afterTrades(); break;
-    case "settings": c.innerHTML=viewSettings(); break;
-  }
-}
-
-function matchesGlobal(s){
-  if(filters.star!=="all" && s.stars!==+filters.star) return false;
-  if(filters.gold==="gold" && !s.isGold) return false;
-  if(filters.gold==="reg" && s.isGold) return false;
-  if(filters.q){ const q=filters.q.toLowerCase(); if(!s.name.toLowerCase().includes(q) && !s.setName.toLowerCase().includes(q)) return false; }
-  return true;
-}
-function matchesForAccount(s,accId){
-  if(!matchesGlobal(s)) return false;
-  if(filters.need && getCount(accId,s.id)>0) return false;   
-  if(filters.dupes && dupesOf(accId,s.id)===0) return false;  
-  return true;
-}
-function filterBarHtml(){
-  const starOpts=["all",1,2,3,4,5,6].map(v=>`<option value="${v}" ${filters.star==(v+"")?"selected":""}>${v==="all"?"All stars":"★ "+v}</option>`).join("");
-  return `<div class="filterbar">
-    <input type="text" data-filter="q" value="${esc(filters.q)}" placeholder="🔎 Search stickers…">
-    <label class="toggle-pill ${filters.need?"on":""}" data-action="filter-toggle" data-f="need">🎯 Need Only</label>
-    <label class="toggle-pill ${filters.dupes?"on":""}" data-action="filter-toggle" data-f="dupes">🃏 Dupes Only</label>
-    <select data-filter="star">${starOpts}</select>
-    <select data-filter="gold">
-      <option value="all" ${filters.gold==="all"?"selected":""}>Gold & Regular</option>
-      <option value="gold" ${filters.gold==="gold"?"selected":""}>✨ Gold only</option>
-      <option value="reg" ${filters.gold==="reg"?"selected":""}>Regular only</option>
-    </select>
-    <button class="btn ghost sm" data-action="clear-filters">Reset</button>
-  </div>`;
-}
-function viewAlbum(){
-  let head=`<div class="page-head"><span class="ph-emoji">📖</span><h1>The Album</h1></div>`;
-  if(state.accounts.length===0){
-    return head+filterBarHtml()+`<div class="empty"><span class="em">👨‍👩‍👧‍👦</span>
-      <h3>No accounts yet!</h3><p>Add at least one account to start tracking stickers across the family.</p>
-      <button class="btn" data-action="goto-page" data-page="accounts">➕ Add an Account</button></div>`;
-  }
-  let blocks="";
-  ALBUM.forEach(set=>{
-    const perAcc = state.accounts.map(a=>({a, list:set.stickers.filter(s=>matchesForAccount(s,a.id))}));
-    if(!perAcc.some(p=>p.list.length>0)) return;   
-    blocks += setBlockHtml(set,perAcc);
-  });
-  if(!blocks) blocks=`<div class="empty"><span class="em">🔍</span><h3>Nothing matches those filters</h3>
-    <button class="btn ghost" data-action="clear-filters">Clear filters</button></div>`;
-  return head+filterBarHtml()+blocks;
-}
-function setBlockHtml(set,perAcc){
-  let chips="", allDone=true;
-  state.accounts.forEach(a=>{
-    const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100);
-    if(pct<100) allDone=false;
-    chips+=`<span class="accchip"><span class="dot" style="background:${a.color}"></span>${a.emoji} ${esc(a.name)} ${o}/${set.stickers.length}
-      <span class="mini"><i style="width:${pct}%;background:${a.color}"></i></span></span>`;
-  });
-  let cols="";
-  perAcc.forEach(({a,list})=>{
-    const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100);
-    const grid = list.length ? list.map(s=>cardHtml(a,s)).join("")
-      : `<div class="panel-empty">✨ Nothing to show here with the current filters</div>`;
-    cols+=`<div class="acct-col">
-      <div class="acct-col-head">
-        <span class="dot" style="background:${a.color}"></span>
-        <span class="ah-name">${a.emoji} ${esc(a.name)}</span>
-        <span class="ah-count" data-acc="${a.id}">${o}/${set.stickers.length}</span>
-        <span class="ah-bar"><i data-acc="${a.id}" style="width:${pct}%;background:${a.color}"></i></span>
-      </div>
-      <div class="sticker-grid">${grid}</div>
-    </div>`;
-  });
-  return `<div class="setblock ${allDone?"complete":""}" id="set-${set.id}" data-setblock="${set.id}">
-    <div class="setblock-head">
-      <span class="sb-emoji">${SET_EMOJI[set.id]||"🎴"}</span>
-      <span class="sb-title"><span class="num">Set ${set.id}</span>${esc(set.name)}</span>
-      <span class="scroll-hint">↔ drag / swipe</span>
-      <span class="sb-accchips">${chips}</span>
-    </div>
-    <div class="set-scrollwrap">
-      <button class="scrollbtn left" data-action="scroll-set" data-dir="-1" aria-label="Scroll accounts left">◀</button>
-      <div class="set-scroll">${cols}</div>
-      <button class="scrollbtn right" data-action="scroll-set" data-dir="1" aria-label="Scroll accounts right">▶</button>
-    </div>
-  </div>`;
-}
-function cardHtml(a,s){
-  const c=getCount(a.id,s.id), have=c>0, d=Math.max(0,c-1);
-  const starClass = s.stars === 6 ? "star-6" : ""; 
-  return `<div class="card ${have?"have":"missing"} ${s.isGold?"gold":""} ${starClass}" data-action="sticker" data-acc="${a.id}" data-sid="${s.id}" title="${esc(s.name)} — ${esc(a.name)}">
-    <span class="have-badge">✓</span>
-    <span class="cic">${iconFor(s)}</span>
-    <span class="cstars">${starStr(s.stars)}</span>
-    <span class="cname">${esc(s.name)}</span>
-    <div class="dupzone" data-action="dupzone">
-      <button data-action="dup-dec" data-acc="${a.id}" data-sid="${s.id}" title="Remove copy">−</button>
-      <input class="dupinput ${d>0?"has":""}" type="number" min="0" value="${d}" data-acc="${a.id}" data-sid="${s.id}" title="Duplicates">
-      <button data-action="dup-inc" data-acc="${a.id}" data-sid="${s.id}" title="Add copy">+</button>
-    </div>
-  </div>`;
-}
-
-function updateCell(acc,sid){
-  const cell=document.querySelector(`.card[data-acc="${acc}"][data-sid="${sid}"]`);
-  if(!cell) return;
-  const c=getCount(acc,sid), have=c>0, d=Math.max(0,c-1);
-  cell.classList.toggle("have",have); cell.classList.toggle("missing",!have);
-  const inp=cell.querySelector(".dupinput"); if(inp){ inp.value=d; inp.classList.toggle("has",d>0); }
-}
-function refreshSetUI(setId){
-  const set=ALBUM.find(s=>s.id===setId);
-  const block=document.getElementById("set-"+setId);
-  if(block){
-    let allDone=true;
-    block.querySelectorAll(".accchip").forEach((chip,idx)=>{
-      const a=state.accounts[idx]; if(!a) return;
-      const o=ownedInSet(a.id,setId),pct=Math.round(o/set.stickers.length*100);
-      if(pct<100) allDone=false;
-      chip.childNodes[1].nodeValue=` ${a.emoji} ${a.name} ${o}/${set.stickers.length} `;
-      const bar=chip.querySelector(".mini i"); if(bar) bar.style.width=pct+"%";
-    });
-    block.classList.toggle("complete",allDone);
-    block.querySelectorAll(".ah-count[data-acc]").forEach(el=>{
-      const a=accById(el.dataset.acc); if(!a) return;
-      el.textContent=ownedInSet(a.id,setId)+"/"+set.stickers.length;
-    });
-    block.querySelectorAll(".ah-bar i[data-acc]").forEach(el=>{
-      const a=accById(el.dataset.acc); if(!a) return;
-      el.style.width=Math.round(ownedInSet(a.id,setId)/set.stickers.length*100)+"%";
-    });
-  }
-  renderSetList();
-}
-
-/* ============================================================
-   VIEW: ACCOUNTS
-   ============================================================ */
-const AVATARS=["🍩","💙","🛹","🎷","👶","👴","🎩","🥸","🍺","🤡","🤓","😼","😋","🐶","🐷","☢️","🦸","🚜","🚀","🥊","💰","🎵","🐱","🌮","👮","🍔"];
-function viewAccounts(){
-  let head=`<div class="page-head"><span class="ph-emoji">👨‍👩‍👧‍👦</span><h1>Accounts</h1></div>
-    <p class="page-sub">Track multiple players side-by-side. Each account becomes a column in the Album.</p>`;
-  let cards = state.accounts.map(a=>{
-    const o=ownedTotal(a.id), gold=ownedGold(a.id), vt=vaultTotal(a.id);
-    const pct=Math.round(o/TOTAL*100);
-    const emojis=AVATARS.map(e=>`<button data-action="acc-emoji" data-id="${a.id}" data-e="${e}" class="${a.emoji===e?"sel":""}">${e}</button>`).join("");
-    return `<div class="panel acc-card">
-      <div class="acc-top">
-        <span class="avatar" style="background:${a.color}">${a.emoji}</span>
-        <div style="flex:1">
-          <div class="field"><span>Account name</span>
-            <input type="text" value="${esc(a.name)}" data-action="acc-name" data-id="${a.id}" maxlength="22"></div>
-        </div>
-        <button class="btn danger sm" data-action="del-account" data-id="${a.id}" title="Delete">🗑️</button>
-      </div>
-      <div class="row2">
-        <div class="field"><span>Colour</span>
-          <input type="color" value="${a.color}" data-action="acc-color" data-id="${a.id}" style="height:38px;padding:2px"></div>
-        <div class="field"><span>Completion</span>
-          <div class="bigbar" style="margin-top:6px"><i style="width:${pct}%;background:${a.color}"></i></div></div>
-      </div>
-      <div class="field"><span>Avatar</span><div class="emoji-pick">${emojis}</div></div>
-      <div class="statrow"><span>📖 Stickers</span><b>${o} / ${TOTAL}</b></div>
-      <div class="statrow"><span>✨ Gold</span><b>${gold} / ${TOTAL_GOLD}</b></div>
-      <div class="statrow"><span>⭐ Vault stars</span><b>${vt}</b></div>
-    </div>`;
-  }).join("");
-  if(state.accounts.length===0){
-    cards=`<div class="empty"><span class="em">➕</span><h3>No accounts yet</h3><p>Create your first player below.</p></div>`;
-  }
-  return head+`<div style="margin-bottom:16px"><button class="btn" data-action="add-account">➕ Add Account</button></div>
-    <div class="cards-grid">${cards}</div>`;
-}
-
-/* ============================================================
-   VIEW: PROGRESS
-   ============================================================ */
-function viewProgress(){
-  let head=`<div class="page-head"><span class="ph-emoji">📊</span><h1>Progress</h1></div>`;
-  if(state.accounts.length===0) return head+emptyAccounts();
-  const totCells = state.accounts.length*TOTAL;
-  let owned=0; state.accounts.forEach(a=>owned+=ownedTotal(a.id));
-  const kpi=`<div class="kpi">
-    <div class="box"><div class="v">${state.accounts.length}</div><div class="l">Accounts</div></div>
-    <div class="box"><div class="v">${owned}<small style="font-size:.9rem;color:var(--mut)">/${totCells}</small></div><div class="l">Stickers owned</div></div>
-    <div class="box"><div class="v">${Math.round(owned/Math.max(1,totCells)*100)}%</div><div class="l">Collective complete</div></div>
-    <div class="box"><div class="v">${state.accounts.reduce((a,x)=>a+vaultTotal(x.id),0)}</div><div class="l">Total vault ⭐</div></div>
-  </div>`;
-  let accPanels = state.accounts.map(a=>{
-    const o=ownedTotal(a.id), pct=Math.round(o/TOTAL*100);
-    let setBars=ALBUM.map(set=>{
-      const so=ownedInSet(a.id,set.id), sp=Math.round(so/set.stickers.length*100);
-      return `<div class="statrow" style="margin:2px 0"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${SET_EMOJI[set.id]} ${esc(set.name)}</span><b>${so}/${set.stickers.length}</b></div>
-        <div class="bigbar" style="height:8px;margin:0 0 6px"><i style="width:${sp}%;background:${a.color}"></i></div>`;
-    }).join("");
-    return `<div class="panel">
-      <h2><span class="avatar" style="width:34px;height:34px;font-size:1.2rem;background:${a.color}">${a.emoji}</span> ${esc(a.name)}</h2>
-      <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
-        <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
-        <div style="flex:1;min-width:140px">
-          <div class="statrow"><span>📖 Stickers</span><b>${o}/${TOTAL}</b></div>
-          <div class="statrow"><span>✨ Gold</span><b>${ownedGold(a.id)}/${TOTAL_GOLD}</b></div>
-          <div class="statrow"><span>⭐ Stars collected</span><b>${starsCollected(a.id)}/${TOTAL_STARS}</b></div>
-          <div class="statrow"><span>🃏 Vault stars</span><b>${vaultTotal(a.id)}</b></div>
-        </div>
-      </div>
-      <div style="max-height:260px;overflow-y:auto;padding-right:6px">${setBars}</div>
-    </div>`;
-  }).join("");
-  return head+kpi+`<div class="cards-grid">${accPanels}</div>`;
-}
-
-/* ============================================================
-   VIEW: STAR VAULT
-   ============================================================ */
-function viewVault(){
-  let head=`<div class="page-head"><span class="ph-emoji">⭐</span><h1>Star Vault</h1></div>
-    <p class="page-sub">Duplicate value: each regular dupe = its star value, each <b>gold</b> dupe = <b>2×</b> its stars.</p>`;
-  if(state.accounts.length===0) return head+emptyAccounts();
-  let panels=state.accounts.map(a=>{
-    const total=vaultTotal(a.id);
-    let tiers=VAULT_TIERS.map(t=>{
-      const pct=Math.min(100,Math.round(total/t.need*100));
-      const maxed=total>=t.need;
-      return `<div class="tier ${maxed?"maxed":""}">
-        <span class="tier-ic">${maxed?"🏆":t.emoji}</span>
-        <div class="tier-body">
-          <div class="tier-name"><span>${t.name}</span><span>${Math.min(total,t.need)} / ${t.need} ${maxed?"✅":""}</span></div>
-          <div class="bigbar"><i style="width:${pct}%;background:linear-gradient(90deg,${t.color},color-mix(in srgb,${t.color} 55%,#fff))"></i></div>
-        </div></div>`;
-    }).join("");
-    let dups=STICKERS.map(s=>({s,d:dupesOf(a.id,s.id)})).filter(x=>x.d>0)
-      .map(x=>({...x,val:dupStarValue(x.s,x.d)})).sort((p,q)=>q.val-p.val).slice(0,10);
-    let list = dups.length? dups.map((x,i)=>`<li>
-        <span class="rank">${i+1}</span><span style="font-size:1.2rem">${iconFor(x.s)}</span>
-        <span class="nm">${esc(x.s.name)} ${x.s.isGold?'<span class="goldtag">G</span>':""}<br><small style="color:var(--mut);font-weight:600">×${x.d} · ${x.s.stars}⭐${x.s.isGold?" ·2x":""}</small></span>
-        <span class="dval">+${x.val}</span></li>`).join("")
-      : `<li style="color:var(--mut)">No duplicates yet — add some in the Album.</li>`;
-    return `<div class="panel vault-acc">
-      <h2><span class="avatar" style="width:34px;height:34px;font-size:1.2rem;background:${a.color}">${a.emoji}</span> ${esc(a.name)}
-        <span style="margin-left:auto;font-size:1.4rem;color:var(--gold)">⭐ ${total}</span></h2>
-      ${tiers}
-      <div class="nav-title" style="padding:12px 0 4px">Top 10 Duplicates</div>
-      <ul class="dup-list">${list}</ul>
-    </div>`;
-  }).join("");
-  return head+`<div class="cards-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${panels}</div>`;
-}
-
-/* ============================================================
    VIEW: COMMUNITY & TRADES (Portal / Tabbed Hub)
    ============================================================ */
 function viewTrades(){
@@ -1146,7 +854,6 @@ function viewTrades(){
       <button class="btn" data-action="goto-page" data-page="accounts">➕ Add Accounts</button></div>`;
   }
 
-  // --- PORTAL NAVIGATION BAR ---
   const portalTabs = `
     <div style="background: var(--pnl); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 12px; margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; box-shadow: 3px 4px 0px rgba(0,0,0,0.6);">
       <button class="btn ${activeCommunityTab === 'network' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('network')" style="flex: 1; min-width: 120px;">📇 Network</button>
@@ -1156,7 +863,6 @@ function viewTrades(){
     </div>
   `;
 
-  // --- UI PANELS ---
   const safetyBanner = `
     <div class="panel" style="background: #fff3cd; border-color: #d99a00; margin-bottom: 16px;">
       <h3 style="margin:0 0 8px; color: #856404; display:flex; align-items:center; gap:8px;">
@@ -1208,20 +914,7 @@ function viewTrades(){
 
       <h3 style="margin: 16px 0 8px; font-size: 1.05rem;">👥 Your Network</h3>
       <ul class="trade-list" id="friends-list">
-        <!-- Static Example Visuals for demonstration -->
-        <li class="trade-row" style="background: var(--chip); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
-          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#4aa3d4;">🛹</span>
-          <span style="font-weight:800; font-size:0.9rem; flex:1;">Bart_Sk8er</span>
-          <span class="auto-tag" style="background:var(--goldDeep);">Pending</span>
-          <button class="btn sm" style="margin-left:6px;">Accept</button>
-          <button class="btn sm danger">✕</button>
-        </li>
-        <li class="trade-row" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
-          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#9b59b6;">🎷</span>
-          <span style="font-weight:800; font-size:0.9rem; flex:1;">Jazz_Lisa</span>
-          <span style="font-size:0.75rem; font-weight:900; color:var(--mut);">Friends</span>
-          <button class="btn sm ghost" style="margin-left:8px;">Manage</button>
-        </li>
+         <div style="color:var(--mut); font-weight:700; padding:10px;">Loading your network Rolodex...</div>
       </ul>
     </div>`;
 
@@ -1264,7 +957,6 @@ function viewTrades(){
       </div>
     </div>`;
 
-  // --- LOCAL PLANNER PANELS ---
   const accOpts=state.accounts.map(a=>`<option value="${a.id}">${a.emoji} ${esc(a.name)}</option>`).join("");
   const setOpts=ALBUM.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
   const regLimit = state.settings.tradeFest?state.settings.tradeFestLimit:state.settings.regularLimit;
@@ -1310,11 +1002,11 @@ function viewTrades(){
 
   const calPanel=`<div class="panel"><h2>📅 Calendar</h2>${calendarHtml()}</div>`;
 
-  // --- RENDER LOGIC ---
   let activeContent = '';
   
   if (activeCommunityTab === 'network') {
     activeContent = friendRolodex;
+    setTimeout(fetchFriendsList, 50); 
   } else if (activeCommunityTab === 'search') {
     activeContent = safetyBanner + communityHub;
   } else if (activeCommunityTab === 'events') {
@@ -1398,42 +1090,36 @@ function calendarHtml(){
    ============================================================ */
 function viewSettings(){
   const head=`<div class="page-head"><span class="ph-emoji">⚙️</span><h1>Settings</h1></div>`;
-  const themeCards=THEMES.map(t=>{
-    const grad=`linear-gradient(135deg,${t.c[0]},${t.c[0]} 50%,${t.c[2]})`;
-    return `<div class="theme-card ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" style="background:${grad}">
-      <div style="display:flex;justify-content:space-between"><span class="tc-name">${t.name}</span><span class="tc-emoji">${t.emoji}</span></div>
-      <div class="tc-dots">${t.c.map(c=>`<i style="background:${c}"></i>`).join("")}</div>
-    </div>`;
-  }).join("");
   return head+`
     <div class="panel" style="margin-bottom:16px">
-      <h2>🎨 Theme <span style="color:var(--mut);font-size:.8rem;font-weight:700">(${THEMES.length} to choose from)</span></h2>
-      <div class="theme-grid">${themeCards}</div>
-      <div class="setting-row" style="margin-top:6px"><div class="sr-label">🧭 Auto-hide side navigation<small>Collapse the side bars to slim rails that expand on hover — more room for the album (desktop)</small></div>
+      <h2>🎨 Theme</h2>
+      <div class="theme-grid">
+        <div class="theme-card ${state.settings.theme==='springfield'?'active':''}" data-action="set-theme" data-theme="springfield" style="background:linear-gradient(135deg,#79c0ff,#ffd521,#3f9bd6)">
+          <div style="display:flex;justify-content:space-between"><span class="tc-name">Springfield (Day)</span><span class="tc-emoji">☀️</span></div>
+        </div>
+        <div class="theme-card ${state.settings.theme==='night'?'active':''}" data-action="set-theme" data-theme="night" style="background:linear-gradient(135deg,#1a2b4c,#ffd521,#0f172a)">
+          <div style="display:flex;justify-content:space-between"><span class="tc-name">Springfield (Night)</span><span class="tc-emoji">🌙</span></div>
+        </div>
+      </div>
+      <div class="setting-row" style="margin-top:12px"><div class="sr-label">🧭 Auto-hide side navigation<small>Collapse side bars to rails on desktop</small></div>
         <div class="switch ${state.settings.navAuto?"on":""}" data-action="toggle-pin"><i></i></div></div>
     </div>
     <div class="panel" style="margin-bottom:16px">
       <h2>🔄 Trade Limits & Events</h2>
-      <div class="setting-row"><div class="sr-label">Daily regular send limit<small>How many normal stickers each account can send per day</small></div>
+      <div class="setting-row"><div class="sr-label">Daily regular send limit<small>Stickers per day</small></div>
         <input type="number" min="1" value="${state.settings.regularLimit}" data-action="limit" data-key="regularLimit"></div>
-      <div class="setting-row"><div class="sr-label">⚡ Gold Blitz daily limit<small>Gold sends allowed per day while Gold Blitz is on</small></div>
+      <div class="setting-row"><div class="sr-label">⚡ Gold Blitz daily limit</div>
         <input type="number" min="0" value="${state.settings.goldBlitzLimit}" data-action="limit" data-key="goldBlitzLimit"></div>
-      <div class="setting-row"><div class="sr-label">🎉 Trade Fest daily limit<small>Raised regular limit while Trade Fest is on</small></div>
+      <div class="setting-row"><div class="sr-label">🎉 Trade Fest daily limit</div>
         <input type="number" min="1" value="${state.settings.tradeFestLimit}" data-action="limit" data-key="tradeFestLimit"></div>
-      <div class="setting-row"><div class="sr-label">⚡ Gold Blitz<small>Currently ${state.settings.goldBlitz?"ON":"off"}</small></div>
-        <div class="switch ${state.settings.goldBlitz?"on":""}" data-action="toggle-event" data-event="goldBlitz"><i></i></div></div>
-      <div class="setting-row"><div class="sr-label">🎉 Trade Fest<small>Currently ${state.settings.tradeFest?"ON":"off"}</small></div>
-        <div class="switch ${state.settings.tradeFest?"on":""}" data-action="toggle-event" data-event="tradeFest"><i></i></div></div>
     </div>
     <div class="panel">
       <h2>💾 Cloud & Data</h2>
-      <p class="page-sub" style="margin:0 0 12px">Syncing to Cloud. ${isDemoModeActive ? "Currently Offline." : ""}</p>
+      <p class="page-sub">Syncing to Cloud. ${isDemoModeActive ? "Currently Offline." : ""}</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn alt" data-action="export-data">⬇️ Export JSON Backup</button>
         <button class="btn danger" data-action="sign-out">🚪 Sign Out</button>
       </div>
-      <div style="margin-top:14px;font-size:.78rem;color:var(--mut);font-weight:700">
-        Album: ${TOTAL} stickers · ${TOTAL_GOLD} gold · ${ALBUM.length} sets · ${TOTAL_STARS} total stars</div>
     </div>`;
 }
 
