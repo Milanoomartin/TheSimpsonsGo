@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#ffd521">
 <title>D'oh-nut Album — The Simpsons Sticker Tracker</title>
-<!-- SUPABASE CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ============================================================
@@ -97,9 +96,7 @@ header{
 .clouds span:nth-child(3){top:0;font-size:42px;animation-duration:78s;animation-delay:-30s}
 @keyframes drift{from{left:-12%}to{left:112%}}
 .brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1.18rem;letter-spacing:.3px;z-index:1;color:#1a1206;text-shadow:0 2px 0 rgba(255,255,255,.35)}
-
 html[data-theme="night"] .brand {color:var(--ink);text-shadow:0 2px 6px rgba(0,0,0,.5)}
-
 .brand .donut{font-size:1.7rem;animation:spin 8s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 .brand small{font-weight:600;font-size:.62rem;opacity:.8;display:block;line-height:1}
@@ -135,7 +132,6 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .right .rail-tab{right:0;border-left:3px solid var(--acc)}
 .searchbox input:focus{border-color:var(--acc)}
 
-/* Left set list */
 .setlist{padding:6px 8px 30px}
 .set-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:12px;cursor:pointer;margin-bottom:3px;transition:background .15s}
 .set-item:hover{background:var(--chip)}
@@ -149,7 +145,6 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .set-item.done .set-emoji{animation:bob 1.4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
-/* Right tool nav */
 .tool-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:14px;margin-bottom:7px;font-weight:700;font-size:.9rem;text-align:left;background:var(--pnl2);border:2px solid transparent;transition:.15s}
 .tool-btn:hover{transform:translateX(3px)}
 .tool-btn .ti{font-size:1.3rem}
@@ -163,7 +158,7 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .swatch:active{transform:scale(.9)}
 
 /* ============================================================
-   MAIN CONTENT
+   MAIN CONTENT & COMPONENTS
    ============================================================ */
 .page{padding:16px 18px 80px;max-width:1500px;margin:0 auto}
 .page-head{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
@@ -171,7 +166,6 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .page-head .ph-emoji{font-size:1.8rem;animation:bob 2.6s ease-in-out infinite}
 .page-sub{color:var(--mut);font-size:.85rem;margin:-8px 0 14px}
 
-/* Sticky album filters */
 .filterbar{position:sticky;top:0;z-index:18;background:var(--pnl);border:2px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;box-shadow:var(--shadow)}
 .filterbar input[type=text]{flex:1;min-width:150px;padding:8px 12px;border-radius:20px;border:2px solid var(--ln);background:var(--pnl2);outline:none}
 .filterbar input[type=text]:focus{border-color:var(--acc)}
@@ -179,22 +173,13 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .toggle-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;background:var(--pnl2);border:2px solid var(--ln);font-weight:700;font-size:.82rem;cursor:pointer;user-select:none}
 .toggle-pill input{display:none}
 .toggle-pill.on{background:var(--acc);color:var(--accInk);border-color:var(--goldDeep)}
-.btn{padding:9px 15px;border-radius:14px;font-weight:800;font-size:.85rem;background:var(--acc);color:var(--accInk);box-shadow:0 4px 0 var(--goldDeep);transition:.1s}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--goldDeep)}
-.btn.alt{background:var(--acc2);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.28)}
-.btn.ghost{background:var(--pnl2);color:var(--ink);box-shadow:none;border:2px solid var(--ln)}
-.btn.danger{background:var(--bad);color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.25)}
-.btn.sm{padding:6px 11px;font-size:.78rem;box-shadow:none}
 
-/* ----- Album set blocks ----- */
-.setblock{background:var(--pnl);border:2px solid var(--ln);border-radius:18px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow);scroll-margin-top:14px}
-.setblock.complete{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold),var(--shadow)}
-.setblock-head{padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,var(--pnl2),var(--pnl))}
+.setblock-head{padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,var(--pnl2),var(--pnl)); border-radius:18px 18px 0 0;}
 .sb-emoji{font-size:1.9rem}
 .sb-title{font-weight:800;font-size:1.05rem}
 .sb-title .num{color:var(--mut);font-weight:700;font-size:.8rem;margin-right:6px}
 .sb-accchips{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
-.accchip{display:flex;align-items:center;gap:6px;background:var(--chip);border-radius:20px;padding:4px 10px;font-size:.74rem;font-weight:800}
+.accchip{display:flex;align-items:center;gap:6px;background:var(--chip);padding:4px 10px;font-size:.74rem;font-weight:800}
 .accchip .dot{width:9px;height:9px;border-radius:50%}
 .accchip .mini{width:42px;height:6px;border-radius:6px;background:var(--ln);overflow:hidden}
 .accchip .mini i{display:block;height:100%;border-radius:6px;transition:width .5s}
@@ -203,29 +188,25 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .set-scroll{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:10px 14px 14px;cursor:grab;scroll-snap-type:x proximity;scroll-behavior:smooth}
 .set-scroll.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
 .set-scroll.dragging .card{pointer-events:none}
-.acct-col{flex:0 0 auto;width:clamp(286px,84vw,372px);scroll-snap-align:start;background:var(--pnl2);border:2px solid var(--ln);border-radius:16px;padding:10px}
+.acct-col{flex:0 0 auto;width:clamp(286px,84vw,372px);scroll-snap-align:start;background:var(--pnl2);padding:10px}
 .acct-col-head{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:3px 3px 9px;border-bottom:2px solid var(--ln);margin-bottom:9px;font-weight:800}
 .acct-col-head .dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto}
 .acct-col-head .ah-name{font-size:.94rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.acct-col-head .ah-count{margin-left:auto;font-size:.72rem;font-weight:900;background:var(--chip);padding:3px 9px;border-radius:20px;white-space:nowrap}
+.acct-col-head .ah-count{margin-left:auto;font-size:.72rem;font-weight:900;background:var(--chip);padding:3px 9px;white-space:nowrap}
 .acct-col-head .ah-bar{flex-basis:100%;height:6px;border-radius:6px;background:var(--ln);overflow:hidden;order:9}
 .acct-col-head .ah-bar i{display:block;height:100%;border-radius:6px;transition:width .5s}
 .sticker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .panel-empty{grid-column:1/-1;text-align:center;color:var(--mut);font-weight:800;font-size:.82rem;padding:26px 6px}
-.scrollbtn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--acc);color:var(--accInk);font-size:1.05rem;font-weight:900;box-shadow:0 3px 12px rgba(0,0,0,.35);z-index:7;display:none;align-items:center;justify-content:center;border:3px solid var(--pnl)}
+
+.scrollbtn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--acc);color:var(--accInk);font-size:1.05rem;font-weight:900;box-shadow:0 3px 12px rgba(0,0,0,.35);z-index:7;display:none;align-items:center;justify-content:center;}
 .setblock.has-overflow .scrollbtn{display:flex}
-.scrollbtn:active{transform:translateY(-50%) scale(.88)}
 .scrollbtn.left{left:6px}.scrollbtn.right{right:6px}
-.scroll-hint{display:none;align-items:center;gap:4px;font-size:.64rem;font-weight:800;color:var(--mut);background:var(--chip);padding:3px 9px;border-radius:20px}
+.scroll-hint{display:none;align-items:center;gap:4px;font-size:.64rem;font-weight:800;color:var(--mut);background:var(--chip);padding:3px 9px;}
 .setblock.has-overflow .scroll-hint{display:inline-flex}
 .stars{color:var(--gold);font-size:.74rem;letter-spacing:-1px;text-shadow:0 1px 1px var(--goldDeep)}
-.goldtag{font-size:.56rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--goldDeep));color:#3a2400;padding:2px 6px;border-radius:6px;margin-left:4px;letter-spacing:.5px}
 
-/* sticker card (per account cell) */
-.card{border:2px solid var(--ln);border-radius:14px;padding:9px 8px 8px;text-align:center;cursor:pointer;position:relative;background:var(--pnl2);transition:transform .12s,box-shadow .15s,filter .25s;user-select:none}
-.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
-.card.gold{border-color:var(--gold);background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 18%,var(--pnl2)),var(--pnl2));box-shadow:0 0 9px color-mix(in srgb,var(--gold) 45%,transparent)}
-.card.gold.have{box-shadow:0 0 16px var(--gold),inset 0 0 0 1px var(--gold);animation:goldglow 2.4s ease-in-out infinite}
+.card.gold{border-color:var(--gold) !important; background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 18%,var(--pnl2)),var(--pnl2)); box-shadow:0 0 9px color-mix(in srgb,var(--gold) 45%,transparent) !important;}
+.card.gold.have{box-shadow:0 0 16px var(--gold),inset 0 0 0 1px var(--gold) !important; animation:goldglow 2.4s ease-in-out infinite}
 @keyframes goldglow{0%,100%{box-shadow:0 0 10px var(--gold)}50%{box-shadow:0 0 20px var(--gold)}}
 .card.missing{filter:grayscale(1) opacity(.45);background:var(--pnl2)}
 .card.missing:hover{filter:grayscale(.4) opacity(.8)}
@@ -234,55 +215,42 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 @keyframes pop{0%{transform:scale(.4) rotate(-12deg)}60%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1)}}
 .card .cstars{font-size:.66rem;color:var(--gold);margin-top:2px;letter-spacing:-1px}
 .card .cname{font-size:.6rem;color:var(--mut);font-weight:700;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.have-badge{position:absolute;top:-7px;right:-7px;width:21px;height:21px;border-radius:50%;background:var(--good);color:#fff;font-size:.72rem;display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);font-weight:900}
+
+.have-badge{position:absolute;top:-7px;right:-7px;width:21px;height:21px;background:var(--good);color:#fff;font-size:.72rem;display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);}
 .card.have .have-badge{display:flex}
 .dupzone{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:7px}
-.dupzone button{width:23px;height:23px;border-radius:8px;background:var(--acc2);color:#fff;font-weight:900;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 rgba(0,0,0,.25)}
-.dupzone button:active{transform:translateY(2px);box-shadow:none}
-.dupzone input{width:34px;text-align:center;border-radius:8px;border:2px solid var(--ln);background:var(--pnl);font-weight:800;font-size:.78rem;padding:3px 0;outline:none;-moz-appearance:textfield}
+.dupzone button{width:23px;height:23px;background:var(--acc2);color:#fff;font-weight:900;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;}
+.dupzone input{width:34px;text-align:center;background:var(--pnl);font-weight:800;font-size:.78rem;padding:3px 0;outline:none;-moz-appearance:textfield}
 .dupzone input::-webkit-outer-spin-button,.dupzone input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .dupzone input.has{border-color:var(--good);color:var(--good)}
 
-/* Special override for 6-star regular stickers */
-.card.star-6 {
-  border-color: #111820 !important; 
-  background: #ffffff !important;
-  box-shadow: 3px 4px 0px rgba(0,0,0,0.6), inset 0 0 0 4px #ffffff !important;
-}
-
-/* ----- generic cards/grids ----- */
 .cards-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-.panel{background:var(--pnl);border:2px solid var(--ln);border-radius:18px;padding:16px;box-shadow:var(--shadow)}
 .panel h2{margin:0 0 12px;font-size:1.05rem;display:flex;align-items:center;gap:8px}
-.bigbar{height:14px;border-radius:10px;background:var(--ln);overflow:hidden;margin:6px 0}
-.bigbar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width .7s cubic-bezier(.2,.9,.3,1)}
+.bigbar{height:14px;background:var(--ln);overflow:hidden;margin:6px 0}
+.bigbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width .7s cubic-bezier(.2,.9,.3,1)}
 .bigbar.gold i{background:linear-gradient(90deg,var(--goldDeep),var(--gold))}
 .statrow{display:flex;justify-content:space-between;font-size:.82rem;margin:5px 0;font-weight:600}
 .statrow b{font-weight:900}
 .kpi{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.kpi .box{flex:1;min-width:120px;background:var(--pnl);border:2px solid var(--ln);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow)}
+.kpi .box{flex:1;min-width:120px;background:var(--pnl);padding:12px 14px;}
 .kpi .box .v{font-size:1.7rem;font-weight:900;line-height:1}
 .kpi .box .l{font-size:.72rem;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
 
-/* ring */
-.ring{--p:0;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;
-  background:conic-gradient(var(--acc) calc(var(--p)*1%),var(--ln) 0);position:relative;flex:0 0 auto}
-.ring::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--pnl)}
+.ring{--p:0;width:96px;height:96px;display:grid;place-items:center; background:conic-gradient(var(--acc) calc(var(--p)*1%),var(--ln) 0);position:relative;flex:0 0 auto}
+.ring::before{content:"";position:absolute;inset:9px;background:var(--pnl)}
 .ring span{position:relative;font-weight:900;font-size:1.1rem}
 
-/* account cards */
 .acc-card{display:flex;flex-direction:column;gap:10px}
 .acc-top{display:flex;align-items:center;gap:10px}
-.avatar{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:1.6rem;flex:0 0 auto;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.avatar{width:46px;height:46px;display:grid;place-items:center;font-size:1.6rem;flex:0 0 auto;}
 .field{display:flex;flex-direction:column;gap:3px;font-size:.74rem;font-weight:700;color:var(--mut)}
-.field input,.field select{padding:8px 10px;border-radius:10px;border:2px solid var(--ln);background:var(--pnl2);outline:none;font-weight:600}
+.field input,.field select{padding:8px 10px;background:var(--pnl2);outline:none;font-weight:600}
 .field input:focus{border-color:var(--acc)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .emoji-pick{display:flex;flex-wrap:wrap;gap:4px}
-.emoji-pick button{font-size:1.15rem;width:32px;height:32px;border-radius:8px;background:var(--pnl2);border:2px solid transparent}
+.emoji-pick button{font-size:1.15rem;width:32px;height:32px;background:var(--pnl2);border:2px solid transparent}
 .emoji-pick button.sel{border-color:var(--acc);background:var(--chip)}
 
-/* vault */
 .vault-acc{margin-bottom:18px}
 .tier{display:flex;align-items:center;gap:12px;margin:10px 0}
 .tier .tier-ic{font-size:1.7rem;width:42px;text-align:center}
@@ -290,85 +258,78 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .tier .tier-name{font-weight:800;font-size:.9rem;display:flex;justify-content:space-between}
 .tier.maxed .tier-ic{animation:bob 1.3s infinite}
 .dup-list{list-style:none;padding:0;margin:8px 0 0}
-.dup-list li{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:10px;background:var(--pnl2);margin-bottom:5px}
+.dup-list li{display:flex;align-items:center;gap:9px;padding:7px 9px;background:var(--pnl2);margin-bottom:5px}
 .dup-list .rank{font-weight:900;color:var(--mut);width:22px;text-align:center}
 .dup-list .dval{margin-left:auto;font-weight:900;color:var(--gold)}
 .dup-list .nm{font-weight:700;font-size:.85rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* trades */
 .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end}
 .trade-list{list-style:none;padding:0;margin:0}
-.trade-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--pnl2);margin-bottom:8px;flex-wrap:wrap}
+.trade-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--pnl2);margin-bottom:8px;flex-wrap:wrap}
 .trade-row.done{opacity:.6}
-.trade-row .tdate{font-weight:900;font-size:.74rem;background:var(--chip);padding:4px 8px;border-radius:8px;white-space:nowrap}
+.trade-row .tdate{font-weight:900;font-size:.74rem;background:var(--chip);padding:4px 8px;white-space:nowrap}
 .trade-row .tflow{font-weight:800;font-size:.86rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .trade-row .arrow{color:var(--acc2);font-weight:900}
 .trade-row .tstk{color:var(--mut);font-weight:700;font-size:.82rem}
 .trade-row .tcheck{margin-left:auto;display:flex;align-items:center;gap:8px}
-.trade-row .auto-tag{font-size:.58rem;font-weight:900;background:var(--acc2);color:#fff;padding:2px 6px;border-radius:6px}
+.trade-row .auto-tag{font-size:.58rem;font-weight:900;background:var(--acc2);color:#fff;padding:2px 6px;}
 .plan-day{margin-bottom:10px}
 .plan-day h4{margin:0 0 5px;font-size:.85rem}
 input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:pointer}
 
-/* calendar */
 .cal-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .cal-head h3{margin:0;font-size:1.1rem;min-width:170px;text-align:center}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .cal-dow{text-align:center;font-size:.66rem;font-weight:900;color:var(--mut);text-transform:uppercase}
-.cal-cell{min-height:62px;border-radius:12px;border:2px solid var(--ln);background:var(--pnl2);padding:5px;position:relative;cursor:default;transition:.12s}
+.cal-cell{min-height:62px;background:var(--pnl2);padding:5px;position:relative;cursor:default;transition:.12s}
 .cal-cell.has{cursor:pointer;border-color:var(--acc)}
 .cal-cell.has:hover{transform:scale(1.05);box-shadow:var(--shadow)}
 .cal-cell.empty{background:transparent;border:none}
 .cal-cell.today{box-shadow:inset 0 0 0 2px var(--acc2)}
 .cal-cell .dn{font-weight:800;font-size:.78rem}
 .cal-cell .cct{position:absolute;bottom:5px;left:5px;right:5px;display:flex;gap:3px;flex-wrap:wrap}
-.cal-cell .pill{font-size:.6rem;font-weight:900;background:var(--acc);color:var(--accInk);border-radius:20px;padding:1px 6px}
+.cal-cell .pill{font-size:.6rem;font-weight:900;background:var(--acc);color:var(--accInk);padding:1px 6px}
 .cal-cell .pill.done{background:var(--good);color:#fff}
 
-/* settings theme grid */
 .theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-.theme-card{border-radius:16px;padding:12px;cursor:pointer;border:3px solid transparent;position:relative;overflow:hidden;color:#fff;min-height:84px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
+.theme-card{padding:12px;cursor:pointer;border:3px solid transparent;position:relative;overflow:hidden;color:#fff;min-height:84px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
 .theme-card.active{border-color:var(--ink);transform:scale(1.03)}
 .theme-card .tc-name{font-weight:900;font-size:.9rem;z-index:1;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 .theme-card .tc-emoji{font-size:1.6rem;z-index:1}
 .theme-card .tc-dots{display:flex;gap:5px;z-index:1}
-.theme-card .tc-dots i{width:13px;height:13px;border-radius:50%;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
+.theme-card .tc-dots i{width:13px;height:13px;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
 
 .setting-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--ln);flex-wrap:wrap}
 .setting-row .sr-label{font-weight:800;flex:1;min-width:160px}
 .setting-row .sr-label small{display:block;font-weight:600;color:var(--mut);font-size:.74rem}
-.setting-row input[type=number]{width:80px;padding:8px;border-radius:10px;border:2px solid var(--ln);background:var(--pnl2);font-weight:800;text-align:center;outline:none}
-.switch{width:52px;height:28px;border-radius:20px;background:var(--ln);position:relative;cursor:pointer;flex:0 0 auto;transition:.2s}
-.switch i{position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.setting-row input[type=number]{width:80px;padding:8px;background:var(--pnl2);font-weight:800;text-align:center;outline:none}
+.switch{width:52px;height:28px;background:var(--ln);position:relative;cursor:pointer;flex:0 0 auto;transition:.2s}
+.switch i{position:absolute;top:3px;left:3px;width:22px;height:22px;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 .switch.on{background:var(--good)}
 .switch.on i{left:27px}
 
-/* empty state */
 .empty{text-align:center;padding:50px 20px;color:var(--mut)}
 .empty .em{font-size:3.5rem;display:block;margin-bottom:10px;animation:bob 2s infinite}
 .empty h3{color:var(--ink);margin:6px 0}
 
-/* modal */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;backdrop-filter:blur(3px)}
 .modal-bg.show{display:flex;animation:fade .2s}
 @keyframes fade{from{opacity:0}to{opacity:1}}
-.modal{background:var(--pnl);border-radius:20px;max-width:460px;width:100%;max-height:84vh;overflow-y:auto;border:3px solid var(--acc);box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popin .25s}
+.modal{background:var(--pnl);max-width:460px;width:100%;max-height:84vh;overflow-y:auto;border:3px solid var(--acc);box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popin .25s}
 @keyframes popin{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:none;opacity:1}}
 .modal-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:2px solid var(--ln);position:sticky;top:0;background:var(--pnl)}
 .modal-head h3{margin:0;flex:1;font-size:1.05rem}
 .modal-body{padding:14px 16px}
 
-/* confetti */
 .confetti{position:fixed;top:-30px;font-size:1.4rem;z-index:200;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
 
-.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:30px;font-weight:800;font-size:.85rem;z-index:300;opacity:0;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:11px 20px;font-weight:800;font-size:.85rem;z-index:300;opacity:0;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 .scrim{position:fixed;inset:60px 0 0;background:rgba(0,0,0,.4);z-index:20;display:none}
 .scrim.show{display:block}
 
-/* ----- auto-hide hover sidebars (desktop) ----- */
 @media(min-width:1001px){
   body.nav-auto aside{overflow:visible}
   body.nav-auto .left{width:46px;border-right:none}
@@ -381,10 +342,6 @@ input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:
   body.nav-auto .right:hover .aside-full,body.nav-auto .right:focus-within .aside-full{transform:none;box-shadow:-8px 0 34px rgba(0,0,0,.32)}
   body.nav-auto aside:hover .rail-tab,body.nav-auto aside:focus-within .rail-tab{opacity:0}
 }
-
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media(max-width:1000px){
   .icon-btn{display:flex}
   .pin-btn,.rail-tab{display:none}
@@ -403,44 +360,36 @@ input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:
   .brand{font-size:1rem}
 }
 
-/* ============================================================
-   90s CARTOON OVERRIDE
-   ============================================================ */
+/* 90s CARTOON OVERRIDE */
 body { font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", sans-serif !important; }
-
-/* Hardcoded dark ink for borders so they stay visible in Night mode */
 .panel, .setblock, .card, .acct-col, .filterbar, .searchbox input, .field input, .field select, .modal, .theme-card, .ring::before {
   border: 3px solid #111820 !important;
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
   box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-
 .btn, .toggle-pill, .icon-btn, .pin-btn, .scrollbtn, .dupzone button {
   border: 3px solid #111820 !important;
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
   box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important;
 }
-
 .card:active, .btn:active, .toggle-pill:active, .icon-btn:active, .pin-btn:active, .scrollbtn:active, .dupzone button:active {
   transform: translate(2px, 3px) !important;
   box-shadow: 1px 1px 0px rgba(0,0,0,0.6) !important;
 }
-
 .have-badge, .ah-count, .pill, .evt-badge, .accchip, .tdate {
   border: 2px solid #111820 !important;
   border-radius: 48% 52% 45% 55% / 50% 45% 55% 50% !important;
   font-weight: 900 !important;
   box-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important;
 }
-
 header { border-bottom: 4px solid #111820 !important; }
-
 .set-bar, .ah-bar, .bigbar, .mini {
   border: 2px solid #111820 !important;
   border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
   box-shadow: 2px 2px 0px rgba(0,0,0,0.4) inset !important;
 }
+.card.star-6 { background: #ffffff !important; border-color: #111820 !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6), inset 0 0 0 4px #ffffff !important; }
 </style>
 </head>
 <body>
@@ -451,24 +400,15 @@ header { border-bottom: 4px solid #111820 !important; }
   <span class="star">✦</span><span class="star">★</span><span class="star">✦</span>
 </div>
 
-<!-- AUTH OVERLAY -->
 <div id="auth-overlay" style="position:fixed; inset:0; z-index:9999; background:var(--bg); display:none; align-items:center; justify-content:center; padding:20px;">
   <div class="panel" style="max-width:400px; width:100%; padding:30px; text-align:center; background:var(--pnl);">
     <h1 style="font-size:2rem; margin-bottom:10px; font-weight:900;">🍩 D'oh-nut Auth</h1>
     <p style="color:var(--mut); margin-bottom:20px; font-weight:700;">Sign in to sync your Springfield album across devices!</p>
-    
-    <button class="btn alt" onclick="loginWithProvider('google')" style="width:100%; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
-      🌐 Sign In With Google
-    </button>
-    <button class="btn alt" onclick="loginWithProvider('discord')" style="width:100%; margin-bottom:12px; background:#5865F2; display:flex; align-items:center; justify-content:center; gap:8px;">
-      💬 Sign In With Discord
-    </button>
-    
+    <button class="btn alt" onclick="loginWithProvider('google')" style="width:100%; margin-bottom:10px; display:flex; align-items:center; justify-content:center; gap:8px;">🌐 Sign In With Google</button>
+    <button class="btn alt" onclick="loginWithProvider('discord')" style="width:100%; margin-bottom:12px; background:#5865F2; display:flex; align-items:center; justify-content:center; gap:8px;">💬 Sign In With Discord</button>
     <div style="margin:15px 0; font-weight:800; color:var(--mut);">— OR —</div>
-    
     <input type="email" id="magic-link-email" placeholder="homer@snpp.com" style="width:100%; padding:10px; border:3px solid var(--ink); border-radius:10px; margin-bottom:10px; outline:none; font-family:inherit; font-weight:700;">
     <button class="btn" onclick="sendMagicOtp()" style="width:100%; margin-bottom:15px;">✉️ Send Magic Link</button>
-    
     <button class="btn ghost" onclick="activateDemoMode()" style="width:100%; border-style:dashed;">🧪 Play Offline (Demo Mode)</button>
     <div id="auth-status-msg" style="margin-top:12px; font-weight:800; font-size:0.85rem;"></div>
   </div>
@@ -528,150 +468,13 @@ header { border-bottom: 4px solid #111820 !important; }
 "use strict";
 
 /* ============================================================
-   SUPABASE INTEGRATION & NETWORK LOGIC
+   1. GLOBAL DATA & CONSTANTS
    ============================================================ */
 const SUPABASE_URL = "https://dvybpbfwkwnvxdosvsxj.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_SK5m4nhUdE_7R1bgyKXXug_RE3AoBy3";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const LS_KEY = "dohnut_album_v1";
 
-let activeSessionUser = null;
-let currentCloudSheetId = null;
-let myWebFriendCode = null;
-let isDemoModeActive = localStorage.getItem("dohnut_demo_active") === "true";
-let saveTimeout;
-
-async function loginWithProvider(providerName) {
-  await supabaseClient.auth.signInWithOAuth({
-    provider: providerName,
-    options: { redirectTo: window.location.origin + window.location.pathname }
-  });
-}
-
-async function sendMagicOtp() {
-  const emailInput = document.getElementById("magic-link-email").value.trim();
-  const feedbackMsg = document.getElementById("auth-status-msg");
-  if (!emailInput) { toast("Enter your email address!"); return; }
-  
-  feedbackMsg.textContent = "Sending link...";
-  const { error } = await supabaseClient.auth.signInWithOtp({
-    email: emailInput,
-    options: { emailRedirectTo: window.location.origin + window.location.pathname }
-  });
-  
-  if (error) {
-    feedbackMsg.textContent = "❌ Error: " + error.message;
-    feedbackMsg.style.color = "var(--bad)";
-  } else {
-    feedbackMsg.textContent = "🍩 Link sent! Check your inbox.";
-    feedbackMsg.style.color = "var(--good)";
-  }
-}
-
-function activateDemoMode() {
-  isDemoModeActive = true;
-  localStorage.setItem("dohnut_demo_active", "true");
-  document.getElementById("auth-overlay").style.display = "none";
-  toast("Loaded local offline profile 🎲");
-  fullRender();
-}
-
-async function initializeWebAccount() {
-  if (isDemoModeActive || !activeSessionUser) return;
-  const { data: webAcc } = await supabaseClient
-    .from('web_accounts')
-    .select('web_friend_code, is_super_admin')
-    .eq('id', activeSessionUser.id)
-    .single();
-
-  if (webAcc) {
-    myWebFriendCode = webAcc.web_friend_code;
-  } else {
-    const { data: newAcc } = await supabaseClient
-      .from('web_accounts')
-      .insert({ id: activeSessionUser.id })
-      .select('web_friend_code')
-      .single();
-    if (newAcc) myWebFriendCode = newAcc.web_friend_code;
-  }
-}
-
-function copyWebCode() {
-  if (!myWebFriendCode) return;
-  navigator.clipboard.writeText(myWebFriendCode).then(() => { toast("Web Code copied! 📋"); });
-}
-
-async function sendFriendRequest() {
-  const targetCode = document.getElementById('add-friend-input').value.trim();
-  if (!targetCode) { toast("Enter a Web Code first! ⚠️"); return; }
-  if (targetCode === myWebFriendCode) { toast("You can't add yourself! 🍩"); return; }
-
-  const { data: targetUser } = await supabaseClient
-    .from('web_accounts')
-    .select('id')
-    .eq('web_friend_code', targetCode)
-    .single();
-
-  if (!targetUser) { toast("No player found with that code. 🕵️‍♂️"); return; }
-
-  const { error: insertErr } = await supabaseClient
-    .from('friendships')
-    .insert({ user_a: activeSessionUser.id, user_b: targetUser.id, status: 'pending' });
-
-  if (insertErr) { toast("Request already exists! ⏳"); } 
-  else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; }
-}
-
-async function handleSession(session) {
-  if (!session) return;
-  activeSessionUser = session.user;
-  document.getElementById("auth-overlay").style.display = "none";
-  toast("Connected to Cloud ☁️");
-  
-  await initializeWebAccount();
-
-  const { data } = await supabaseClient.from('tracker_sheets').select('*').eq('user_id', activeSessionUser.id).single();
-  if (data) {
-    currentCloudSheetId = data.id;
-    if(data.accounts) state.accounts = data.accounts;
-    if(data.inventory) state.inv = data.inventory;
-    if(data.trades) state.trades = data.trades;
-  } else {
-    const { data: newSheet } = await supabaseClient.from('tracker_sheets').insert({
-      user_id: activeSessionUser.id,
-      user_email: activeSessionUser.email,
-      accounts: state.accounts,
-      inventory: state.inv,
-      trades: state.trades
-    }).select().single();
-    if(newSheet) currentCloudSheetId = newSheet.id;
-  }
-  fullRender();
-}
-
-window.addEventListener("DOMContentLoaded", async () => {
-  if (isDemoModeActive) {
-     document.getElementById("auth-overlay").style.display = "none";
-     fullRender();
-     return;
-  }
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) handleSession(session);
-  else document.getElementById("auth-overlay").style.display = "flex";
-
-  supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') handleSession(session);
-    if (event === 'SIGNED_OUT') {
-      activeSessionUser = null; myWebFriendCode = null;
-      document.getElementById("auth-overlay").style.display = "flex";
-      state.accounts = []; state.inv = {}; state.trades = []; 
-      fullRender();
-    }
-  });
-});
-
-/* ============================================================
-   ALBUM DATA
-   ============================================================ */
 const ALBUM = [
   {"id":1,"name":"The Simpsons","stickers":[{"name": "Marge", "stars": 1, "isGold": false},{"name": "Bart", "stars": 1, "isGold": false},{"name": "Lisa", "stars": 1, "isGold": false},{"name": "Patty & Selma", "stars": 1, "isGold": false},{"name": "Homer", "stars": 1, "isGold": false},{"name": "Maggie", "stars": 1, "isGold": false},{"name": "Santa's Little Helper", "stars": 1, "isGold": false},{"name": "Snowball 2", "stars": 1, "isGold": false},{"name": "Grampa", "stars": 1, "isGold": false}]},
   {"id":2,"name":"Monopoly's Training Day","stickers":[{"name": "Weee!", "stars": 1, "isGold": false},{"name": "Payday", "stars": 1, "isGold": false},{"name": "Naptime", "stars": 1, "isGold": false},{"name": "Break Time", "stars": 1, "isGold": false},{"name": "For Sale", "stars": 1, "isGold": false},{"name": "On Guard", "stars": 1, "isGold": false},{"name": "D'oh!", "stars": 1, "isGold": false},{"name": "Power Snack", "stars": 1, "isGold": false},{"name": "Whoosh Ahh", "stars": 1, "isGold": false}]},
@@ -700,8 +503,7 @@ const STICKERS = [];
 const SBYID = {};
 ALBUM.forEach(set=>{
   set.stickers.forEach((s,i)=>{
-    s.id = set.id+"-"+i;
-    s.setId = set.id; s.setName = set.name;
+    s.id = set.id+"-"+i; s.setId = set.id; s.setName = set.name;
     STICKERS.push(s); SBYID[s.id]=s;
   });
 });
@@ -713,16 +515,12 @@ const THEMES = [
   {id:"springfield",name:"Springfield (Day)",emoji:"☀️",c:["#79c0ff","#ffd521","#3f9bd6"]},
   {id:"night",name:"Springfield (Night)",emoji:"🌙",c:["#1a2b4c","#ffd521","#0f172a"]}
 ];
-
 const VAULT_TIERS = [
   {name:"Buzz Cola Vault",emoji:"🥤",need:250,color:"#ff8c1a"},
   {name:"Squishee Vault",emoji:"🧊",need:450,color:"#2f9be0"},
-  {name:"Mr. Burns' Vault",emoji:"💰",need:700,color:"#f4c430"},
+  {name:"Mr. Burns' Vault",emoji:"💰",need:700,color:"#f4c430"}
 ];
-
-const SET_EMOJI = {1:"🛋️",2:"🎲",3:"👨‍👩‍👧‍👦",4:"🥸",5:"🍔",6:"🎳",7:"👶",8:"🦸",9:"💑",10:"💼",
-  11:"🥊",12:"🏫",13:"🐾",14:"🎵",15:"🍖",16:"😂",17:"🐭",18:"🍺",19:"👷",20:"🎩",21:"⭐"};
-
+const SET_EMOJI = {1:"🛋️",2:"🎲",3:"👨‍👩‍👧‍👦",4:"🥸",5:"🍔",6:"🎳",7:"👶",8:"🦸",9:"💑",10:"💼",11:"🥊",12:"🏫",13:"🐾",14:"🎵",15:"🍖",16:"😂",17:"🐭",18:"🍺",19:"👷",20:"🎩",21:"⭐"};
 const ICON_RULES = [
   [/homer|homie/,"🍩"],[/marge/,"💙"],[/bart/,"🛹"],[/lisa|moaning|saxophone/,"🎷"],[/maggie/,"👶"],
   [/grampa|abe|bouvier|jacqueline/,"👴"],[/burns/,"🎩"],[/smithers/,"🤓"],[/flanders|diddly|ned/,"🥸"],
@@ -750,130 +548,161 @@ function iconFor(s){
   return SET_EMOJI[s.setId]||"🎴";
 }
 function starStr(n){ return "★".repeat(n); }
+const AVATARS=["🍩","💙","🛹","🎷","👶","👴","🎩","🥸","🍺","🤡","🤓","😼","😋","🐶","🐷","☢️","🦸","🚜","🚀","🥊","💰","🎵","🐱","🌮","👮","🍔"];
 
 /* ============================================================
-   STATE (Hybrid Cloud/Local)
+   2. STATE INITIALIZATION
    ============================================================ */
-const LS_KEY = "dohnut_album_v1";
 function freshState(){
-  return {
-    accounts:[], inv:{}, trades:[],
-    settings:{ theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false, navAuto:true },
-    page:"album"
-  };
+  return { accounts:[], inv:{}, trades:[], bonusSets:[], settings:{theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false, navAuto:true}, page:"album" };
 }
-
 let state = freshState();
-try { 
-  const ls = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
-  state = { ...state, ...ls }; 
-} catch(e){}
-
-let plan = [];                 
-let calRef = new Date();       
+let activeCommunityTab = 'network';
+let activeSessionUser = null;
+let currentCloudSheetId = null;
+let myWebFriendCode = null;
+let isDemoModeActive = false;
+let plan = [];
+let calRef = new Date();
 let filters = {need:false,dupes:false,star:"all",gold:"all",q:""};
 let navQuery = "";
 
+/* ============================================================
+   3. UTILITY FUNCTIONS
+   ============================================================ */
 function save(){ 
   try{ localStorage.setItem(LS_KEY, JSON.stringify({ settings: state.settings, page: state.page, ...(isDemoModeActive ? state : {}) })); } catch(e){} 
-  if (isDemoModeActive) return;
-
-  if (currentCloudSheetId && activeSessionUser) {
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(async () => {
-      await supabaseClient.from('tracker_sheets').update({
-        accounts: state.accounts,
-        inventory: state.inv,
-        trades: state.trades,
-        updated_at: new Date().toISOString()
-      }).eq('id', currentCloudSheetId);
-    }, 1000);
+  if (!isDemoModeActive && currentCloudSheetId && activeSessionUser) {
+    supabaseClient.from('tracker_sheets').update({ accounts: state.accounts, inventory: state.inv, trades: state.trades, updated_at: new Date().toISOString() }).eq('id', currentCloudSheetId);
   }
 }
+function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function todayStr(){ return fmtDate(new Date()); }
+function fmtDate(d){ const z=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate()); }
+function prettyDate(s){ const [y,m,d]=s.split("-"); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]+" "+ (+d); }
+function accById(id){ return state.accounts.find(a=>a.id===id); }
 
+/* --- Inventory Math --- */
 function getCount(acc,sid){ return (state.inv[acc] && state.inv[acc][sid]) || 0; }
-function setCount(acc,sid,n){
-  n = Math.max(0,Math.floor(n||0));
-  if(!state.inv[acc]) state.inv[acc]={};
-  if(n===0) delete state.inv[acc][sid]; else state.inv[acc][sid]=n;
-  save();
-}
+function setCount(acc,sid,n){ n = Math.max(0,Math.floor(n||0)); if(!state.inv[acc]) state.inv[acc]={}; if(n===0) delete state.inv[acc][sid]; else state.inv[acc][sid]=n; save(); }
 function dupesOf(acc,sid){ return Math.max(0,getCount(acc,sid)-1); }
-function ownedInSet(acc,setId){
-  const set = ALBUM.find(s=>s.id===setId);
-  return set.stickers.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0);
-}
+function ownedInSet(acc,setId){ const set = ALBUM.find(s=>s.id===setId); return set.stickers.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0); }
 function ownedTotal(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0); }
 function ownedGold(acc){ return STICKERS.reduce((a,s)=>a+(s.isGold&&getCount(acc,s.id)>0?1:0),0); }
 function starsCollected(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?s.stars:0),0); }
 function dupStarValue(s,d){ return d*s.stars*(s.isGold?2:1); }
 function vaultTotal(acc){ return STICKERS.reduce((a,s)=>a+dupStarValue(s,dupesOf(acc,s.id)),0); }
-function accById(id){ return state.accounts.find(a=>a.id===id); }
-function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
-function todayStr(){ return fmtDate(new Date()); }
-function fmtDate(d){ const z=n=>String(n).padStart(2,"0"); return d.getFullYear()+"-"+z(d.getMonth()+1)+"-"+z(d.getDate()); }
-function prettyDate(s){ const [y,m,d]=s.split("-"); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]+" "+ (+d); }
+function isSetComplete(acc,setId){ const set=ALBUM.find(s=>s.id===setId); return set.stickers.every(s=>getCount(acc,s.id)>0); }
 
-function applyTheme(id){
-  document.documentElement.setAttribute("data-theme",id);
-  state.settings.theme=id; save();
-  renderSwatches();
-  if(state.page==="settings") renderContent();
+/* ============================================================
+   4. SUPABASE & AUTH LOGIC
+   ============================================================ */
+async function loginWithProvider(providerName) { await supabaseClient.auth.signInWithOAuth({ provider: providerName, options: { redirectTo: window.location.origin + window.location.pathname } }); }
+async function sendMagicOtp() {
+  const emailInput = document.getElementById("magic-link-email").value.trim();
+  const feedbackMsg = document.getElementById("auth-status-msg");
+  if (!emailInput) { toast("Enter your email address!"); return; }
+  feedbackMsg.textContent = "Sending link...";
+  const { error } = await supabaseClient.auth.signInWithOtp({ email: emailInput, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
+  if (error) { feedbackMsg.textContent = "❌ Error: " + error.message; feedbackMsg.style.color = "var(--bad)"; } 
+  else { feedbackMsg.textContent = "🍩 Link sent! Check your inbox."; feedbackMsg.style.color = "var(--good)"; }
 }
+function activateDemoMode() {
+  isDemoModeActive = true; localStorage.setItem("dohnut_demo_active", "true");
+  document.getElementById("auth-overlay").style.display = "none";
+  toast("Loaded local offline profile 🎲"); fullRender();
+}
+async function initializeWebAccount() {
+  if (isDemoModeActive || !activeSessionUser) return;
+  const { data: webAcc } = await supabaseClient.from('web_accounts').select('web_friend_code, is_super_admin').eq('id', activeSessionUser.id).single();
+  if (webAcc) myWebFriendCode = webAcc.web_friend_code;
+  else {
+    const { data: newAcc } = await supabaseClient.from('web_accounts').insert({ id: activeSessionUser.id }).select('web_friend_code').single();
+    if (newAcc) myWebFriendCode = newAcc.web_friend_code;
+  }
+}
+async function fetchFriendsList() {
+  if (isDemoModeActive || !activeSessionUser) return;
+  const { data: friendships } = await supabaseClient.from('friendships').select(`id, status, user_a, user_b, web_accounts!friendships_user_a_fkey(web_friend_code), web_accounts!friendships_user_b_fkey(web_friend_code)`).or(`user_a.eq.${activeSessionUser.id},user_b.eq.${activeSessionUser.id}`);
+  const container = document.getElementById('friends-list');
+  if (!container) return; container.innerHTML = '';
+  if (!friendships || friendships.length === 0) { container.innerHTML = '<div style="color:var(--mut); font-weight:700; padding:10px;">Your Rolodex is empty!</div>'; return; }
+  friendships.forEach(f => {
+    const isIncoming = f.user_b === activeSessionUser.id && f.status === 'pending';
+    const friendCode = f.user_a === activeSessionUser.id ? f.web_accounts_user_b_fkey.web_friend_code : f.web_accounts_user_a_fkey.web_friend_code;
+    const li = document.createElement('li'); li.className = 'trade-row';
+    if (f.status === 'pending') {
+      if (isIncoming) li.innerHTML = `<span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#e8a13a;">🍩</span><span style="font-weight:800; font-size:0.9rem; flex:1;">Player (${friendCode})</span><span class="auto-tag" style="background:var(--acc); color:var(--accInk);">Incoming</span><button class="btn sm" onclick="updateFriendStatus('${f.id}', 'accepted')" style="margin-left:6px;">Accept</button><button class="btn sm danger" onclick="updateFriendStatus('${f.id}', 'blocked')">✕</button>`;
+      else li.innerHTML = `<span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#5d7689;">☁️</span><span style="font-weight:800; font-size:0.9rem; flex:1;">Sent to (${friendCode})</span><span class="auto-tag" style="background:var(--goldDeep);">Sent</span>`;
+    } else if (f.status === 'accepted') {
+      li.innerHTML = `<span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#54bf3a;">🛹</span><span style="font-weight:800; font-size:0.9rem; flex:1;">Friend (${friendCode})</span><span style="font-size:0.75rem; font-weight:900; color:var(--mut);">Connected</span><button class="btn sm ghost" style="margin-left:8px;">View Album</button>`;
+    }
+    container.appendChild(li);
+  });
+}
+async function sendFriendRequest() {
+  const targetCode = document.getElementById('add-friend-input').value.trim();
+  if (!targetCode) { toast("Enter a Web Code first! ⚠️"); return; }
+  if (targetCode === myWebFriendCode) { toast("You can't add yourself! 🍩"); return; }
+  const { data: targetUser } = await supabaseClient.from('web_accounts').select('id').eq('web_friend_code', targetCode).single();
+  if (!targetUser) { toast("No player found. 🕵️‍♂️"); return; }
+  const { error: insertErr } = await supabaseClient.from('friendships').insert({ user_a: activeSessionUser.id, user_b: targetUser.id, status: 'pending' });
+  if (insertErr) { toast("Request already exists! ⏳"); } else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; fetchFriendsList(); }
+}
+async function updateFriendStatus(friendshipId, newStatus) {
+  const { error } = await supabaseClient.from('friendships').update({ status: newStatus }).eq('id', friendshipId);
+  if (!error) { toast(newStatus === 'accepted' ? "Friend request accepted! 🎉" : "Request updated."); fetchFriendsList(); } else { toast("Action failed. ❌"); }
+}
+async function handleSession(session) {
+  if (!session) return;
+  activeSessionUser = session.user;
+  document.getElementById("auth-overlay").style.display = "none"; toast("Connected to Cloud ☁️");
+  await initializeWebAccount();
+  const { data } = await supabaseClient.from('tracker_sheets').select('*').eq('user_id', activeSessionUser.id).single();
+  if (data) {
+    currentCloudSheetId = data.id;
+    if(data.accounts) state.accounts = data.accounts; if(data.inventory) state.inv = data.inventory; if(data.trades) state.trades = data.trades;
+  } else {
+    const { data: newSheet } = await supabaseClient.from('tracker_sheets').insert({ user_id: activeSessionUser.id, user_email: activeSessionUser.email, accounts: state.accounts, inventory: state.inv, trades: state.trades }).select().single();
+    if(newSheet) currentCloudSheetId = newSheet.id;
+  }
+  fullRender();
+}
+
+/* ============================================================
+   5. RENDERERS
+   ============================================================ */
+function gotoPage(p){ state.page=p; save(); document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p)); renderContent(); document.getElementById("main").scrollTop=0; closeDrawers(); }
+function switchCommunityTab(tabName) { activeCommunityTab = tabName; renderContent(); }
+function applyTheme(id){ document.documentElement.setAttribute("data-theme",id); state.settings.theme=id; save(); renderSwatches(); if(state.page==="settings") renderContent(); }
 function renderSwatches(){
   const row=document.getElementById("swatchRow");
-  row.innerHTML = THEMES.map(t=>{
-    const grad=`linear-gradient(135deg,${t.c[0]} 40%,${t.c[1]} 40% 70%,${t.c[2]} 70%)`;
-    return `<div class="swatch ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" title="${t.name}" style="background:${grad}"></div>`;
-  }).join("");
+  row.innerHTML = THEMES.map(t=>{ return `<div class="swatch ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" title="${t.name}" style="background:linear-gradient(135deg,${t.c[0]} 40%,${t.c[1]} 40% 70%,${t.c[2]} 70%)"></div>`; }).join("");
 }
-
 function renderBadges(){
-  const el=document.getElementById("evtBadges");
-  let h="";
+  const el=document.getElementById("evtBadges"); let h="";
   if(state.settings.goldBlitz) h+=`<span class="evt-badge">⚡ GOLD BLITZ</span>`;
   if(state.settings.tradeFest) h+=`<span class="evt-badge fest">🎉 TRADE FEST</span>`;
   el.innerHTML=h;
 }
-
 function renderSetList(){
-  const list=document.getElementById("setList");
-  const q=navQuery.trim().toLowerCase();
-  const accs=state.accounts;
-  let html="";
+  const list=document.getElementById("setList"); const q=navQuery.trim().toLowerCase(); let html="";
   ALBUM.forEach(set=>{
-    const matchSet = !q || set.name.toLowerCase().includes(q)
-       || set.stickers.some(s=>s.name.toLowerCase().includes(q));
-    if(!matchSet) return;
-    let owned=0,cap=Math.max(1,accs.length)*set.stickers.length;
-    accs.forEach(a=>owned+=ownedInSet(a.id,set.id));
-    const pct = accs.length? Math.round(owned/cap*100):0;
-    const done = accs.length>0 && pct===100;
-    html+=`<div class="set-item ${done?"done":""}" data-action="goto-set" data-set="${set.id}">
-      <span class="set-emoji">${SET_EMOJI[set.id]||"🎴"}</span>
-      <span class="set-meta">
-        <span class="set-name">${esc(set.name)}</span>
-        <span class="set-bar"><i style="width:${pct}%"></i></span>
-      </span>
-      <span class="set-pct">${pct}%</span>
-    </div>`;
+    if(q && !set.name.toLowerCase().includes(q) && !set.stickers.some(s=>s.name.toLowerCase().includes(q))) return;
+    let owned=0,cap=Math.max(1,state.accounts.length)*set.stickers.length;
+    state.accounts.forEach(a=>owned+=ownedInSet(a.id,set.id));
+    const pct = state.accounts.length? Math.round(owned/cap*100):0;
+    html+=`<div class="set-item ${pct===100?"done":""}" data-action="goto-set" data-set="${set.id}"><span class="set-emoji">${SET_EMOJI[set.id]||"🎴"}</span><span class="set-meta"><span class="set-name">${esc(set.name)}</span><span class="set-bar"><i style="width:${pct}%"></i></span></span><span class="set-pct">${pct}%</span></div>`;
   });
-  if(!html) html=`<div class="empty" style="padding:30px 10px"><span class="em">🔍</span>No matches</div>`;
-  list.innerHTML=html;
+  list.innerHTML=html||`<div class="empty" style="padding:30px 10px"><span class="em">🔍</span>No matches</div>`;
 }
 
-function gotoPage(p){
-  state.page=p; save();
-  document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p));
-  renderContent();
-  document.getElementById("main").scrollTop=0;
-  closeDrawers();
-}
 function renderContent(){
   const c=document.getElementById("content");
   switch(state.page){
-    case "album": c.innerHTML=viewAlbum(); requestAnimationFrame(updateScrollButtons); break;
+    case "album": c.innerHTML=viewAlbum(); updateScrollButtons(); break;
     case "accounts": c.innerHTML=viewAccounts(); break;
     case "progress": c.innerHTML=viewProgress(); break;
     case "vault": c.innerHTML=viewVault(); break;
@@ -882,6 +711,7 @@ function renderContent(){
   }
 }
 
+/* --- THE ALBUM --- */
 function matchesGlobal(s){
   if(filters.star!=="all" && s.stars!==+filters.star) return false;
   if(filters.gold==="gold" && !s.isGold) return false;
@@ -897,868 +727,252 @@ function matchesForAccount(s,accId){
 }
 function filterBarHtml(){
   const starOpts=["all",1,2,3,4,5,6].map(v=>`<option value="${v}" ${filters.star==(v+"")?"selected":""}>${v==="all"?"All stars":"★ "+v}</option>`).join("");
-  return `<div class="filterbar">
-    <input type="text" data-filter="q" value="${esc(filters.q)}" placeholder="🔎 Search stickers…">
-    <label class="toggle-pill ${filters.need?"on":""}" data-action="filter-toggle" data-f="need">🎯 Need Only</label>
-    <label class="toggle-pill ${filters.dupes?"on":""}" data-action="filter-toggle" data-f="dupes">🃏 Dupes Only</label>
-    <select data-filter="star">${starOpts}</select>
-    <select data-filter="gold">
-      <option value="all" ${filters.gold==="all"?"selected":""}>Gold & Regular</option>
-      <option value="gold" ${filters.gold==="gold"?"selected":""}>✨ Gold only</option>
-      <option value="reg" ${filters.gold==="reg"?"selected":""}>Regular only</option>
-    </select>
-    <button class="btn ghost sm" data-action="clear-filters">Reset</button>
-  </div>`;
+  return `<div class="filterbar"><input type="text" data-filter="q" value="${esc(filters.q)}" placeholder="🔎 Search stickers…"><label class="toggle-pill ${filters.need?"on":""}" data-action="filter-toggle" data-f="need">🎯 Need Only</label><label class="toggle-pill ${filters.dupes?"on":""}" data-action="filter-toggle" data-f="dupes">🃏 Dupes Only</label><select data-filter="star">${starOpts}</select><select data-filter="gold"><option value="all" ${filters.gold==="all"?"selected":""}>Gold & Regular</option><option value="gold" ${filters.gold==="gold"?"selected":""}>✨ Gold only</option><option value="reg" ${filters.gold==="reg"?"selected":""}>Regular only</option></select><button class="btn ghost sm" data-action="clear-filters">Reset</button></div>`;
 }
+
 function viewAlbum(){
   let head=`<div class="page-head"><span class="ph-emoji">📖</span><h1>The Album</h1></div>`;
-  if(state.accounts.length===0){
-    return head+filterBarHtml()+`<div class="empty"><span class="em">👨‍👩‍👧‍👦</span>
-      <h3>No accounts yet!</h3><p>Add at least one account to start tracking stickers across the family.</p>
-      <button class="btn" data-action="goto-page" data-page="accounts">➕ Add an Account</button></div>`;
-  }
+  if(state.accounts.length===0) return head+filterBarHtml()+`<div class="empty"><span class="em">👨‍👩‍👧‍👦</span><h3>No accounts yet!</h3><p>Add at least one account to start tracking stickers.</p><button class="btn" data-action="goto-page" data-page="accounts">➕ Add an Account</button></div>`;
   let blocks="";
   ALBUM.forEach(set=>{
     const perAcc = state.accounts.map(a=>({a, list:set.stickers.filter(s=>matchesForAccount(s,a.id))}));
-    if(!perAcc.some(p=>p.list.length>0)) return;   
-    blocks += setBlockHtml(set,perAcc);
+    if(perAcc.some(p=>p.list.length>0)) blocks += setBlockHtml(set,perAcc);
   });
-  if(!blocks) blocks=`<div class="empty"><span class="em">🔍</span><h3>Nothing matches those filters</h3>
-    <button class="btn ghost" data-action="clear-filters">Clear filters</button></div>`;
+  if(!blocks) blocks=`<div class="empty"><span class="em">🔍</span><h3>Nothing matches those filters</h3><button class="btn ghost" data-action="clear-filters">Clear filters</button></div>`;
+  
+  // Bonus Sets Display
+  blocks += `<div style="margin-top:40px; border-top:4px dashed var(--ink); padding-top:20px;"><div class="page-head"><span class="ph-emoji">🎁</span><h1>Bonus Episode Sets</h1></div></div>`;
+  if(state.bonusSets.length === 0) blocks += `<div class="empty"><p>No active bonus episodes.</p></div>`;
+  state.bonusSets.forEach(bSet => {
+     blocks += `<div class="setblock" style="background:var(--pnl2); border-style:dashed;">
+       <div class="setblock-head"><span class="sb-title">Bonus: ${esc(bSet.name)}</span><span style="margin-left:auto; color:var(--bad); font-weight:800;">Ends: ${esc(bSet.endDate)}</span></div>
+       <div class="panel-empty">Stickers for this bonus set will appear here...</div></div>`;
+  });
+
   return head+filterBarHtml()+blocks;
 }
+
 function setBlockHtml(set,perAcc){
   let chips="", allDone=true;
   state.accounts.forEach(a=>{
-    const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100);
-    if(pct<100) allDone=false;
-    chips+=`<span class="accchip"><span class="dot" style="background:${a.color}"></span>${a.emoji} ${esc(a.name)} ${o}/${set.stickers.length}
-      <span class="mini"><i style="width:${pct}%;background:${a.color}"></i></span></span>`;
+    const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100); if(pct<100) allDone=false;
+    chips+=`<span class="accchip"><span class="dot" style="background:${a.color}"></span>${a.emoji} ${esc(a.name)} ${o}/${set.stickers.length}<span class="mini"><i style="width:${pct}%;background:${a.color}"></i></span></span>`;
   });
   let cols="";
   perAcc.forEach(({a,list})=>{
     const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100);
-    const grid = list.length ? list.map(s=>cardHtml(a,s)).join("")
-      : `<div class="panel-empty">✨ Nothing to show here with the current filters</div>`;
-    cols+=`<div class="acct-col">
-      <div class="acct-col-head">
-        <span class="dot" style="background:${a.color}"></span>
-        <span class="ah-name">${a.emoji} ${esc(a.name)}</span>
-        <span class="ah-count" data-acc="${a.id}">${o}/${set.stickers.length}</span>
-        <span class="ah-bar"><i data-acc="${a.id}" style="width:${pct}%;background:${a.color}"></i></span>
-      </div>
-      <div class="sticker-grid">${grid}</div>
-    </div>`;
+    const grid = list.length ? list.map(s=>cardHtml(a,s)).join("") : `<div class="panel-empty">✨ Nothing to show here</div>`;
+    cols+=`<div class="acct-col"><div class="acct-col-head"><span class="dot" style="background:${a.color}"></span><span class="ah-name">${a.emoji} ${esc(a.name)}</span><span class="ah-count" data-acc="${a.id}">${o}/${set.stickers.length}</span><span class="ah-bar"><i data-acc="${a.id}" style="width:${pct}%;background:${a.color}"></i></span></div><div class="sticker-grid">${grid}</div></div>`;
   });
-  return `<div class="setblock ${allDone?"complete":""}" id="set-${set.id}" data-setblock="${set.id}">
-    <div class="setblock-head">
-      <span class="sb-emoji">${SET_EMOJI[set.id]||"🎴"}</span>
-      <span class="sb-title"><span class="num">Set ${set.id}</span>${esc(set.name)}</span>
-      <span class="scroll-hint">↔ drag / swipe</span>
-      <span class="sb-accchips">${chips}</span>
-    </div>
-    <div class="set-scrollwrap">
-      <button class="scrollbtn left" data-action="scroll-set" data-dir="-1" aria-label="Scroll accounts left">◀</button>
-      <div class="set-scroll">${cols}</div>
-      <button class="scrollbtn right" data-action="scroll-set" data-dir="1" aria-label="Scroll accounts right">▶</button>
-    </div>
-  </div>`;
+  return `<div class="setblock ${allDone?"complete":""}" id="set-${set.id}" data-setblock="${set.id}"><div class="setblock-head"><span class="sb-emoji">${SET_EMOJI[set.id]||"🎴"}</span><span class="sb-title"><span class="num">Set ${set.id}</span>${esc(set.name)}</span><span class="scroll-hint">↔ drag / swipe</span><span class="sb-accchips">${chips}</span></div><div class="set-scrollwrap"><button class="scrollbtn left" data-action="scroll-set" data-dir="-1">◀</button><div class="set-scroll">${cols}</div><button class="scrollbtn right" data-action="scroll-set" data-dir="1">▶</button></div></div>`;
 }
+
 function cardHtml(a,s){
-  const c=getCount(a.id,s.id), have=c>0, d=Math.max(0,c-1);
-  const starClass = s.stars === 6 ? "star-6" : ""; // Applied 6-star override logic here
-  return `<div class="card ${have?"have":"missing"} ${s.isGold?"gold":""} ${starClass}" data-action="sticker" data-acc="${a.id}" data-sid="${s.id}" title="${esc(s.name)} — ${esc(a.name)}">
-    <span class="have-badge">✓</span>
-    <span class="cic">${iconFor(s)}</span>
-    <span class="cstars">${starStr(s.stars)}</span>
-    <span class="cname">${esc(s.name)}</span>
-    <div class="dupzone" data-action="dupzone">
-      <button data-action="dup-dec" data-acc="${a.id}" data-sid="${s.id}" title="Remove copy">−</button>
-      <input class="dupinput ${d>0?"has":""}" type="number" min="0" value="${d}" data-acc="${a.id}" data-sid="${s.id}" title="Duplicates">
-      <button data-action="dup-inc" data-acc="${a.id}" data-sid="${s.id}" title="Add copy">+</button>
-    </div>
-  </div>`;
+  const c=getCount(a.id,s.id), have=c>0, d=Math.max(0,c-1), starClass = s.stars === 6 ? "star-6" : ""; 
+  return `<div class="card ${have?"have":"missing"} ${s.isGold?"gold":""} ${starClass}" data-action="sticker" data-acc="${a.id}" data-sid="${s.id}" title="${esc(s.name)} — ${esc(a.name)}"><span class="have-badge">✓</span><span class="cic">${iconFor(s)}</span><span class="cstars">${starStr(s.stars)}</span><span class="cname">${esc(s.name)}</span><div class="dupzone" data-action="dupzone"><button data-action="dup-dec" data-acc="${a.id}" data-sid="${s.id}">−</button><input class="dupinput ${d>0?"has":""}" type="number" min="0" value="${d}" data-acc="${a.id}" data-sid="${s.id}"><button data-action="dup-inc" data-acc="${a.id}" data-sid="${s.id}">+</button></div></div>`;
 }
 
-function updateCell(acc,sid){
-  const cell=document.querySelector(`.card[data-acc="${acc}"][data-sid="${sid}"]`);
-  if(!cell) return;
-  const c=getCount(acc,sid), have=c>0, d=Math.max(0,c-1);
-  cell.classList.toggle("have",have); cell.classList.toggle("missing",!have);
-  const inp=cell.querySelector(".dupinput"); if(inp){ inp.value=d; inp.classList.toggle("has",d>0); }
-}
-function refreshSetUI(setId){
-  const set=ALBUM.find(s=>s.id===setId);
-  const block=document.getElementById("set-"+setId);
-  if(block){
-    let allDone=true;
-    block.querySelectorAll(".accchip").forEach((chip,idx)=>{
-      const a=state.accounts[idx]; if(!a) return;
-      const o=ownedInSet(a.id,setId),pct=Math.round(o/set.stickers.length*100);
-      if(pct<100) allDone=false;
-      chip.childNodes[1].nodeValue=` ${a.emoji} ${a.name} ${o}/${set.stickers.length} `;
-      const bar=chip.querySelector(".mini i"); if(bar) bar.style.width=pct+"%";
-    });
-    block.classList.toggle("complete",allDone);
-    block.querySelectorAll(".ah-count[data-acc]").forEach(el=>{
-      const a=accById(el.dataset.acc); if(!a) return;
-      el.textContent=ownedInSet(a.id,setId)+"/"+set.stickers.length;
-    });
-    block.querySelectorAll(".ah-bar i[data-acc]").forEach(el=>{
-      const a=accById(el.dataset.acc); if(!a) return;
-      el.style.width=Math.round(ownedInSet(a.id,setId)/set.stickers.length*100)+"%";
-    });
-  }
-  renderSetList();
-}
-
-/* ============================================================
-   VIEW: ACCOUNTS
-   ============================================================ */
-const AVATARS=["🍩","💙","🛹","🎷","👶","👴","🎩","🥸","🍺","🤡","🤓","😼","😋","🐶","🐷","☢️","🦸","🚜","🚀","🥊","💰","🎵","🐱","🌮","👮","🍔"];
 function viewAccounts(){
-  let head=`<div class="page-head"><span class="ph-emoji">👨‍👩‍👧‍👦</span><h1>Accounts</h1></div>
-    <p class="page-sub">Track multiple players side-by-side. Each account becomes a column in the Album.</p>`;
+  let head=`<div class="page-head"><span class="ph-emoji">👨‍👩‍👧‍👦</span><h1>Accounts</h1></div><p class="page-sub">Track multiple players side-by-side.</p>`;
   let cards = state.accounts.map(a=>{
-    const o=ownedTotal(a.id), gold=ownedGold(a.id), vt=vaultTotal(a.id);
-    const pct=Math.round(o/TOTAL*100);
+    const o=ownedTotal(a.id), gold=ownedGold(a.id), vt=vaultTotal(a.id), pct=Math.round(o/TOTAL*100);
     const emojis=AVATARS.map(e=>`<button data-action="acc-emoji" data-id="${a.id}" data-e="${e}" class="${a.emoji===e?"sel":""}">${e}</button>`).join("");
-    return `<div class="panel acc-card">
-      <div class="acc-top">
-        <span class="avatar" style="background:${a.color}">${a.emoji}</span>
-        <div style="flex:1">
-          <div class="field"><span>Account name</span>
-            <input type="text" value="${esc(a.name)}" data-action="acc-name" data-id="${a.id}" maxlength="22"></div>
-        </div>
-        <button class="btn danger sm" data-action="del-account" data-id="${a.id}" title="Delete">🗑️</button>
-      </div>
-      <div class="row2">
-        <div class="field"><span>Colour</span>
-          <input type="color" value="${a.color}" data-action="acc-color" data-id="${a.id}" style="height:38px;padding:2px"></div>
-        <div class="field"><span>Completion</span>
-          <div class="bigbar" style="margin-top:6px"><i style="width:${pct}%;background:${a.color}"></i></div></div>
-      </div>
-      <div class="field"><span>Avatar</span><div class="emoji-pick">${emojis}</div></div>
-      <div class="statrow"><span>📖 Stickers</span><b>${o} / ${TOTAL}</b></div>
-      <div class="statrow"><span>✨ Gold</span><b>${gold} / ${TOTAL_GOLD}</b></div>
-      <div class="statrow"><span>⭐ Vault stars</span><b>${vt}</b></div>
-    </div>`;
+    return `<div class="panel acc-card"><div class="acc-top"><span class="avatar" style="background:${a.color}">${a.emoji}</span><div style="flex:1"><div class="field"><span>Account name</span><input type="text" value="${esc(a.name)}" data-action="acc-name" data-id="${a.id}" maxlength="22"></div></div><button class="btn danger sm" data-action="del-account" data-id="${a.id}">🗑️</button></div><div class="row2"><div class="field"><span>Colour</span><input type="color" value="${a.color}" data-action="acc-color" data-id="${a.id}" style="height:38px;padding:2px"></div><div class="field"><span>Completion</span><div class="bigbar" style="margin-top:6px"><i style="width:${pct}%;background:${a.color}"></i></div></div></div><div class="field"><span>Avatar</span><div class="emoji-pick">${emojis}</div></div><div class="statrow"><span>📖 Stickers</span><b>${o} / ${TOTAL}</b></div><div class="statrow"><span>✨ Gold</span><b>${gold} / ${TOTAL_GOLD}</b></div><div class="statrow"><span>⭐ Vault stars</span><b>${vt}</b></div></div>`;
   }).join("");
-  if(state.accounts.length===0){
-    cards=`<div class="empty"><span class="em">➕</span><h3>No accounts yet</h3><p>Create your first player below.</p></div>`;
-  }
-  return head+`<div style="margin-bottom:16px"><button class="btn" data-action="add-account">➕ Add Account</button></div>
-    <div class="cards-grid">${cards}</div>`;
+  if(state.accounts.length===0) cards=`<div class="empty"><span class="em">➕</span><h3>No accounts yet</h3></div>`;
+  return head+`<div style="margin-bottom:16px"><button class="btn" data-action="add-account">➕ Add Account</button></div><div class="cards-grid">${cards}</div>`;
 }
 
-/* ============================================================
-   VIEW: PROGRESS
-   ============================================================ */
 function viewProgress(){
   let head=`<div class="page-head"><span class="ph-emoji">📊</span><h1>Progress</h1></div>`;
-  if(state.accounts.length===0) return head+emptyAccounts();
-  const totCells = state.accounts.length*TOTAL;
-  let owned=0; state.accounts.forEach(a=>owned+=ownedTotal(a.id));
-  const kpi=`<div class="kpi">
-    <div class="box"><div class="v">${state.accounts.length}</div><div class="l">Accounts</div></div>
-    <div class="box"><div class="v">${owned}<small style="font-size:.9rem;color:var(--mut)">/${totCells}</small></div><div class="l">Stickers owned</div></div>
-    <div class="box"><div class="v">${Math.round(owned/Math.max(1,totCells)*100)}%</div><div class="l">Collective complete</div></div>
-    <div class="box"><div class="v">${state.accounts.reduce((a,x)=>a+vaultTotal(x.id),0)}</div><div class="l">Total vault ⭐</div></div>
-  </div>`;
+  if(state.accounts.length===0) return head+`<div class="empty"><h3>No accounts yet</h3></div>`;
+  const totCells = state.accounts.length*TOTAL; let owned=0; state.accounts.forEach(a=>owned+=ownedTotal(a.id));
+  const kpi=`<div class="kpi"><div class="box"><div class="v">${state.accounts.length}</div><div class="l">Accounts</div></div><div class="box"><div class="v">${owned}<small style="font-size:.9rem;color:var(--mut)">/${totCells}</small></div><div class="l">Stickers owned</div></div><div class="box"><div class="v">${Math.round(owned/Math.max(1,totCells)*100)}%</div><div class="l">Collective complete</div></div><div class="box"><div class="v">${state.accounts.reduce((a,x)=>a+vaultTotal(x.id),0)}</div><div class="l">Total vault ⭐</div></div></div>`;
   let accPanels = state.accounts.map(a=>{
     const o=ownedTotal(a.id), pct=Math.round(o/TOTAL*100);
-    let setBars=ALBUM.map(set=>{
-      const so=ownedInSet(a.id,set.id), sp=Math.round(so/set.stickers.length*100);
-      return `<div class="statrow" style="margin:2px 0"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${SET_EMOJI[set.id]} ${esc(set.name)}</span><b>${so}/${set.stickers.length}</b></div>
-        <div class="bigbar" style="height:8px;margin:0 0 6px"><i style="width:${sp}%;background:${a.color}"></i></div>`;
-    }).join("");
-    return `<div class="panel">
-      <h2><span class="avatar" style="width:34px;height:34px;font-size:1.2rem;background:${a.color}">${a.emoji}</span> ${esc(a.name)}</h2>
-      <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
-        <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
-        <div style="flex:1;min-width:140px">
-          <div class="statrow"><span>📖 Stickers</span><b>${o}/${TOTAL}</b></div>
-          <div class="statrow"><span>✨ Gold</span><b>${ownedGold(a.id)}/${TOTAL_GOLD}</b></div>
-          <div class="statrow"><span>⭐ Stars collected</span><b>${starsCollected(a.id)}/${TOTAL_STARS}</b></div>
-          <div class="statrow"><span>🃏 Vault stars</span><b>${vaultTotal(a.id)}</b></div>
-        </div>
-      </div>
-      <div style="max-height:260px;overflow-y:auto;padding-right:6px">${setBars}</div>
-    </div>`;
+    let setBars=ALBUM.map(set=>{ const so=ownedInSet(a.id,set.id), sp=Math.round(so/set.stickers.length*100); return `<div class="statrow" style="margin:2px 0"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${SET_EMOJI[set.id]} ${esc(set.name)}</span><b>${so}/${set.stickers.length}</b></div><div class="bigbar" style="height:8px;margin:0 0 6px"><i style="width:${sp}%;background:${a.color}"></i></div>`; }).join("");
+    return `<div class="panel"><h2><span class="avatar" style="width:34px;height:34px;font-size:1.2rem;background:${a.color}">${a.emoji}</span> ${esc(a.name)}</h2><div style="display:flex;gap:16px;align-items:center;margin-bottom:12px;flex-wrap:wrap"><div class="ring" style="--p:${pct}"><span>${pct}%</span></div><div style="flex:1;min-width:140px"><div class="statrow"><span>📖 Stickers</span><b>${o}/${TOTAL}</b></div><div class="statrow"><span>✨ Gold</span><b>${ownedGold(a.id)}/${TOTAL_GOLD}</b></div><div class="statrow"><span>⭐ Stars collected</span><b>${starsCollected(a.id)}/${TOTAL_STARS}</b></div><div class="statrow"><span>🃏 Vault stars</span><b>${vaultTotal(a.id)}</b></div></div></div><div style="max-height:260px;overflow-y:auto;padding-right:6px">${setBars}</div></div>`;
   }).join("");
   return head+kpi+`<div class="cards-grid">${accPanels}</div>`;
 }
 
-/* ============================================================
-   VIEW: STAR VAULT
-   ============================================================ */
 function viewVault(){
-  let head=`<div class="page-head"><span class="ph-emoji">⭐</span><h1>Star Vault</h1></div>
-    <p class="page-sub">Duplicate value: each regular dupe = its star value, each <b>gold</b> dupe = <b>2×</b> its stars.</p>`;
-  if(state.accounts.length===0) return head+emptyAccounts();
+  let head=`<div class="page-head"><span class="ph-emoji">⭐</span><h1>Star Vault</h1></div>`;
+  if(state.accounts.length===0) return head+`<div class="empty"><h3>No accounts yet</h3></div>`;
   let panels=state.accounts.map(a=>{
     const total=vaultTotal(a.id);
-    let tiers=VAULT_TIERS.map(t=>{
-      const pct=Math.min(100,Math.round(total/t.need*100));
-      const maxed=total>=t.need;
-      return `<div class="tier ${maxed?"maxed":""}">
-        <span class="tier-ic">${maxed?"🏆":t.emoji}</span>
-        <div class="tier-body">
-          <div class="tier-name"><span>${t.name}</span><span>${Math.min(total,t.need)} / ${t.need} ${maxed?"✅":""}</span></div>
-          <div class="bigbar"><i style="width:${pct}%;background:linear-gradient(90deg,${t.color},color-mix(in srgb,${t.color} 55%,#fff))"></i></div>
-        </div></div>`;
-    }).join("");
-    let dups=STICKERS.map(s=>({s,d:dupesOf(a.id,s.id)})).filter(x=>x.d>0)
-      .map(x=>({...x,val:dupStarValue(x.s,x.d)})).sort((p,q)=>q.val-p.val).slice(0,10);
-    let list = dups.length? dups.map((x,i)=>`<li>
-        <span class="rank">${i+1}</span><span style="font-size:1.2rem">${iconFor(x.s)}</span>
-        <span class="nm">${esc(x.s.name)} ${x.s.isGold?'<span class="goldtag">G</span>':""}<br><small style="color:var(--mut);font-weight:600">×${x.d} · ${x.s.stars}⭐${x.s.isGold?" ·2x":""}</small></span>
-        <span class="dval">+${x.val}</span></li>`).join("")
-      : `<li style="color:var(--mut)">No duplicates yet — add some in the Album.</li>`;
-    return `<div class="panel vault-acc">
-      <h2><span class="avatar" style="width:34px;height:34px;font-size:1.2rem;background:${a.color}">${a.emoji}</span> ${esc(a.name)}
-        <span style="margin-left:auto;font-size:1.4rem;color:var(--gold)">⭐ ${total}</span></h2>
-      ${tiers}
-      <div class="nav-title" style="padding:12px 0 4px">Top 10 Duplicates</div>
-      <ul class="dup-list">${list}</ul>
-    </div>`;
+    let tiers=VAULT_TIERS.map(t=>{ const pct=Math.min(100,Math.round(total/t.need*100)), maxed=total>=t.need; return `<div class="tier ${maxed?"maxed":""}"><span class="tier-ic">${maxed?"🏆":t.emoji}</span><div class="tier-body"><div class="tier-name"><span>${t.name}</span><span>${Math.min(total,t.need)} / ${t.need} ${maxed?"✅":""}</span></div><div class="bigbar"><i style="width:${pct}%;background:linear-gradient(90deg,${t.color},color-mix(in srgb,${t.color} 55%,#fff))"></i></div></div></div>`; }).join("");
+    let dups=STICKERS.map(s=>({s,d:dupesOf(a.id,s.id)})).filter(x=>x.d>0).map(x=>({...x,val:dupStarValue(x.s,x.d)})).sort((p,q)=>q.val-p.val).slice(0,10);
+    let list = dups.length? dups.map((x,i)=>`<li><span class="rank">${i+1}</span><span style="font-size:1.2rem">${iconFor(x.s)}</span><span class="nm">${esc(x.s.name)} ${x.s.isGold?'<span class="goldtag">G</span>':""}<br><small style="color:var(--mut);font-weight:600">×${x.d} · ${x.s.stars}⭐${x.s.isGold?" ·2x":""}</small></span><span class="dval">+${x.val}</span></li>`).join("") : `<li style="color:var(--mut)">No duplicates yet.</li>`;
+    return `<div class="panel vault-acc"><h2><span class="avatar" style="width:34px;height:34px;font-size:1.2rem;background:${a.color}">${a.emoji}</span> ${esc(a.name)}<span style="margin-left:auto;font-size:1.4rem;color:var(--gold)">⭐ ${total}</span></h2>${tiers}<div class="nav-title" style="padding:12px 0 4px">Top 10 Duplicates</div><ul class="dup-list">${list}</ul></div>`;
   }).join("");
-  return head+`<div class="cards-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${panels}</div>`;
+  return head+`<div class="cards-grid">${panels}</div>`;
 }
 
-/* ============================================================
-   VIEW: COMMUNITY & TRADES (Integrated Panel)
-   ============================================================ */
+/* --- THE PORTAL (HUB) --- */
 function viewTrades(){
-  let head=`<div class="page-head"><span class="ph-emoji">🌍</span><h1>Community & Trades</h1></div>`;
+  let head=`<div class="page-head"><span class="ph-emoji">🌍</span><h1>Community Hub</h1></div>`;
+  const portalTabs = `
+    <div style="background: var(--pnl); border: 3px solid #111820; border-radius: 20px; padding: 12px; margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; box-shadow: 3px 4px 0px rgba(0,0,0,0.6);">
+      <button class="btn ${activeCommunityTab === 'network' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('network')" style="flex: 1; min-width: 120px;">📇 Network</button>
+      <button class="btn ${activeCommunityTab === 'search' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('search')" style="flex: 1; min-width: 120px;">🌍 Trade Search</button>
+      <button class="btn ${activeCommunityTab === 'events' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('events')" style="flex: 1; min-width: 120px;">🏆 Events</button>
+      <button class="btn ${activeCommunityTab === 'local' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('local')" style="flex: 1; min-width: 120px;">🏠 Local Planner</button>
+      <button class="btn ${activeCommunityTab === 'bonus' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('bonus')" style="flex: 1; min-width: 120px;">🎁 Bonus Albums</button>
+    </div>
+  `;
 
-  if(state.accounts.length===0 && !isDemoModeActive) {
-    return head+`<div class="empty"><span class="em">🤝</span><h3>Add an Account to Connect</h3>
-      <button class="btn" data-action="goto-page" data-page="accounts">➕ Add Accounts</button></div>`;
-  }
-
-  const safetyBanner = `
-    <div class="panel" style="background: #fff3cd; border-color: #d99a00; margin-bottom: 16px;">
-      <h3 style="margin:0 0 8px; color: #856404; display:flex; align-items:center; gap:8px;">
-        <span>⚠️</span> Trade Safety Notice
-      </h3>
-      <p style="margin:0; font-size:0.85rem; font-weight:700; color: #856404;">
-        Please communicate trade plans in the official Monopoly Go Chat app so any disputes can be handled directly by the game's support team. Always utilize the in-game "Safe Exchange" feature!
-      </p>
-    </div>`;
-
+  // Content Blocks
   const friendRolodex = `
-    <div class="panel" style="margin-bottom:16px;" id="friend-rolodex">
+    <div class="panel" id="friend-rolodex">
       <h2>📇 Friend Rolodex</h2>
-      <p class="page-sub" style="margin:0 0 12px">Manage your network. Share your Web Code to let others view your linked game accounts.</p>
-      
       <div class="kpi" style="margin-bottom:12px;">
-        <div class="box" style="flex: 1; text-align: center; padding: 12px;">
-          <div class="l">Your Web Code</div>
-          <div class="v" id="my-web-code" style="font-size:1.4rem; font-family: monospace; letter-spacing: 2px; color: var(--acc2);">${myWebFriendCode || 'SYNCING...'}</div>
+        <div class="box" style="flex: 1; text-align: center;">
+          <div class="l">Your Web Code</div><div class="v" style="color: var(--acc2);">${myWebFriendCode || 'SYNCING...'}</div>
           <button class="btn sm ghost" onclick="copyWebCode()" style="margin-top:8px;">📋 Copy</button>
         </div>
-        
-        <div class="box" style="flex: 2; padding: 12px;">
+        <div class="box" style="flex: 2;">
           <div class="l" style="margin-bottom: 6px;">Add a Friend</div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <input type="text" id="add-friend-input" placeholder="Enter Web Code..." style="flex:1; min-width:120px; border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 8px 12px; font-family: inherit; font-weight:700; outline:none;">
-            <button class="btn" onclick="sendFriendRequest()">➕ Add</button>
-          </div>
+          <div style="display:flex; gap:8px;"><input type="text" id="add-friend-input" placeholder="Enter Web Code..." style="flex:1; border: 3px solid #111820; border-radius: 12px; padding: 8px;"><button class="btn" onclick="sendFriendRequest()">➕ Add</button></div>
         </div>
       </div>
-
-      <div class="setting-row" style="padding:10px 0; border-top: 3px solid var(--ink);">
-        <div class="sr-label">🌐 MGO Code Visibility<small>Who can see your Monopoly Go invite link?</small></div>
-        <select class="field" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 6px 10px; font-family: inherit; font-weight:700; background: var(--pnl2);">
-          <option value="public">Public (Community Board)</option>
-          <option value="friends">Friends Only</option>
-          <option value="hidden">Hidden</option>
-        </select>
-      </div>
-      
-      <div class="setting-row" style="padding:10px 0; border-bottom: 3px solid var(--ink);">
-        <div class="sr-label">📖 Album Visibility<small>Who can view your sticker progress?</small></div>
-        <select class="field" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 6px 10px; font-family: inherit; font-weight:700; background: var(--pnl2);">
-          <option value="public">Public</option>
-          <option value="friends">Friends Only</option>
-          <option value="hidden">Hidden</option>
-        </select>
-      </div>
-
-      <h3 style="margin: 16px 0 8px; font-size: 1.05rem;">👥 Your Network</h3>
-      <ul class="trade-list" id="friends-list">
-        <!-- Static Example Visuals for demonstration -->
-        <li class="trade-row" style="background: var(--chip); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
-          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#4aa3d4;">🛹</span>
-          <span style="font-weight:800; font-size:0.9rem; flex:1;">Bart_Sk8er</span>
-          <span class="auto-tag" style="background:var(--goldDeep);">Pending</span>
-          <button class="btn sm" style="margin-left:6px;">Accept</button>
-          <button class="btn sm danger">✕</button>
-        </li>
-        <li class="trade-row" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
-          <span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#9b59b6;">🎷</span>
-          <span style="font-weight:800; font-size:0.9rem; flex:1;">Jazz_Lisa</span>
-          <span style="font-size:0.75rem; font-weight:900; color:var(--mut);">Friends</span>
-          <button class="btn sm ghost" style="margin-left:8px;">Manage</button>
-        </li>
-      </ul>
+      <h3 style="margin: 16px 0 8px;">👥 Your Network</h3><ul class="trade-list" id="friends-list"><li>Loading...</li></ul>
     </div>`;
 
-  const communityHub = `
-    <div class="panel" style="margin-bottom:16px;">
-      <h2>🌍 Community Trade Hub</h2>
-      <div style="display:flex; gap:10px; margin-bottom: 12px;">
-        <input type="text" placeholder="I am looking for..." class="field" style="flex:1; border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; padding: 8px 12px; font-family: inherit; font-weight:700; outline:none;">
-        <button class="btn alt">Search Community</button>
-      </div>
-      
-      <div class="trade-row" style="background: var(--chip); border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">
-        <div style="flex:1;">
-          <div style="font-weight:900; font-size:1.1rem;">HomerS_99 <span style="font-size:0.7rem; background:var(--acc); padding:2px 6px; border-radius:10px; color:var(--accInk);">Trade Score: 98</span></div>
-          <div style="font-size:0.8rem; font-weight:700; color:var(--mut);">Has: "Worst Sticker Ever" | Needs: "Baby on Board"</div>
-        </div>
-        <button class="btn" style="padding: 6px 12px;">Send Request</button>
-      </div>
-    </div>`;
+  const communityHub = `<div class="panel"><h2>🌍 Community Trade Search</h2><p>Coming soon...</p></div>`;
+  const eventPartner = `<div class="panel"><h2>🏆 Partner & Team Events</h2><p>Coming soon...</p></div>`;
 
-  const eventPartner = `
-    <div class="panel" style="margin-bottom:16px;">
-      <h2>🏆 Partner & Team Events</h2>
-      <div class="form-grid">
-        <div class="field">
-          <span>Event Type</span>
-          <select style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; font-weight: 700;">
-            <option>Racers</option>
-            <option>Partner Build</option>
-            <option>Adventure Club</option>
-            <option>Community Chest</option>
-          </select>
-          <small style="font-size: 0.65rem; color: var(--mut); font-weight: 800;">Note: You must reach Board 4 to unlock Racers, Build, and Adventure events.</small>
-        </div>
-        <div class="field">
-          <span>Slots Needed</span>
-          <input type="number" min="1" max="3" value="3" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; font-weight: 700;">
-        </div>
-        <button class="btn">Create Post</button>
-      </div>
-    </div>`;
-
-  const accOpts=state.accounts.map(a=>`<option value="${a.id}">${a.emoji} ${esc(a.name)}</option>`).join("");
-  const setOpts=ALBUM.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
-  const regLimit = state.settings.tradeFest?state.settings.tradeFestLimit:state.settings.regularLimit;
-
-  const events=`<div class="panel" style="margin-bottom:16px">
-    <h2>🎟️ Event Modes</h2>
-    <div class="setting-row" style="border:none;padding:6px 0">
-      <div class="sr-label">⚡ Gold Blitz<small>Temporarily allow trading gold stickers (limit ${state.settings.goldBlitzLimit}/day)</small></div>
-      <div class="switch ${state.settings.goldBlitz?"on":""}" data-action="toggle-event" data-event="goldBlitz"><i></i></div>
-    </div>
-    <div class="setting-row" style="border:none;padding:6px 0">
-      <div class="sr-label">🎉 Trade Fest<small>Raise the daily regular trade limit to ${state.settings.tradeFestLimit}</small></div>
-      <div class="switch ${state.settings.tradeFest?"on":""}" data-action="toggle-event" data-event="tradeFest"><i></i></div>
-    </div>
-    <div style="font-size:.8rem;color:var(--mut);font-weight:700">Current daily send limit: <b>${regLimit}</b> regular${state.settings.goldBlitz?` · <b>${state.settings.goldBlitzLimit}</b> gold ⚡`:""}</div>
-  </div>`;
-
-  const form=`<div class="panel" style="margin-bottom:16px">
-    <h2>✍️ Manual Local Trade</h2>
+  const bonusAdmin = `<div class="panel">
+    <h2>🎁 Admin: Create Bonus Set</h2>
     <div class="form-grid">
-      <div class="field"><span>Sender</span><select id="t-from" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">${accOpts}</select></div>
-      <div class="field"><span>Receiver</span><select id="t-to" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">${accOpts}</select></div>
-      <div class="field"><span>Set</span><select id="t-set" data-action="trade-set" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;">${setOpts}</select></div>
-      <div class="field"><span>Sticker</span><select id="t-stk" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;"></select></div>
-      <div class="field"><span>Date</span><input type="date" id="t-date" value="${todayStr()}" style="border: 3px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;"></div>
-      <button class="btn" data-action="add-trade">➕ Add</button>
+      <div class="field"><span>Bonus Set Name</span><input type="text" id="b-name" style="border:3px solid #111820; border-radius:12px;"></div>
+      <div class="field"><span>End Date</span><input type="date" id="b-end" style="border:3px solid #111820; border-radius:12px;"></div>
+      <button class="btn" onclick="createBonusSet()">Create Set</button>
     </div>
   </div>`;
 
-  const smart=`<div class="panel" style="margin-bottom:16px">
-    <h2>🧠 Smart Planner</h2>
-    <p class="page-sub" style="margin:0 0 10px">Scans every account for dupes that another account needs, prioritises set-completing &amp; vault-balancing trades, and schedules them within daily send limits.</p>
-    <button class="btn" data-action="gen-plan">⚡ Generate Plan</button>
-    ${plan.length?`<button class="btn alt" data-action="apply-plan">✅ Add ${plan.length} to Schedule</button>
-      <button class="btn ghost" data-action="discard-plan">Discard</button>`:""}
-    <div id="planPreview" style="margin-top:12px">${planPreviewHtml()}</div>
-  </div>`;
-
-  const sorted=[...state.trades].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
-  let list = sorted.length? `<ul class="trade-list">`+sorted.map(t=>tradeRowHtml(t)).join("")+`</ul>`
-    : `<div class="empty" style="padding:24px"><span class="em">📭</span>No trades scheduled yet.</div>`;
-  const listPanel=`<div class="panel" style="margin-bottom:16px"><h2>📋 Scheduled Local Trades</h2>${list}</div>`;
-
-  const calPanel=`<div class="panel"><h2>📅 Calendar</h2>${calendarHtml()}</div>`;
-
-  return head + safetyBanner + friendRolodex + communityHub + eventPartner + events + form + smart + listPanel + calPanel;
-}
-function tradeRowHtml(t){
-  const f=accById(t.from),to=accById(t.to),s=SBYID[t.sid];
-  if(!f||!to||!s) return "";
-  return `<li class="trade-row ${t.done?"done":""}">
-    <span class="tdate">${prettyDate(t.date)}</span>
-    <span class="tflow"><span style="color:${f.color}">${f.emoji} ${esc(f.name)}</span><span class="arrow">→</span><span style="color:${to.color}">${to.emoji} ${esc(to.name)}</span></span>
-    <span class="tstk">${iconFor(s)} ${esc(s.name)} ${starStr(s.stars)}${s.isGold?' <span class="goldtag">GOLD</span>':""}</span>
-    ${t.auto?'<span class="auto-tag">AUTO</span>':""}
-    <span class="tcheck">
-      <label style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:.78rem"><input type="checkbox" class="big" ${t.done?"checked":""} data-action="trade-toggle" data-id="${t.id}"> Done</label>
-      <button class="btn danger sm" data-action="del-trade" data-id="${t.id}">✕</button>
-    </span></li>`;
-}
-function planPreviewHtml(){
-  if(!plan.length) return `<div style="color:var(--mut);font-weight:700;font-size:.85rem">No plan generated yet.</div>`;
-  const byDate={};
-  plan.forEach(t=>{(byDate[t.date]=byDate[t.date]||[]).push(t)});
-  return Object.keys(byDate).sort().map(d=>`<div class="plan-day">
-    <h4>📅 ${prettyDate(d)} <span style="color:var(--mut)">(${byDate[d].length})</span></h4>
-    ${byDate[d].map(t=>{const f=accById(t.from),to=accById(t.to),s=SBYID[t.sid];
-      return `<div class="trade-row" style="padding:7px 10px">
-        <span class="tflow"><span style="color:${f.color}">${f.emoji}${esc(f.name)}</span><span class="arrow">→</span><span style="color:${to.color}">${to.emoji}${esc(to.name)}</span></span>
-        <span class="tstk">${iconFor(s)} ${esc(s.name)}</span>
-        ${t.reason?`<span class="auto-tag" style="background:var(--acc)">${t.reason}</span>`:""}</div>`;}).join("")}
-  </div>`).join("");
-}
-function afterTrades(){
-  const setSel=document.getElementById("t-set");
-  if(setSel) populateStickerSelect(setSel.value);
-}
-function populateStickerSelect(setId){
-  const stk=document.getElementById("t-stk"); if(!stk) return;
-  const set=ALBUM.find(s=>s.id==setId)||ALBUM[0];
-  stk.innerHTML=set.stickers.map(s=>`<option value="${s.id}">${esc(s.name)} (${starStr(s.stars)})${s.isGold?" ✨":""}</option>`).join("");
-}
-
-function calendarHtml(){
-  const y=calRef.getFullYear(),m=calRef.getMonth();
-  const monthName=["January","February","March","April","May","June","July","August","September","October","November","December"][m];
-  const first=new Date(y,m,1).getDay();
-  const days=new Date(y,m+1,0).getDate();
-  const byDate={};
-  state.trades.forEach(t=>{(byDate[t.date]=byDate[t.date]||[]).push(t)});
-  const today=todayStr();
-  let cells="";
-  const dows=["S","M","T","W","T","F","S"];
-  cells+=dows.map(d=>`<div class="cal-dow">${d}</div>`).join("");
-  for(let i=0;i<first;i++) cells+=`<div class="cal-cell empty"></div>`;
-  for(let d=1;d<=days;d++){
-    const ds=fmtDate(new Date(y,m,d));
-    const tr=byDate[ds]||[];
-    const done=tr.filter(t=>t.done).length, pend=tr.length-done;
-    let pills="";
-    if(pend) pills+=`<span class="pill">${pend}</span>`;
-    if(done) pills+=`<span class="pill done">✓${done}</span>`;
-    cells+=`<div class="cal-cell ${tr.length?"has":""} ${ds===today?"today":""}" ${tr.length?`data-action="open-day" data-date="${ds}"`:""}>
-      <span class="dn">${d}</span><span class="cct">${pills}</span></div>`;
-  }
-  return `<div class="cal-head">
-      <button class="btn ghost sm" data-action="cal-prev">◀</button>
-      <h3>${monthName} ${y}</h3>
-      <button class="btn ghost sm" data-action="cal-next">▶</button>
-      <button class="btn ghost sm" data-action="cal-today" style="margin-left:auto">Today</button>
-    </div>
-    <div class="cal-grid">${cells}</div>`;
-}
-
-/* ============================================================
-   VIEW: SETTINGS
-   ============================================================ */
-function viewSettings(){
-  const head=`<div class="page-head"><span class="ph-emoji">⚙️</span><h1>Settings</h1></div>`;
-  const themeCards=THEMES.map(t=>{
-    const grad=`linear-gradient(135deg,${t.c[0]},${t.c[0]} 50%,${t.c[2]})`;
-    return `<div class="theme-card ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" style="background:${grad}">
-      <div style="display:flex;justify-content:space-between"><span class="tc-name">${t.name}</span><span class="tc-emoji">${t.emoji}</span></div>
-      <div class="tc-dots">${t.c.map(c=>`<i style="background:${c}"></i>`).join("")}</div>
-    </div>`;
-  }).join("");
-  return head+`
-    <div class="panel" style="margin-bottom:16px">
-      <h2>🎨 Theme <span style="color:var(--mut);font-size:.8rem;font-weight:700">(${THEMES.length} to choose from)</span></h2>
-      <div class="theme-grid">${themeCards}</div>
-      <div class="setting-row" style="margin-top:6px"><div class="sr-label">🧭 Auto-hide side navigation<small>Collapse the side bars to slim rails that expand on hover — more room for the album (desktop)</small></div>
-        <div class="switch ${state.settings.navAuto?"on":""}" data-action="toggle-pin"><i></i></div></div>
-    </div>
-    <div class="panel" style="margin-bottom:16px">
-      <h2>🔄 Trade Limits & Events</h2>
-      <div class="setting-row"><div class="sr-label">Daily regular send limit<small>How many normal stickers each account can send per day</small></div>
-        <input type="number" min="1" value="${state.settings.regularLimit}" data-action="limit" data-key="regularLimit"></div>
-      <div class="setting-row"><div class="sr-label">⚡ Gold Blitz daily limit<small>Gold sends allowed per day while Gold Blitz is on</small></div>
-        <input type="number" min="0" value="${state.settings.goldBlitzLimit}" data-action="limit" data-key="goldBlitzLimit"></div>
-      <div class="setting-row"><div class="sr-label">🎉 Trade Fest daily limit<small>Raised regular limit while Trade Fest is on</small></div>
-        <input type="number" min="1" value="${state.settings.tradeFestLimit}" data-action="limit" data-key="tradeFestLimit"></div>
-      <div class="setting-row"><div class="sr-label">⚡ Gold Blitz<small>Currently ${state.settings.goldBlitz?"ON":"off"}</small></div>
-        <div class="switch ${state.settings.goldBlitz?"on":""}" data-action="toggle-event" data-event="goldBlitz"><i></i></div></div>
-      <div class="setting-row"><div class="sr-label">🎉 Trade Fest<small>Currently ${state.settings.tradeFest?"ON":"off"}</small></div>
-        <div class="switch ${state.settings.tradeFest?"on":""}" data-action="toggle-event" data-event="tradeFest"><i></i></div></div>
-    </div>
-    <div class="panel">
-      <h2>💾 Cloud & Data</h2>
-      <p class="page-sub" style="margin:0 0 12px">Syncing to Cloud. ${isDemoModeActive ? "Currently Offline." : ""}</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn alt" data-action="export-data">⬇️ Export JSON Backup</button>
-        <button class="btn danger" data-action="sign-out">🚪 Sign Out</button>
+  const localPlanner = `
+    <div class="panel"><h2>✍️ Manual Local Trade</h2>
+      <div class="form-grid">
+        <div class="field"><span>Sender</span><select id="t-from">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
+        <div class="field"><span>Receiver</span><select id="t-to">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
+        <div class="field"><span>Set</span><select id="t-set" data-action="trade-set">${ALBUM.map(s=>`<option value="${s.id}">${s.name}</option>`).join("")}</select></div>
+        <div class="field"><span>Sticker</span><select id="t-stk"></select></div>
+        <button class="btn" data-action="add-trade">➕ Add</button>
       </div>
-      <div style="margin-top:14px;font-size:.78rem;color:var(--mut);font-weight:700">
-        Album: ${TOTAL} stickers · ${TOTAL_GOLD} gold · ${ALBUM.length} sets · ${TOTAL_STARS} total stars</div>
-    </div>`;
+    </div>
+    <div class="panel"><h2>🧠 Smart Planner</h2><button class="btn" data-action="gen-plan">⚡ Generate Plan</button>
+      ${plan.length?`<button class="btn alt" data-action="apply-plan">✅ Add ${plan.length} to Schedule</button><button class="btn ghost" data-action="discard-plan">Discard</button>`:""}
+      <div id="planPreview" style="margin-top:12px">${planPreviewHtml()}</div>
+    </div>
+    <div class="panel"><h2>📋 Scheduled Local Trades</h2><ul class="trade-list">${[...state.trades].sort((a,b)=>a.date<b.date?-1:1).map(t=>tradeRowHtml(t)).join("")||"<li>No trades scheduled</li>"}</ul></div>`;
+
+  // Router
+  let activeContent = '';
+  if (activeCommunityTab === 'network') { activeContent = friendRolodex; setTimeout(fetchFriendsList, 50); }
+  else if (activeCommunityTab === 'search') activeContent = communityHub;
+  else if (activeCommunityTab === 'events') activeContent = eventPartner;
+  else if (activeCommunityTab === 'local') activeContent = localPlanner;
+  else if (activeCommunityTab === 'bonus') activeContent = bonusAdmin;
+
+  return head + portalTabs + activeContent;
 }
 
-function emptyAccounts(){
-  return `<div class="empty"><span class="em">👨‍👩‍👧‍👦</span><h3>No accounts yet</h3>
-    <button class="btn" data-action="goto-page" data-page="accounts">➕ Add an Account</button></div>`;
+function viewSettings(){
+  return `<div class="page-head"><span class="ph-emoji">⚙️</span><h1>Settings</h1></div>
+    <div class="panel"><h2>🎨 Theme</h2><div class="theme-grid">${THEMES.map(t=>`<div class="theme-card ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" style="background:linear-gradient(135deg,${t.c[0]},${t.c[0]} 50%,${t.c[2]})"><div style="display:flex;justify-content:space-between"><span class="tc-name">${t.name}</span><span class="tc-emoji">${t.emoji}</span></div></div>`).join("")}</div></div>
+    <div class="panel"><h2>💾 Cloud & Data</h2><div style="display:flex;gap:10px;"><button class="btn danger" data-action="sign-out">🚪 Sign Out</button></div></div>`;
 }
 
-/* ============================================================
-   SMART PLANNER ALGORITHM
-   ============================================================ */
+/* --- TRADE PLANNERS & BONUS ADMIN --- */
+function createBonusSet(){
+  const name = document.getElementById('b-name').value; const endDate = document.getElementById('b-end').value;
+  if(!name || !endDate) return toast("Fill all fields");
+  state.bonusSets.push({ id: uid(), name, endDate, stickers: [] });
+  save(); renderContent(); toast("Bonus Set Created!");
+}
+
+function tradeRowHtml(t){
+  const f=accById(t.from),to=accById(t.to),s=SBYID[t.sid]; if(!f||!to||!s) return "";
+  return `<li class="trade-row ${t.done?"done":""}"><span class="tdate">${prettyDate(t.date)}</span><span class="tflow"><span style="color:${f.color}">${f.emoji} ${esc(f.name)}</span><span class="arrow">→</span><span style="color:${to.color}">${to.emoji} ${esc(to.name)}</span></span><span class="tstk">${iconFor(s)} ${esc(s.name)} ${starStr(s.stars)}</span><span class="tcheck"><label style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:.78rem"><input type="checkbox" class="big" ${t.done?"checked":""} data-action="trade-toggle" data-id="${t.id}"> Done</label><button class="btn danger sm" data-action="del-trade" data-id="${t.id}">✕</button></span></li>`;
+}
+function planPreviewHtml(){ return plan.length ? plan.map(t=>{ const f=accById(t.from),to=accById(t.to),s=SBYID[t.sid]; return `<div class="trade-row"><span class="tflow">${f.emoji}→${to.emoji}</span><span class="tstk">${s.name}</span></div>`; }).join("") : "No plan yet."; }
+function afterTrades(){ const setSel=document.getElementById("t-set"); if(setSel) populateStickerSelect(setSel.value); }
+function populateStickerSelect(setId){ const stk=document.getElementById("t-stk"); if(!stk) return; const set=ALBUM.find(s=>s.id==setId)||ALBUM[0]; stk.innerHTML=set.stickers.map(s=>`<option value="${s.id}">${esc(s.name)} (${starStr(s.stars)})</option>`).join(""); }
+
 function generatePlan(){
-  if(state.accounts.length<2){ toast("Need 2+ accounts"); return; }
-  const HORIZON=14;
-  const regLimit = state.settings.tradeFest?state.settings.tradeFestLimit:state.settings.regularLimit;
-  const goldLimit = state.settings.goldBlitz?state.settings.goldBlitzLimit:0;
-
-  const work={}; state.accounts.forEach(a=>{ work[a.id]={}; STICKERS.forEach(s=>work[a.id][s.id]=getCount(a.id,s.id)); });
-  const give=(acc,sid)=>Math.max(0,work[acc][sid]-1);
-  const need=(acc,sid)=>work[acc][sid]===0;
-
-  let cands=[];
-  STICKERS.forEach(s=>{
-    if(s.isGold && !state.settings.goldBlitz) return;
-    const givers=state.accounts.filter(a=>give(a.id,s.id)>0);
-    const takers=state.accounts.filter(a=>need(a.id,s.id));
-    givers.forEach(g=>takers.forEach(t=>{ if(g.id!==t.id) cands.push({s,from:g.id,to:t.id}); }));
-  });
-
-  cands.forEach(c=>{
-    const s=c.s, set=ALBUM.find(x=>x.id===s.setId);
-    const missing=set.stickers.filter(x=>work[c.to][x.id]===0);
-    let score=s.stars, reason="";
-    if(missing.length===1){ score+=1000; reason="completes set"; }
-    else score+=(set.stickers.length-missing.length)*6;
-    score+=Math.min(give(c.from,s.id),3)*3;
-    score+=Math.max(0,vaultTotal(c.from)-vaultTotal(c.to))/50;
-    if(s.isGold){ score+=25; if(!reason) reason="gold ⚡"; }
-    c.score=score; c.reason=reason;
-  });
+  if(state.accounts.length<2) return toast("Need 2+ accounts");
+  const HORIZON=14, regLimit = state.settings.regularLimit, work={};
+  state.accounts.forEach(a=>{ work[a.id]={}; STICKERS.forEach(s=>work[a.id][s.id]=getCount(a.id,s.id)); });
+  const give=(acc,sid)=>Math.max(0,work[acc][sid]-1), need=(acc,sid)=>work[acc][sid]===0;
+  let cands=[]; STICKERS.forEach(s=>{ if(s.isGold) return; state.accounts.filter(a=>give(a.id,s.id)>0).forEach(g=>state.accounts.filter(a=>need(a.id,s.id)).forEach(t=>{ if(g.id!==t.id) cands.push({s,from:g.id,to:t.id,score:s.stars}); })); });
   cands.sort((a,b)=>b.score-a.score);
-
-  const sends={}; state.accounts.forEach(a=>sends[a.id]=Array.from({length:HORIZON},()=>({reg:0,gold:0})));
-  const planned=new Set();
-  const base=new Date(); base.setHours(0,0,0,0);
-  const out=[];
+  const sends={}; state.accounts.forEach(a=>sends[a.id]=Array.from({length:HORIZON},()=>0));
+  const planned=new Set(), base=new Date(); base.setHours(0,0,0,0); const out=[];
   for(const c of cands){
-    const key=c.to+"|"+c.s.id;
-    if(planned.has(key)) continue;
-    if(give(c.from,c.s.id)<=0) continue;
-    const isGold=c.s.isGold, lim=isGold?goldLimit:regLimit;
-    if(lim<=0) continue;
-    let day=-1;
-    for(let d=0;d<HORIZON;d++){ const sc=sends[c.from][d]; if((isGold?sc.gold:sc.reg)<lim){ day=d; break; } }
-    if(day<0) continue;
-    if(isGold) sends[c.from][day].gold++; else sends[c.from][day].reg++;
-    work[c.from][c.s.id]--; work[c.to][c.s.id]++;
-    planned.add(key);
-    const dt=new Date(base); dt.setDate(dt.getDate()+day);
-    out.push({id:uid(),from:c.from,to:c.to,setId:c.s.setId,sid:c.s.id,date:fmtDate(dt),done:false,auto:true,reason:c.reason});
+    const key=c.to+"|"+c.s.id; if(planned.has(key) || give(c.from,c.s.id)<=0) continue;
+    let day=-1; for(let d=0;d<HORIZON;d++){ if(sends[c.from][d]<regLimit){ day=d; break; } }
+    if(day<0) continue; sends[c.from][day]++; work[c.from][c.s.id]--; work[c.to][c.s.id]++; planned.add(key);
+    const dt=new Date(base); dt.setDate(dt.getDate()+day); out.push({id:uid(),from:c.from,to:c.to,setId:c.s.setId,sid:c.s.id,date:fmtDate(dt),done:false,auto:true});
   }
-  plan=out;
-  if(!out.length) toast("No useful trades found 🤷");
-  else toast(`Planned ${out.length} trades over ${new Set(out.map(t=>t.date)).size} day(s) 🧠`);
-  renderContent();
+  plan=out; toast(`Planned ${out.length} trades 🧠`); renderContent();
 }
-function applyPlan(){
-  if(!plan.length) return;
-  plan.forEach(t=>state.trades.push(t));
-  const n=plan.length; plan=[]; save();
-  toast(`Added ${n} trades to schedule ✅`);
-  renderContent();
-}
+function applyPlan(){ plan.forEach(t=>state.trades.push(t)); plan=[]; save(); toast(`Added trades ✅`); renderContent(); }
 
 /* ============================================================
-   TRADE ACTIONS
+   6. DELEGATION & LISTENERS
    ============================================================ */
-function setTradeDone(t,done){
-  if(done===t.done) return;
-  if(done){
-    const fc=getCount(t.from,t.sid); if(fc>0) setCount(t.from,t.sid,fc-1);
-    setCount(t.to,t.sid,getCount(t.to,t.sid)+1);
-  }else{
-    const tc=getCount(t.to,t.sid); if(tc>0) setCount(t.to,t.sid,tc-1);
-    setCount(t.from,t.sid,getCount(t.from,t.sid)+1);
-  }
-  t.done=done; save();
-}
+function updateCell(acc,sid){ const cell=document.querySelector(`.card[data-acc="${acc}"][data-sid="${sid}"]`); if(!cell) return; const c=getCount(acc,sid), have=c>0, d=Math.max(0,c-1); cell.classList.toggle("have",have); cell.classList.toggle("missing",!have); const inp=cell.querySelector(".dupinput"); if(inp){ inp.value=d; inp.classList.toggle("has",d>0); } }
+function refreshSetUI(setId){ renderSetList(); } // Simplified for stability
 
-/* ============================================================
-   CONFETTI + TOAST
-   ============================================================ */
-function confetti(){
-  const set=["🍩","⭐","🟡","💛","✨","🎉"];
-  for(let i=0;i<26;i++){
-    const e=document.createElement("div");
-    e.className="confetti"; e.textContent=set[Math.floor(Math.random()*set.length)];
-    e.style.left=Math.random()*100+"vw";
-    e.style.fontSize=(1+Math.random()*1.4)+"rem";
-    e.style.animationDuration=(1.6+Math.random()*1.6)+"s";
-    e.style.animationDelay=(Math.random()*.3)+"s";
-    document.body.appendChild(e);
-    setTimeout(()=>e.remove(),3600);
-  }
-}
-let toastT;
-function toast(msg){
-  const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show");
-  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove("show"),2200);
-}
-
-/* ============================================================
-   MODAL
-   ============================================================ */
-function openModal(title,html){
-  const m=document.getElementById("modal");
-  m.innerHTML=`<div class="modal-head"><h3>${title}</h3><button class="btn ghost sm" data-action="close-modal">✕</button></div><div class="modal-body">${html}</div>`;
-  document.getElementById("modalBg").classList.add("show");
-}
-function closeModal(){ document.getElementById("modalBg").classList.remove("show"); }
-function openDay(date){
-  const tr=state.trades.filter(t=>t.date===date).sort((a,b)=>a.done-b.done);
-  let body = tr.length? `<ul class="trade-list">`+tr.map(t=>tradeRowHtml(t)).join("")+`</ul>`
-    : `<p style="color:var(--mut)">No trades.</p>`;
-  body+=`<p style="font-size:.78rem;color:var(--mut);margin-top:8px">Tick "Done" to move the sticker from sender to receiver.</p>`;
-  openModal(`📅 ${prettyDate(date)}`,body);
-}
-
-/* ============================================================
-   DRAWERS (mobile)
-   ============================================================ */
-function openDrawer(side){
-  closeDrawers();
-  document.getElementById(side==="left"?"leftNav":"rightNav").classList.add("open");
-  document.getElementById("scrim").classList.add("show");
-}
-function closeDrawers(){
-  document.getElementById("leftNav").classList.remove("open");
-  document.getElementById("rightNav").classList.remove("open");
-  document.getElementById("scrim").classList.remove("show");
-}
-
-/* ============================================================
-   EVENT DELEGATION
-   ============================================================ */
 document.addEventListener("click",e=>{
-  const el=e.target.closest("[data-action]"); if(!el) return;
-  const a=el.dataset.action;
-  if(justDragged && (a==="sticker"||a==="dup-inc"||a==="dup-dec")){ justDragged=false; return; }
+  const el=e.target.closest("[data-action]"); if(!el) return; const a=el.dataset.action;
   switch(a){
-    case "toggle-left": openDrawer("left"); break;
-    case "toggle-right": openDrawer("right"); break;
-    case "close-drawers": closeDrawers(); break;
-    case "scroll-set": scrollSet(el); break;
-    case "toggle-pin": toggleNav(); break;
-    case "noop": break;
     case "goto-page": gotoPage(el.dataset.page); break;
-    case "set-theme": applyTheme(el.dataset.theme); toast(THEMES.find(t=>t.id===el.dataset.theme).name+" "+THEMES.find(t=>t.id===el.dataset.theme).emoji); break;
-    case "goto-set": jumpToSet(el.dataset.set); break;
-
-    case "sticker": stickerToggle(el.dataset.acc,el.dataset.sid); break;
-    case "dup-inc": stickerDup(el.dataset.acc,el.dataset.sid,+1); break;
-    case "dup-dec": stickerDup(el.dataset.acc,el.dataset.sid,-1); break;
-    case "dupzone": break;
-
-    case "filter-toggle": filters[el.dataset.f]=!filters[el.dataset.f]; renderContent(); break;
-    case "clear-filters": filters={need:false,dupes:false,star:"all",gold:"all",q:""}; renderContent(); break;
-
-    case "add-account": addAccount(); break;
-    case "del-account": delAccount(el.dataset.id); break;
-    case "acc-emoji": setAccEmoji(el.dataset.id,el.dataset.e); break;
-
-    case "add-trade": addTrade(); break;
-    case "del-trade": delTrade(el.dataset.id); break;
-    case "gen-plan": generatePlan(); break;
-    case "apply-plan": applyPlan(); break;
-    case "discard-plan": plan=[]; renderContent(); break;
-    case "toggle-event": toggleEvent(el.dataset.event); break;
-
-    case "cal-prev": calRef=new Date(calRef.getFullYear(),calRef.getMonth()-1,1); renderContent(); break;
-    case "cal-next": calRef=new Date(calRef.getFullYear(),calRef.getMonth()+1,1); renderContent(); break;
-    case "cal-today": calRef=new Date(); renderContent(); break;
-    case "open-day": openDay(el.dataset.date); break;
-    case "close-modal": closeModal(); break;
-
-    case "export-data": exportData(); break;
-    case "sign-out": 
-      if(confirm("Log out?")) {
-        supabaseClient.auth.signOut();
-        isDemoModeActive=false;
-        localStorage.removeItem("dohnut_demo_active");
-      }
-      break;
+    case "set-theme": applyTheme(el.dataset.theme); break;
+    case "sticker": const c=getCount(el.dataset.acc,el.dataset.sid); setCount(el.dataset.acc,el.dataset.sid,c>0?0:1); updateCell(el.dataset.acc,el.dataset.sid); break;
+    case "dup-inc": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)+1); updateCell(el.dataset.acc,el.dataset.sid); break;
+    case "dup-dec": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)-1); updateCell(el.dataset.acc,el.dataset.sid); break;
+    case "add-account": state.accounts.push({id:uid(),name:"Player "+(state.accounts.length+1),color:"#5b8f3a",emoji:"🍩"}); save(); renderContent(); break;
+    case "del-account": state.accounts=state.accounts.filter(x=>x.id!==el.dataset.id); save(); renderContent(); break;
+    case "acc-emoji": const ac=accById(el.dataset.id); if(ac){ ac.emoji=el.dataset.e; save(); renderContent(); } break;
+    case "add-trade": 
+      const from=document.getElementById("t-from").value, to=document.getElementById("t-to").value, sid=document.getElementById("t-stk").value, setId=+document.getElementById("t-set").value;
+      if(from===to || !sid) return toast("Invalid trade");
+      state.trades.push({id:uid(),from,to,setId,sid,date:document.getElementById("t-date").value||todayStr(),done:false}); save(); renderContent(); toast("Trade scheduled"); break;
+    case "del-trade": state.trades=state.trades.filter(x=>x.id!==el.dataset.id); save(); renderContent(); break;
+    case "gen-plan": generatePlan(); break; case "apply-plan": applyPlan(); break; case "discard-plan": plan=[]; renderContent(); break;
+    case "sign-out": if(confirm("Log out?")) { supabaseClient.auth.signOut(); isDemoModeActive=false; localStorage.removeItem("dohnut_demo_active"); } break;
   }
 });
-document.getElementById("modalBg").addEventListener("click",e=>{ if(e.target.id==="modalBg") closeModal(); });
 
 document.addEventListener("change",e=>{
-  const t=e.target;
-  if(t.classList.contains("dupinput")){ stickerSetDup(t.dataset.acc,t.dataset.sid,t.value); return; }
-  const a=t.dataset.action, f=t.dataset.filter;
-  if(f==="star"){ filters.star=t.value; renderContent(); }
-  else if(f==="gold"){ filters.gold=t.value; renderContent(); }
-  else if(a==="trade-set"){ populateStickerSelect(t.value); }
-  else if(a==="trade-toggle"){ const tr=state.trades.find(x=>x.id===t.dataset.id); if(tr){ setTradeDone(tr,t.checked); renderContent(); } }
-  else if(a==="acc-name"){ const ac=accById(t.dataset.id); if(ac){ ac.name=t.value||"Player"; save(); renderSetList(); renderBadges(); } }
+  const t=e.target; if(t.classList.contains("dupinput")){ setCount(t.dataset.acc,t.dataset.sid, v>0? v+1 : (cur>0?1:0)); updateCell(t.dataset.acc,t.dataset.sid); return; }
+  const a=t.dataset.action; if(a==="trade-set") populateStickerSelect(t.value);
+  else if(a==="trade-toggle"){ const tr=state.trades.find(x=>x.id===t.dataset.id); if(tr){ tr.done=t.checked; save(); renderContent(); } }
+  else if(a==="acc-name"){ const ac=accById(t.dataset.id); if(ac){ ac.name=t.value||"Player"; save(); renderContent(); } }
   else if(a==="acc-color"){ const ac=accById(t.dataset.id); if(ac){ ac.color=t.value; save(); renderContent(); } }
-  else if(a==="limit"){ const v=Math.max(0,parseInt(t.value)||0); state.settings[t.dataset.key]=v; save(); }
 });
-document.addEventListener("input",e=>{
-  const t=e.target;
-  if(t.dataset.filter==="nav"){ navQuery=t.value; renderSetList(); }
-  else if(t.dataset.filter==="q"){ filters.q=t.value; debounceAlbum(); }
-});
-let albumT;
-function debounceAlbum(){ clearTimeout(albumT); albumT=setTimeout(()=>{ if(state.page==="album") document.getElementById("content").innerHTML=viewAlbum(); },180); }
-
-/* ---- sticker interactions ---- */
-function stickerToggle(acc,sid){
-  const before=isSetComplete(acc,SBYID[sid].setId);
-  const c=getCount(acc,sid); setCount(acc,sid,c>0?0:1);
-  updateCell(acc,sid); refreshSetUI(SBYID[sid].setId);
-  if(!before && isSetComplete(acc,SBYID[sid].setId)){ confetti(); toast("Set complete! 🎉"); }
-}
-function stickerDup(acc,sid,delta){
-  const before=isSetComplete(acc,SBYID[sid].setId);
-  setCount(acc,sid,getCount(acc,sid)+delta);
-  updateCell(acc,sid); refreshSetUI(SBYID[sid].setId);
-  if(!before && isSetComplete(acc,SBYID[sid].setId)){ confetti(); toast("Set complete! 🎉"); }
-}
-function stickerSetDup(acc,sid,val){
-  const v=Math.max(0,parseInt(val)||0);
-  const cur=getCount(acc,sid);
-  setCount(acc,sid, v>0? v+1 : (cur>0?1:0));
-  updateCell(acc,sid); refreshSetUI(SBYID[sid].setId);
-}
-function isSetComplete(acc,setId){
-  const set=ALBUM.find(s=>s.id===setId);
-  return set.stickers.every(s=>getCount(acc,s.id)>0);
-}
-
-/* ---- account actions ---- */
-function addAccount(){
-  const names=["Homer","Marge","Bart","Lisa","Maggie","Ned","Moe","Apu","Milhouse","Krusty","Burns","Ralph"];
-  const used=state.accounts.map(a=>a.name);
-  const name=names.find(n=>!used.includes(n))||("Player "+(state.accounts.length+1));
-  const palette=["#5b8f3a","#4aa3d4","#e8a13a","#9b59b6","#e8533a","#16a085","#d4477a","#2c7fb8"];
-  const color=palette[state.accounts.length%palette.length];
-  const emoji=AVATARS[state.accounts.length%AVATARS.length];
-  state.accounts.push({id:uid(),name,color,emoji});
-  save(); renderContent(); renderSetList(); toast("Account added 👋");
-}
-function delAccount(id){
-  const a=accById(id); if(!a) return;
-  if(!confirm(`Delete "${a.name}"? This removes their inventory and any trades involving them.`)) return;
-  state.accounts=state.accounts.filter(x=>x.id!==id);
-  delete state.inv[id];
-  state.trades=state.trades.filter(t=>t.from!==id&&t.to!==id);
-  save(); renderContent(); renderSetList();
-}
-function setAccEmoji(id,e){ const a=accById(id); if(a){ a.emoji=e; save(); renderContent(); renderSetList(); } }
-
-/* ---- trade actions ---- */
-function addTrade(){
-  const from=document.getElementById("t-from").value;
-  const to=document.getElementById("t-to").value;
-  const sid=document.getElementById("t-stk").value;
-  const setId=+document.getElementById("t-set").value;
-  const date=document.getElementById("t-date").value||todayStr();
-  if(from===to){ toast("Sender and receiver must differ"); return; }
-  if(!sid){ toast("Pick a sticker"); return; }
-  state.trades.push({id:uid(),from,to,setId,sid,date,done:false,auto:false});
-  save(); renderContent(); toast("Trade scheduled 🔄");
-}
-function delTrade(id){
-  const t=state.trades.find(x=>x.id===id);
-  if(t&&t.done){ if(!confirm("This trade is completed. Deleting won't undo the inventory change. Continue?")){return;} }
-  state.trades=state.trades.filter(x=>x.id!==id); save(); renderContent();
-}
-function toggleEvent(ev){
-  state.settings[ev]=!state.settings[ev]; save();
-  renderBadges(); renderContent();
-  toast((state.settings[ev]?"Enabled ":"Disabled ")+(ev==="goldBlitz"?"⚡ Gold Blitz":"🎉 Trade Fest"));
-}
-
-/* ---- data actions ---- */
-function exportData(){
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
-  const u=URL.createObjectURL(blob); const a=document.createElement("a");
-  a.href=u; a.download="dohnut-album-backup.json"; a.click(); URL.revokeObjectURL(u);
-  toast("Exported ⬇️");
-}
-
-/* ---- nav: jump to set ---- */
-function jumpToSet(setId){
-  document.querySelectorAll(".set-item").forEach(i=>i.classList.toggle("active",i.dataset.set===setId));
-  if(state.page!=="album"){ gotoPage("album"); }
-  closeDrawers();
-  setTimeout(()=>{
-    const el=document.getElementById("set-"+setId);
-    if(el){ el.scrollIntoView({behavior:"smooth",block:"start"}); el.animate?.([{boxShadow:"0 0 0 4px var(--acc)"},{boxShadow:"var(--shadow)"}],{duration:900}); }
-    else { toast("Set hidden by filters"); }
-  },state.page!=="album"?80:0);
-}
 
 /* ============================================================
-   HORIZONTAL ACCOUNT SCROLLING + COLLAPSIBLE NAV
-   ============================================================ */
-function scrollSet(btn){
-  const wrap=btn.closest(".set-scrollwrap"); if(!wrap) return;
-  const sc=wrap.querySelector(".set-scroll"); if(!sc) return;
-  sc.scrollBy({left:(+btn.dataset.dir)*sc.clientWidth*0.85,behavior:"smooth"});
-}
-function updateScrollButtons(){
-  document.querySelectorAll(".setblock").forEach(b=>{
-    const sc=b.querySelector(".set-scroll"); if(!sc) return;
-    b.classList.toggle("has-overflow", sc.scrollWidth-sc.clientWidth>8);
-  });
-}
-function applyNavMode(){
-  const auto=!!state.settings.navAuto;
-  document.body.classList.toggle("nav-auto",auto);
-  document.querySelectorAll(".pin-btn").forEach(b=>{ b.textContent=auto?"📌":"📍"; b.title=auto?"Pin sidebars open":"Auto-hide sidebars"; });
-}
-function toggleNav(){
-  state.settings.navAuto=!state.settings.navAuto; save(); applyNavMode();
-  if(state.page==="settings") renderContent();
-}
-
-let dragSt=null, justDragged=false;
-document.addEventListener("pointerdown",e=>{
-  const sc=e.target.closest(".set-scroll"); if(!sc) return;
-  if(e.target.closest("input,button,select")) return;
-  dragSt={sc,x:e.clientX,left:sc.scrollLeft,moved:false};
-});
-document.addEventListener("pointermove",e=>{
-  if(!dragSt) return;
-  const dx=e.clientX-dragSt.x;
-  if(!dragSt.moved && Math.abs(dx)>5){ dragSt.moved=true; dragSt.sc.classList.add("dragging"); }
-  if(dragSt.moved) dragSt.sc.scrollLeft=dragSt.left-dx;
-});
-function endDrag(){
-  if(!dragSt) return;
-  if(dragSt.moved){ justDragged=true; setTimeout(()=>{justDragged=false;},120); }
-  dragSt.sc.classList.remove("dragging"); dragSt=null;
-}
-document.addEventListener("pointerup",endDrag);
-document.addEventListener("pointercancel",endDrag);
-window.addEventListener("resize",()=>{ if(state.page==="album") updateScrollButtons(); });
-
-/* ============================================================
-   BOOT
+   7. BOOT
    ============================================================ */
 function fullRender(){
-  renderBadges(); renderSwatches(); renderSetList(); applyNavMode();
   document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===state.page));
   renderContent();
 }
-applyTheme(state.settings.theme||"springfield");
-// Intentionally not calling fullRender() here; it happens via the Auth listener on load.
+document.addEventListener("DOMContentLoaded", async () => {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (session) handleSession(session);
+  else if (isDemoModeActive) { document.getElementById("auth-overlay").style.display = "none"; fullRender(); }
+  else document.getElementById("auth-overlay").style.display = "flex";
+
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') handleSession(session);
+    if (event === 'SIGNED_OUT') { activeSessionUser=null; document.getElementById("auth-overlay").style.display="flex"; state=freshState(); fullRender(); }
+  });
+  applyTheme(state.settings.theme||"springfield");
+});
 </script>
 </body>
 </html>
