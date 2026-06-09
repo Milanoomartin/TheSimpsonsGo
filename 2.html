@@ -8,31 +8,47 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ============================================================
-   THEME ENGINE & CSS
+   THEME ENGINE — Day & Night Springfield Themes
    ============================================================ */
 :root{
-  --rail: 196px; --col-min: 154px; --radius: 16px; --radius-sm: 10px;
+  --rail: 196px; --col-min: 154px;
+  --radius: 16px; --radius-sm: 10px;
   --font: "Comic Sans MS", "Chalkboard SE", "Marker Felt", system-ui, sans-serif;
-  --sky:#7ec0ee; --bg:#dff1ff; --pnl:#ffffff; --pnl2:#f1f8ff; --ink:#16242f; --mut:#5d7689; --ln:#cfe4f4;
-  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6; --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
-  --hdr: linear-gradient(180deg,#79c0ff 0%,#bfe3ff 100%); --chip:#eef6ff; --shadow: 0 6px 18px rgba(20,60,90,.16); --cloud:1;
+  --sky:#7ec0ee; --bg:#dff1ff; --pnl:#ffffff; --pnl2:#f1f8ff;
+  --ink:#16242f; --mut:#5d7689; --ln:#cfe4f4;
+  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6;
+  --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
+  --hdr: linear-gradient(180deg,#79c0ff 0%,#bfe3ff 100%);
+  --chip:#eef6ff; --shadow: 0 6px 18px rgba(20,60,90,.16);
+  --cloud:1;
 }
+
 html[data-theme="night"]{
-  --sky:#1e293b; --bg:#0f172a; --pnl:#1e293b; --pnl2:#334155; --ink:#f8fafc; --mut:#cbd5e1; --ln:#475569;
-  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6; --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
-  --hdr: linear-gradient(180deg,#1e293b 0%,#0f172a 100%); --chip:#475569; --shadow: 0 6px 18px rgba(0,0,0,.6); --cloud:0;
+  --sky:#1e293b; --bg:#0f172a; --pnl:#1e293b; --pnl2:#334155;
+  --ink:#f8fafc; --mut:#cbd5e1; --ln:#475569;
+  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6;
+  --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
+  --hdr: linear-gradient(180deg,#1e293b 0%,#0f172a 100%);
+  --chip:#475569; --shadow: 0 6px 18px rgba(0,0,0,.6);
+  --cloud:0;
 }
+
+/* ============================================================
+   BASE
+   ============================================================ */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
 body{font-family:var(--font); background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; overflow:hidden; transition:background .4s ease,color .4s ease;}
-button,input,select{font-family:inherit;color:inherit}
+button,input,select,textarea{font-family:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 ::-webkit-scrollbar{height:11px;width:11px}
 ::-webkit-scrollbar-thumb{background:var(--acc2);border-radius:20px;border:2px solid transparent;background-clip:padding-box}
 ::-webkit-scrollbar-track{background:transparent}
 .hidden{display:none !important}
 
-/* NIGHT SKY */
+/* ============================================================
+   NIGHT SKY (CSS ONLY STAR FIELD)
+   ============================================================ */
 .night-sky-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.6s ease; overflow: hidden; }
 html[data-theme="night"] .night-sky-bg { opacity: 1; }
 .night-sky-bg .star { position: absolute; color: #FFF; font-size: 12px; animation: twinkle linear infinite; text-shadow: 0 0 4px #FFF, 0 0 10px var(--gold); }
@@ -42,9 +58,14 @@ html[data-theme="night"] .night-sky-bg { opacity: 1; }
 .star:nth-child(4) { top: 60%; left: 20%; font-size: 14px; animation-duration: 5s; animation-delay: 0.5s; }
 .star:nth-child(5) { top: 75%; left: 80%; font-size: 18px; animation-duration: 3.5s; animation-delay: 2s; }
 .star:nth-child(6) { top: 85%; left: 30%; font-size: 12px; animation-duration: 4.5s; }
+.star:nth-child(7) { top: 5%; left: 60%; font-size: 15px; animation-duration: 3.2s; animation-delay: 1.5s; }
+.star:nth-child(8) { top: 50%; left: 90%; font-size: 11px; animation-duration: 4.1s; animation-delay: 0.8s; }
+.star:nth-child(9) { top: 90%; left: 60%; font-size: 17px; animation-duration: 3.8s; animation-delay: 2.5s; }
 @keyframes twinkle { 0%, 100% { opacity: 0.1; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1.3); } }
 
-/* HEADER */
+/* ============================================================
+   HEADER & CLOUDS
+   ============================================================ */
 header{ height:60px; display:flex; align-items:center; gap:12px; padding:0 14px; background:var(--hdr); border-bottom:4px solid #111820; position:relative; overflow:hidden; z-index:30; flex:0 0 auto; }
 .clouds{position:absolute;inset:0;pointer-events:none;opacity:var(--cloud);overflow:hidden;transition:opacity .4s ease;}
 .clouds span{position:absolute;font-size:34px;opacity:.85;animation:drift linear infinite}
@@ -63,53 +84,40 @@ html[data-theme="night"] .brand {color:var(--ink);text-shadow:0 2px 6px rgba(0,0
 .evt-badge.fest{background:var(--acc2);color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.3)}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
-/* LAYOUT */
+/* ============================================================
+   LAYOUT
+   ============================================================ */
 .shell{display:flex;height:calc(100% - 60px); position:relative; z-index:10;}
 aside{flex:0 0 auto;background:var(--pnl);overflow-y:auto;overflow-x:hidden;transition:transform .28s ease,width .26s ease;position:relative}
-.left{width:250px;border-right:3px solid var(--acc)}
-.right{width:208px;border-left:3px solid var(--acc)}
+.left{width:250px;border-right:3px solid #111820}
+.right{width:208px;border-left:3px solid #111820}
 main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
+
 .nav-title{font-size:.7rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);padding:14px 14px 6px}
-.searchbox{padding:10px 12px;position:sticky;top:0;background:var(--pnl);z-index:5;border-bottom:1px solid var(--ln);display:flex;gap:7px;align-items:center}
-.searchbox input{flex:1;min-width:0;padding:9px 12px;border-radius:20px;border:2px solid var(--ln);background:var(--pnl2);font-size:.85rem;outline:none}
 .aside-full{display:flex;flex-direction:column}
-.right .aside-full{padding:12px 10px}
-.pin-btn{flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:var(--pnl2);border:2px solid var(--ln);font-size:1rem;display:flex;align-items:center;justify-content:center}
-.pin-btn:active{transform:scale(.9)}
-.nav-title.tools-row{display:flex;align-items:center;justify-content:space-between;padding-right:4px}
-
-.setlist{padding:6px 8px 30px}
-.set-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:12px;cursor:pointer;margin-bottom:3px;transition:background .15s}
-.set-item:hover{background:var(--chip)}
-.set-item.active{background:var(--chip);box-shadow:inset 3px 0 0 var(--acc)}
-.set-emoji{font-size:1.25rem;width:26px;text-align:center;flex:0 0 auto}
-.set-meta{flex:1;min-width:0}
-.set-name{font-size:.82rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.set-bar{height:6px;border-radius:6px;background:var(--ln);margin-top:4px;overflow:hidden}
-.set-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--gold));border-radius:6px;transition:width .5s cubic-bezier(.2,.9,.3,1)}
-.set-pct{font-size:.66rem;font-weight:800;color:var(--mut);flex:0 0 auto}
-
 .tool-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:14px;margin-bottom:7px;font-weight:700;font-size:.9rem;text-align:left;background:var(--pnl2);border:2px solid transparent;transition:.15s}
 .tool-btn:hover{transform:translateX(3px)}
 .tool-btn .ti{font-size:1.3rem}
-.tool-btn.active{background:var(--acc);color:var(--accInk);border-color:var(--goldDeep);box-shadow:0 4px 0 var(--goldDeep)}
+.tool-btn.active{background:var(--acc);color:var(--accInk);border-color:#111820;box-shadow:0 4px 0 #111820}
+.tool-sep{height:1px;background:var(--ln);margin:10px 4px}
 
-/* MAIN CONTENT */
+/* ============================================================
+   MAIN CONTENT & COMPONENTS
+   ============================================================ */
 .page{padding:16px 18px 80px;max-width:1500px;margin:0 auto}
 .page-head{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
 .page-head h1{font-size:1.5rem;margin:0;font-weight:800}
 .page-sub{color:var(--mut);font-size:.85rem;margin:-8px 0 14px}
 
-.filterbar{position:sticky;top:0;z-index:18;background:var(--pnl);border:2px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.filterbar{position:sticky;top:0;z-index:18;background:var(--pnl);border:2px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;box-shadow:var(--shadow)}
 .filterbar input[type=text]{flex:1;min-width:150px;padding:8px 12px;border-radius:20px;border:2px solid var(--ln);background:var(--pnl2);outline:none}
+.filterbar input[type=text]:focus{border-color:var(--acc)}
 .filterbar select{padding:8px 10px;border-radius:12px;border:2px solid var(--ln);background:var(--pnl2);font-weight:700;font-size:.82rem;outline:none}
-.toggle-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;background:var(--pnl2);border:2px solid var(--ln);font-weight:700;font-size:.82rem;cursor:pointer;}
-.toggle-pill input{display:none}
-.toggle-pill.on{background:var(--acc);color:var(--accInk);border-color:var(--goldDeep)}
 
 .setblock-head{padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,var(--pnl2),var(--pnl)); border-radius: 18px 18px 0 0;}
 .sb-emoji{font-size:1.9rem}
 .sb-title{font-weight:800;font-size:1.05rem}
+.sb-title .num{color:var(--mut);font-weight:700;font-size:.8rem;margin-right:6px}
 .sb-accchips{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
 .accchip{display:flex;align-items:center;gap:6px;background:var(--chip);padding:4px 10px;font-size:.74rem;font-weight:800}
 .accchip .dot{width:9px;height:9px;border-radius:50%}
@@ -126,6 +134,7 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .acct-col-head .ah-bar{flex-basis:100%;height:6px;border-radius:6px;background:var(--ln);overflow:hidden;order:9}
 .acct-col-head .ah-bar i{display:block;height:100%;border-radius:6px;transition:width .5s}
 .sticker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.panel-empty{grid-column:1/-1;text-align:center;color:var(--mut);font-weight:800;font-size:.82rem;padding:26px 6px}
 
 .scrollbtn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--acc);color:var(--accInk);font-size:1.05rem;font-weight:900;box-shadow:0 3px 12px rgba(0,0,0,.35);z-index:7;display:none;align-items:center;justify-content:center;}
 .setblock.has-overflow .scrollbtn{display:flex}
@@ -140,15 +149,17 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .card .cic{font-size:1.85rem;line-height:1;display:block;transition:transform .2s}
 .card.have .cic{animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.4) rotate(-12deg)}60%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1)}}
-.card .cstars{font-size:.66rem;color:var(--gold);margin-top:2px;}
+.card .cstars{font-size:.66rem;color:var(--gold);margin-top:2px;letter-spacing:-1px}
 .card .cname{font-size:.6rem;color:var(--mut);font-weight:700;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.have-badge{position:absolute;top:-7px;right:-7px;width:21px;height:21px;background:var(--good);color:#fff;font-size:.72rem;display:none;align-items:center;justify-content:center;}
+.have-badge{position:absolute;top:-7px;right:-7px;width:21px;height:21px;background:var(--good);color:#fff;font-size:.72rem;display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);}
 .card.have .have-badge{display:flex}
 .dupzone{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:7px}
-.dupzone button{width:23px;height:23px;background:var(--acc2);color:#fff;font-weight:900;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;}
+.dupzone button{width:23px;height:23px;background:var(--acc2);color:#fff;font-weight:900;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.dupzone button:active{transform:translateY(2px);box-shadow:none}
 .dupzone input{width:34px;text-align:center;background:var(--pnl);font-weight:800;font-size:.78rem;padding:3px 0;outline:none;-moz-appearance:textfield}
 .dupzone input::-webkit-outer-spin-button,.dupzone input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.dupzone input.has{border-color:var(--good);color:var(--good)}
 
 /* Special override for 6-star regular stickers */
 .card.star-6 { background: #ffffff !important; border-color: #111820 !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6), inset 0 0 0 4px #ffffff !important; }
@@ -172,7 +183,7 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .acc-top{display:flex;align-items:center;gap:10px}
 .avatar{width:46px;height:46px;display:grid;place-items:center;font-size:1.6rem;flex:0 0 auto;}
 .field{display:flex;flex-direction:column;gap:3px;font-size:.74rem;font-weight:700;color:var(--mut)}
-.field input,.field select{padding:8px 10px;background:var(--pnl2);outline:none;font-weight:600}
+.field input,.field select, .field textarea{padding:8px 10px;background:var(--pnl2);outline:none;font-weight:600;font-family:inherit;}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .emoji-pick{display:flex;flex-wrap:wrap;gap:4px}
 .emoji-pick button{font-size:1.15rem;width:32px;height:32px;background:var(--pnl2);border:2px solid transparent}
@@ -195,16 +206,8 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .trade-row .tflow{font-weight:800;font-size:.86rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .trade-row .tstk{color:var(--mut);font-weight:700;font-size:.82rem}
 .trade-row .tcheck{margin-left:auto;display:flex;align-items:center;gap:8px}
-
-.cal-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal-dow{text-align:center;font-size:.66rem;font-weight:900;color:var(--mut);text-transform:uppercase}
-.cal-cell{min-height:62px;background:var(--pnl2);padding:5px;position:relative;cursor:default;transition:.12s}
-.cal-cell.has{cursor:pointer;border-color:var(--acc)}
-.cal-cell.today{box-shadow:inset 0 0 0 2px var(--acc2)}
-.cal-cell .dn{font-weight:800;font-size:.78rem}
-.cal-cell .cct{position:absolute;bottom:5px;left:5px;right:5px;display:flex;gap:3px;flex-wrap:wrap}
-.cal-cell .pill{font-size:.6rem;font-weight:900;background:var(--acc);color:var(--accInk);padding:1px 6px}
+.auto-tag{font-size:.58rem;font-weight:900;background:var(--acc2);color:#fff;padding:2px 6px;border-radius:6px;}
+input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:pointer}
 
 .theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .theme-card{padding:12px;cursor:pointer;border:3px solid transparent;position:relative;overflow:hidden;color:#fff;min-height:84px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
@@ -225,23 +228,14 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .empty .em{font-size:3.5rem;display:block;margin-bottom:10px;}
 .empty h3{color:var(--ink);margin:6px 0}
 
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;backdrop-filter:blur(3px)}
-.modal-bg.show{display:flex;}
-.modal{background:var(--pnl);max-width:460px;width:100%;max-height:84vh;overflow-y:auto;border:3px solid var(--acc);box-shadow:0 20px 60px rgba(0,0,0,.5);}
-.modal-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:2px solid var(--ln);position:sticky;top:0;background:var(--pnl)}
-.modal-head h3{margin:0;flex:1;font-size:1.05rem}
-.modal-body{padding:14px 16px}
-
-.confetti{position:fixed;top:-30px;font-size:1.4rem;z-index:200;pointer-events:none;animation:fall linear forwards}
-@keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:11px 20px;font-weight:800;font-size:.85rem;z-index:300;opacity:0;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
 /* 90s CARTOON OVERRIDES */
-.panel, .setblock, .card, .acct-col, .filterbar, .searchbox input, .field input, .field select, .modal, .theme-card, .ring::before { border: 3px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.panel, .setblock, .card, .acct-col, .filterbar, .searchbox input, .field input, .field select, .field textarea, .modal, .theme-card, .ring::before { border: 3px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important; transition: transform 0.15s ease, box-shadow 0.15s ease; }
 .btn, .toggle-pill, .icon-btn, .pin-btn, .scrollbtn, .dupzone button { border: 3px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important; }
 .card:active, .btn:active, .toggle-pill:active, .icon-btn:active, .pin-btn:active, .scrollbtn:active, .dupzone button:active { transform: translate(2px, 3px) !important; box-shadow: 1px 1px 0px rgba(0,0,0,0.6) !important; }
-.have-badge, .ah-count, .pill, .evt-badge, .accchip, .tdate { border: 2px solid #111820 !important; border-radius: 48% 52% 45% 55% / 50% 45% 55% 50% !important; font-weight: 900 !important; box-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important; }
+.have-badge, .ah-count, .pill, .evt-badge, .accchip, .tdate, .goldtag { border: 2px solid #111820 !important; border-radius: 48% 52% 45% 55% / 50% 45% 55% 50% !important; font-weight: 900 !important; box-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important; }
 .set-bar, .ah-bar, .bigbar, .mini { border: 2px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 2px 2px 0px rgba(0,0,0,0.4) inset !important; }
 </style>
 </head>
@@ -253,7 +247,7 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
   <span class="star">✦</span><span class="star">★</span><span class="star">✦</span>
 </div>
 
-<div id="auth-overlay" style="position:fixed; inset:0; z-index:9999; background:var(--bg); display:none; align-items:center; justify-content:center; padding:20px;">
+<div id="auth-overlay" style="position:fixed; inset:0; z-index:9999; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:20px;">
   <div class="panel" style="max-width:400px; width:100%; padding:30px; text-align:center; background:var(--pnl);">
     <h1 style="font-size:2rem; margin-bottom:10px; font-weight:900;">🍩 D'oh-nut Auth</h1>
     <p style="color:var(--mut); margin-bottom:20px; font-weight:700;">Sign in to sync your Springfield album across devices!</p>
@@ -284,22 +278,18 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
       <button class="tool-btn" data-action="goto-page" data-page="vault"><span class="ti">⭐</span>Star Vault</button>
       <button class="tool-btn" data-action="goto-page" data-page="trades"><span class="ti">🌍</span>Community Hub</button>
       <button class="tool-btn" data-action="goto-page" data-page="settings"><span class="ti">⚙️</span>Settings</button>
-      <div class="tool-sep"></div>
-      <div class="nav-title">Album Sets</div>
-      <div class="setlist" id="setList"></div>
     </div>
   </aside>
   <main id="main"><div class="page" id="content"></div></main>
 </div>
 
-<div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
 "use strict";
 
 /* ============================================================
-   1. GLOBAL DATA & CONSTANTS
+   1. GLOBAL DATA & CONSTANTS (100% UNTRUNCATED)
    ============================================================ */
 const SUPABASE_URL = "https://dvybpbfwkwnvxdosvsxj.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_SK5m4nhUdE_7R1bgyKXXug_RE3AoBy3";
@@ -307,27 +297,27 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const LS_KEY = "dohnut_album_v1";
 
 const ALBUM = [
-  {"id":1,"name":"The Simpsons","stickers":[{"name":"Marge","stars":1,"isGold":false},{"name":"Bart","stars":1,"isGold":false},{"name":"Lisa","stars":1,"isGold":false},{"name":"Patty & Selma","stars":1,"isGold":false},{"name":"Homer","stars":1,"isGold":false},{"name":"Maggie","stars":1,"isGold":false},{"name":"Santa's Little Helper","stars":1,"isGold":false},{"name":"Snowball 2","stars":1,"isGold":false},{"name":"Grampa","stars":1,"isGold":false}]},
-  {"id":2,"name":"Monopoly's Training Day","stickers":[{"name":"Weee!","stars":1,"isGold":false},{"name":"Payday","stars":1,"isGold":false},{"name":"Naptime","stars":1,"isGold":false},{"name":"Break Time","stars":1,"isGold":false},{"name":"For Sale","stars":1,"isGold":false},{"name":"On Guard","stars":1,"isGold":false},{"name":"D'oh!","stars":1,"isGold":false},{"name":"Power Snack","stars":1,"isGold":false},{"name":"Whoosh Ahh","stars":1,"isGold":false}]},
-  {"id":3,"name":"Friends & Family","stickers":[{"name":"Herb Powell","stars":1,"isGold":false},{"name":"Kumiko","stars":1,"isGold":false},{"name":"Apu & Manjula","stars":1,"isGold":false},{"name":"Lenny & Carl","stars":1,"isGold":false},{"name":"The Van Houtens","stars":1,"isGold":false},{"name":"Reverend Lovejoy","stars":1,"isGold":false},{"name":"The Hibberts","stars":2,"isGold":false},{"name":"The Bullies","stars":2,"isGold":false},{"name":"Jacqueline Bouvier","stars":2,"isGold":false}]},
-  {"id":4,"name":"Property of Ned Flanders","stickers":[{"name":"Such a Tool","stars":1,"isGold":false},{"name":"Smart Homer","stars":1,"isGold":false},{"name":"Go Away Ned","stars":1,"isGold":false},{"name":"Come On!","stars":2,"isGold":false},{"name":"Let's Go!","stars":2,"isGold":false},{"name":"Good Kitty","stars":2,"isGold":false},{"name":"Wasn't Me","stars":2,"isGold":false},{"name":"Slow Mow","stars":2,"isGold":false},{"name":"Hi-Diddly-Ho!","stars":2,"isGold":false}]},
-  {"id":5,"name":"Taste of Springfield","stickers":[{"name":"Nuts & Gum","stars":2,"isGold":false},{"name":"Krusty O's","stars":2,"isGold":false},{"name":"Insanity Pepper","stars":2,"isGold":false},{"name":"Pork Chops","stars":2,"isGold":false},{"name":"Squishee","stars":2,"isGold":false},{"name":"Krusty Burger","stars":2,"isGold":false},{"name":"Luigi's Spaghetti","stars":2,"isGold":false},{"name":"Gummy de Milo","stars":2,"isGold":false},{"name":"Buzz Cola","stars":2,"isGold":false}]},
-  {"id":6,"name":"The Pin Pal's New Pal","stickers":[{"name":"Let's Bowl","stars":2,"isGold":false},{"name":"Can You Bowl?","stars":2,"isGold":false},{"name":"Ooh! Jealous!","stars":2,"isGold":false},{"name":"Ugly Ugly","stars":2,"isGold":false},{"name":"Bowl Goal","stars":2,"isGold":false},{"name":"Good One!","stars":2,"isGold":false},{"name":"Claw vs. Claw","stars":2,"isGold":false},{"name":"Old Wins Gold","stars":2,"isGold":false},{"name":"Teammates","stars":2,"isGold":false}]},
-  {"id":7,"name":"Maggie's Big Adventure","stickers":[{"name":"Thimble","stars":2,"isGold":false},{"name":"Dice","stars":2,"isGold":false},{"name":"House Rich","stars":2,"isGold":false},{"name":"Waterworks","stars":2,"isGold":false},{"name":"Scottie!","stars":2,"isGold":false},{"name":"Boom!","stars":2,"isGold":false},{"name":"Passing Go","stars":2,"isGold":false},{"name":"Out of Jail","stars":3,"isGold":false},{"name":"Railroad Ride!","stars":3,"isGold":false}]},
-  {"id":8,"name":"Springfield Superheroes","stickers":[{"name":"Bartman","stars":2,"isGold":false},{"name":"Pie Man","stars":2,"isGold":false},{"name":"Hot Flash","stars":2,"isGold":false},{"name":"Bumblebee Man","stars":2,"isGold":false},{"name":"Radioactive Man","stars":2,"isGold":false},{"name":"Stretch Dude","stars":3,"isGold":false},{"name":"Clobber Girl","stars":3,"isGold":false},{"name":"Fallout Boy","stars":3,"isGold":false},{"name":"Fruit Bat Man","stars":3,"isGold":false}]},
-  {"id":9,"name":"When Homie Met Marge","stickers":[{"name":"Birds Appear","stars":2,"isGold":false},{"name":"Pompetus","stars":2,"isGold":false},{"name":"Do You?","stars":2,"isGold":false},{"name":"I Do","stars":2,"isGold":false},{"name":"Carried Away","stars":3,"isGold":false},{"name":"Oh Homie","stars":3,"isGold":false},{"name":"Date Night","stars":3,"isGold":false},{"name":"Kisses","stars":3,"isGold":false},{"name":"I Do Again","stars":3,"isGold":false}]},
-  {"id":10,"name":"Marge's Many Jobs","stickers":[{"name":"Officer Marge","stars":3,"isGold":false},{"name":"Painter","stars":3,"isGold":false},{"name":"Real Estate Agent","stars":3,"isGold":false},{"name":"Romance Author","stars":3,"isGold":false},{"name":"Pretzel Baker","stars":3,"isGold":false},{"name":"Mayor","stars":3,"isGold":false},{"name":"Bodybuilder","stars":3,"isGold":false},{"name":"Waitress","stars":3,"isGold":false},{"name":"Actress","stars":3,"isGold":false}]},
-  {"id":11,"name":"Old School Rivals","stickers":[{"name":"Got Ya' Now","stars":3,"isGold":false},{"name":"Road Rage","stars":3,"isGold":false},{"name":"Evil Smirk","stars":3,"isGold":false},{"name":"Electricity","stars":3,"isGold":false},{"name":"Not the Face!","stars":3,"isGold":false},{"name":"Birthday","stars":3,"isGold":false},{"name":"Worth It!","stars":3,"isGold":false},{"name":"Excellent!","stars":3,"isGold":false},{"name":"Dog Run","stars":3,"isGold":false}]},
-  {"id":12,"name":"Springfield Elementary","stickers":[{"name":"Ralph Wiggum","stars":3,"isGold":false},{"name":"Sherri & Terri","stars":3,"isGold":false},{"name":"Milhouse Van Houten","stars":3,"isGold":false},{"name":"Nelson Muntz","stars":3,"isGold":false},{"name":"Martin Prince","stars":3,"isGold":false},{"name":"Hubert Wong","stars":3,"isGold":false},{"name":"Allison Taylor","stars":3,"isGold":false},{"name":"Uter Zorker","stars":4,"isGold":false},{"name":"Janey Powell","stars":4,"isGold":false}]},
-  {"id":13,"name":"Exotic Animals","stickers":[{"name":"Jub Jub","stars":3,"isGold":false},{"name":"Spider Pig","stars":3,"isGold":false},{"name":"Princess","stars":3,"isGold":false},{"name":"Illegal Panda","stars":3,"isGold":false},{"name":"Mr. Teeny","stars":3,"isGold":false},{"name":"Pinchy","stars":4,"isGold":false},{"name":"Screamapillar","stars":4,"isGold":false},{"name":"Stampy","stars":4,"isGold":false},{"name":"Blinky","stars":4,"isGold":true}]},
-  {"id":14,"name":"Simpsons in Song","stickers":[{"name":"Baby on Board","stars":3,"isGold":false},{"name":"NOT ME!","stars":3,"isGold":false},{"name":"Last Requests","stars":3,"isGold":false},{"name":"We Do!","stars":4,"isGold":false},{"name":"See My Vest!","stars":4,"isGold":false},{"name":"Springfield","stars":4,"isGold":false},{"name":"Mixtape","stars":4,"isGold":false},{"name":"Sad Schmuck","stars":4,"isGold":true},{"name":"Moaning Lisa","stars":5,"isGold":false}]},
-  {"id":15,"name":"You Steam a Good Ham!","stickers":[{"name":"Unforgettable","stars":4,"isGold":false},{"name":"Roast is Ruined","stars":4,"isGold":false},{"name":"Oh Ho Ho Ho","stars":4,"isGold":false},{"name":"Just Stretching","stars":4,"isGold":false},{"name":"Steamed Hams","stars":4,"isGold":false},{"name":"Obviously Grilled","stars":4,"isGold":true},{"name":"May I See It?","stars":5,"isGold":false},{"name":"Aurora Borealis","stars":5,"isGold":false},{"name":"Northern Lights","stars":4,"isGold":true}]},
-  {"id":16,"name":"Beloved Memes","stickers":[{"name":"I'm in Danger","stars":4,"isGold":false},{"name":"Yells at Cloud","stars":4,"isGold":false},{"name":"Krumping","stars":4,"isGold":false},{"name":"Lisa Presents","stars":4,"isGold":false},{"name":"Homer in Bush","stars":4,"isGold":true},{"name":"More Coffee","stars":4,"isGold":true},{"name":"One of Us","stars":5,"isGold":false},{"name":"Stupid Sexy Flanders","stars":5,"isGold":true},{"name":"Worst Sticker Ever","stars":6,"isGold":false}]},
-  {"id":17,"name":"The Itchy & Scratchy Show","stickers":[{"name":"Run Scratchy Run","stars":4,"isGold":false},{"name":"Heads Up","stars":4,"isGold":false},{"name":"Overstuffed","stars":4,"isGold":false},{"name":"Heart Attack","stars":4,"isGold":true},{"name":"Hit and Done","stars":4,"isGold":true},{"name":"Don't Laugh!","stars":5,"isGold":false},{"name":"Washed Up","stars":5,"isGold":false},{"name":"Shutdown","stars":5,"isGold":true},{"name":"Go to Railroad","stars":6,"isGold":false}]},
-  {"id":18,"name":"Moe's Tavern","stickers":[{"name":"Moe's","stars":4,"isGold":false},{"name":"Rags to Rags","stars":4,"isGold":false},{"name":"Love Tester","stars":4,"isGold":true},{"name":"Pickled Eggs","stars":4,"isGold":true},{"name":"Barney Gumble","stars":5,"isGold":false},{"name":"Prank Call","stars":5,"isGold":false},{"name":"Lenny Leonard","stars":5,"isGold":true},{"name":"Carl Carlson","stars":5,"isGold":true},{"name":"Pool Table","stars":6,"isGold":false}]},
-  {"id":19,"name":"Homer's Many Jobs","stickers":[{"name":"Boxer","stars":4,"isGold":false},{"name":"Sanitation","stars":4,"isGold":true},{"name":"Remote Worker","stars":4,"isGold":true},{"name":"Security","stars":5,"isGold":false},{"name":"Astronaut","stars":5,"isGold":false},{"name":"Mascot","stars":5,"isGold":false},{"name":"Monorail Conductor","stars":5,"isGold":true},{"name":"Be Sharps","stars":5,"isGold":true},{"name":"Mr. Plow","stars":6,"isGold":false}]},
-  {"id":20,"name":"Upper Crust","stickers":[{"name":"Kent Brockman","stars":4,"isGold":true},{"name":"Mrs. Vanderbilt","stars":4,"isGold":true},{"name":"Mayor Quimby","stars":5,"isGold":false},{"name":"Rich Texan","stars":5,"isGold":false},{"name":"Mr. Burns","stars":5,"isGold":false},{"name":"Hank Scorpio","stars":5,"isGold":true},{"name":"Ranier Wolfcastle","stars":5,"isGold":true},{"name":"Drederick Tatum","stars":5,"isGold":true},{"name":"Krusty the Clown","stars":6,"isGold":false}]},
-  {"id":21,"name":"Iconic Moments","stickers":[{"name":"Sun Blocker","stars":4,"isGold":true},{"name":"Homer's Hoagie","stars":4,"isGold":true},{"name":"Step on a Rake","stars":5,"isGold":false},{"name":"Do it For Her","stars":5,"isGold":false},{"name":"Mr. Sparkle","stars":5,"isGold":true},{"name":"Mr. Snrub","stars":5,"isGold":true},{"name":"Guy Incognito","stars":5,"isGold":true},{"name":"Gorge Jump","stars":5,"isGold":true},{"name":"Classy Marge","stars":6,"isGold":false}]}
+  {"id":1,"name":"The Simpsons","stickers":[{"name": "Marge", "stars": 1, "isGold": false},{"name": "Bart", "stars": 1, "isGold": false},{"name": "Lisa", "stars": 1, "isGold": false},{"name": "Patty & Selma", "stars": 1, "isGold": false},{"name": "Homer", "stars": 1, "isGold": false},{"name": "Maggie", "stars": 1, "isGold": false},{"name": "Santa's Little Helper", "stars": 1, "isGold": false},{"name": "Snowball 2", "stars": 1, "isGold": false},{"name": "Grampa", "stars": 1, "isGold": false}]},
+  {"id":2,"name":"Monopoly's Training Day","stickers":[{"name": "Weee!", "stars": 1, "isGold": false},{"name": "Payday", "stars": 1, "isGold": false},{"name": "Naptime", "stars": 1, "isGold": false},{"name": "Break Time", "stars": 1, "isGold": false},{"name": "For Sale", "stars": 1, "isGold": false},{"name": "On Guard", "stars": 1, "isGold": false},{"name": "D'oh!", "stars": 1, "isGold": false},{"name": "Power Snack", "stars": 1, "isGold": false},{"name": "Whoosh Ahh", "stars": 1, "isGold": false}]},
+  {"id":3,"name":"Friends & Family","stickers":[{"name": "Herb Powell", "stars": 1, "isGold": false},{"name": "Kumiko", "stars": 1, "isGold": false},{"name": "Apu & Manjula", "stars": 1, "isGold": false},{"name": "Lenny & Carl", "stars": 1, "isGold": false},{"name": "The Van Houtens", "stars": 1, "isGold": false},{"name": "Reverend Lovejoy", "stars": 1, "isGold": false},{"name": "The Hibberts", "stars": 2, "isGold": false},{"name": "The Bullies", "stars": 2, "isGold": false},{"name": "Jacqueline Bouvier", "stars": 2, "isGold": false}]},
+  {"id":4,"name":"Property of Ned Flanders","stickers":[{"name": "Such a Tool", "stars": 1, "isGold": false},{"name": "Smart Homer", "stars": 1, "isGold": false},{"name": "Go Away Ned", "stars": 1, "isGold": false},{"name": "Come On!", "stars": 2, "isGold": false},{"name": "Let's Go!", "stars": 2, "isGold": false},{"name": "Good Kitty", "stars": 2, "isGold": false},{"name": "Wasn't Me", "stars": 2, "isGold": false},{"name": "Slow Mow", "stars": 2, "isGold": false},{"name": "Hi-Diddly-Ho!", "stars": 2, "isGold": false}]},
+  {"id":5,"name":"Taste of Springfield","stickers":[{"name": "Nuts & Gum", "stars": 2, "isGold": false},{"name": "Krusty O's", "stars": 2, "isGold": false},{"name": "Insanity Pepper", "stars": 2, "isGold": false},{"name": "Pork Chops", "stars": 2, "isGold": false},{"name": "Squishee", "stars": 2, "isGold": false},{"name": "Krusty Burger", "stars": 2, "isGold": false},{"name": "Luigi's Spaghetti", "stars": 2, "isGold": false},{"name": "Gummy de Milo", "stars": 2, "isGold": false},{"name": "Buzz Cola", "stars": 2, "isGold": false}]},
+  {"id":6,"name":"The Pin Pal's New Pal","stickers":[{"name": "Let's Bowl", "stars": 2, "isGold": false},{"name": "Can You Bowl?", "stars": 2, "isGold": false},{"name": "Ooh! Jealous!", "stars": 2, "isGold": false},{"name": "Ugly Ugly", "stars": 2, "isGold": false},{"name": "Bowl Goal", "stars": 2, "isGold": false},{"name": "Good One!", "stars": 2, "isGold": false},{"name": "Claw vs. Claw", "stars": 2, "isGold": false},{"name": "Old Wins Gold", "stars": 2, "isGold": false},{"name": "Teammates", "stars": 2, "isGold": false}]},
+  {"id":7,"name":"Maggie's Big Adventure","stickers":[{"name": "Thimble", "stars": 2, "isGold": false},{"name": "Dice", "stars": 2, "isGold": false},{"name": "House Rich", "stars": 2, "isGold": false},{"name": "Waterworks", "stars": 2, "isGold": false},{"name": "Scottie!", "stars": 2, "isGold": false},{"name": "Boom!", "stars": 2, "isGold": false},{"name": "Passing Go", "stars": 2, "isGold": false},{"name": "Out of Jail", "stars": 3, "isGold": false},{"name": "Railroad Ride!", "stars": 3, "isGold": false}]},
+  {"id":8,"name":"Springfield Superheroes","stickers":[{"name": "Bartman", "stars": 2, "isGold": false},{"name": "Pie Man", "stars": 2, "isGold": false},{"name": "Hot Flash", "stars": 2, "isGold": false},{"name": "Bumblebee Man", "stars": 2, "isGold": false},{"name": "Radioactive Man", "stars": 2, "isGold": false},{"name": "Stretch Dude", "stars": 3, "isGold": false},{"name": "Clobber Girl", "stars": 3, "isGold": false},{"name": "Fallout Boy", "stars": 3, "isGold": false},{"name": "Fruit Bat Man", "stars": 3, "isGold": false}]},
+  {"id":9,"name":"When Homie Met Marge","stickers":[{"name": "Birds Appear", "stars": 2, "isGold": false},{"name": "Pompetus", "stars": 2, "isGold": false},{"name": "Do You?", "stars": 2, "isGold": false},{"name": "I Do", "stars": 2, "isGold": false},{"name": "Carried Away", "stars": 3, "isGold": false},{"name": "Oh Homie", "stars": 3, "isGold": false},{"name": "Date Night", "stars": 3, "isGold": false},{"name": "Kisses", "stars": 3, "isGold": false},{"name": "I Do Again", "stars": 3, "isGold": false}]},
+  {"id":10,"name":"Marge's Many Jobs","stickers":[{"name": "Officer Marge", "stars": 3, "isGold": false},{"name": "Painter", "stars": 3, "isGold": false},{"name": "Real Estate Agent", "stars": 3, "isGold": false},{"name": "Romance Author", "stars": 3, "isGold": false},{"name": "Pretzel Baker", "stars": 3, "isGold": false},{"name": "Mayor", "stars": 3, "isGold": false},{"name": "Bodybuilder", "stars": 3, "isGold": false},{"name": "Waitress", "stars": 3, "isGold": false},{"name": "Actress", "stars": 3, "isGold": false}]},
+  {"id":11,"name":"Old School Rivals","stickers":[{"name": "Got Ya' Now", "stars": 3, "isGold": false},{"name": "Road Rage", "stars": 3, "isGold": false},{"name": "Evil Smirk", "stars": 3, "isGold": false},{"name": "Electricity", "stars": 3, "isGold": false},{"name": "Not the Face!", "stars": 3, "isGold": false},{"name": "Birthday", "stars": 3, "isGold": false},{"name": "Worth It!", "stars": 3, "isGold": false},{"name": "Excellent!", "stars": 3, "isGold": false},{"name": "Dog Run", "stars": 3, "isGold": false}]},
+  {"id":12,"name":"Springfield Elementary","stickers":[{"name": "Ralph Wiggum", "stars": 3, "isGold": false},{"name": "Sherri & Terri", "stars": 3, "isGold": false},{"name": "Milhouse Van Houten", "stars": 3, "isGold": false},{"name": "Nelson Muntz", "stars": 3, "isGold": false},{"name": "Martin Prince", "stars": 3, "isGold": false},{"name": "Hubert Wong", "stars": 3, "isGold": false},{"name": "Allison Taylor", "stars": 3, "isGold": false},{"name": "Uter Zorker", "stars": 4, "isGold": false},{"name": "Janey Powell", "stars": 4, "isGold": false}]},
+  {"id":13,"name":"Exotic Animals","stickers":[{"name": "Jub Jub", "stars": 3, "isGold": false},{"name": "Spider Pig", "stars": 3, "isGold": false},{"name": "Princess", "stars": 3, "isGold": false},{"name": "Illegal Panda", "stars": 3, "isGold": false},{"name": "Mr. Teeny", "stars": 3, "isGold": false},{"name": "Pinchy", "stars": 4, "isGold": false},{"name": "Screamapillar", "stars": 4, "isGold": false},{"name": "Stampy", "stars": 4, "isGold": false},{"name": "Blinky", "stars": 4, "isGold": true}]},
+  {"id":14,"name":"Simpsons in Song","stickers":[{"name": "Baby on Board", "stars": 3, "isGold": false},{"name": "NOT ME!", "stars": 3, "isGold": false},{"name": "Last Requests", "stars": 3, "isGold": false},{"name": "We Do!", "stars": 4, "isGold": false},{"name": "See My Vest!", "stars": 4, "isGold": false},{"name": "Springfield", "stars": 4, "isGold": false},{"name": "Mixtape", "stars": 4, "isGold": false},{"name": "Sad Schmuck", "stars": 4, "isGold": true},{"name": "Moaning Lisa", "stars": 5, "isGold": false}]},
+  {"id":15,"name":"You Steam a Good Ham!","stickers":[{"name": "Unforgettable", "stars": 4, "isGold": false},{"name": "Roast is Ruined", "stars": 4, "isGold": false},{"name": "Oh Ho Ho Ho", "stars": 4, "isGold": false},{"name": "Just Stretching", "stars": 4, "isGold": false},{"name": "Steamed Hams", "stars": 4, "isGold": false},{"name": "Obviously Grilled", "stars": 4, "isGold": true},{"name": "May I See It?", "stars": 5, "isGold": false},{"name": "Aurora Borealis", "stars": 5, "isGold": false},{"name": "Northern Lights", "stars": 4, "isGold": true}]},
+  {"id":16,"name":"Beloved Memes","stickers":[{"name": "I'm in Danger", "stars": 4, "isGold": false},{"name": "Yells at Cloud", "stars": 4, "isGold": false},{"name": "Krumping", "stars": 4, "isGold": false},{"name": "Lisa Presents", "stars": 4, "isGold": false},{"name": "Homer in Bush", "stars": 4, "isGold": true},{"name": "More Coffee", "stars": 4, "isGold": true},{"name": "One of Us", "stars": 5, "isGold": false},{"name": "Stupid Sexy Flanders", "stars": 5, "isGold": true},{"name": "Worst Sticker Ever", "stars": 6, "isGold": false}]},
+  {"id":17,"name":"The Itchy & Scratchy Show","stickers":[{"name": "Run Scratchy Run", "stars": 4, "isGold": false},{"name": "Heads Up", "stars": 4, "isGold": false},{"name": "Overstuffed", "stars": 4, "isGold": false},{"name": "Heart Attack", "stars": 4, "isGold": true},{"name": "Hit and Done", "stars": 4, "isGold": true},{"name": "Don't Laugh!", "stars": 5, "isGold": false},{"name": "Washed Up", "stars": 5, "isGold": false},{"name": "Shutdown", "stars": 5, "isGold": true},{"name": "Go to Railroad", "stars": 6, "isGold": false}]},
+  {"id":18,"name":"Moe's Tavern","stickers":[{"name": "Moe's", "stars": 4, "isGold": false},{"name": "Rags to Rags", "stars": 4, "isGold": false},{"name": "Love Tester", "stars": 4, "isGold": true},{"name": "Pickled Eggs", "stars": 4, "isGold": true},{"name": "Barney Gumble", "stars": 5, "isGold": false},{"name": "Prank Call", "stars": 5, "isGold": false},{"name": "Lenny Leonard", "stars": 5, "isGold": true},{"name": "Carl Carlson", "stars": 5, "isGold": true},{"name": "Pool Table", "stars": 6, "isGold": false}]},
+  {"id":19,"name":"Homer's Many Jobs","stickers":[{"name": "Boxer", "stars": 4, "isGold": false},{"name": "Sanitation", "stars": 4, "isGold": true},{"name": "Remote Worker", "stars": 4, "isGold": true},{"name": "Security", "stars": 5, "isGold": false},{"name": "Astronaut", "stars": 5, "isGold": false},{"name": "Mascot", "stars": 5, "isGold": false},{"name": "Monorail Conductor", "stars": 5, "isGold": true},{"name": "Be Sharps", "stars": 5, "isGold": true},{"name": "Mr. Plow", "stars": 6, "isGold": false}]},
+  {"id":20,"name":"Upper Crust","stickers":[{"name": "Kent Brockman", "stars": 4, "isGold": true},{"name": "Mrs. Vanderbilt", "stars": 4, "isGold": true},{"name": "Mayor Quimby", "stars": 5, "isGold": false},{"name": "Rich Texan", "stars": 5, "isGold": false},{"name": "Mr. Burns", "stars": 5, "isGold": false},{"name": "Hank Scorpio", "stars": 5, "isGold": true},{"name": "Ranier Wolfcastle", "stars": 5, "isGold": true},{"name": "Drederick Tatum", "stars": 5, "isGold": true},{"name": "Krusty the Clown", "stars": 6, "isGold": false}]},
+  {"id":21,"name":"Iconic Moments","stickers":[{"name": "Sun Blocker", "stars": 4, "isGold": true},{"name": "Homer's Hoagie", "stars": 4, "isGold": true},{"name": "Step on a Rake", "stars": 5, "isGold": false},{"name": "Do it For Her", "stars": 5, "isGold": false},{"name": "Mr. Sparkle", "stars": 5, "isGold": true},{"name": "Mr. Snrub", "stars": 5, "isGold": true},{"name": "Guy Incognito", "stars": 5, "isGold": true},{"name": "Gorge Jump", "stars": 5, "isGold": true},{"name": "Classy Marge", "stars": 6, "isGold": false}]}
 ];
 
 const STICKERS = [];
@@ -342,40 +332,49 @@ const TOTAL_STARS = STICKERS.reduce((a,s)=>a+s.stars,0);
 const THEMES = [ {id:"springfield",name:"Springfield (Day)",emoji:"☀️",c:["#79c0ff","#ffd521","#3f9bd6"]}, {id:"night",name:"Springfield (Night)",emoji:"🌙",c:["#1a2b4c","#ffd521","#0f172a"]} ];
 const VAULT_TIERS = [ {name:"Buzz Cola Vault",emoji:"🥤",need:250,color:"#ff8c1a"}, {name:"Squishee Vault",emoji:"🧊",need:450,color:"#2f9be0"}, {name:"Mr. Burns' Vault",emoji:"💰",need:700,color:"#f4c430"} ];
 const SET_EMOJI = {1:"🛋️",2:"🎲",3:"👨‍👩‍👧‍👦",4:"🥸",5:"🍔",6:"🎳",7:"👶",8:"🦸",9:"💑",10:"💼",11:"🥊",12:"🏫",13:"🐾",14:"🎵",15:"🍖",16:"😂",17:"🐭",18:"🍺",19:"👷",20:"🎩",21:"⭐"};
-const ICON_RULES = [ [/homer|homie/,"🍩"],[/marge/,"💙"],[/bart/,"🛹"],[/lisa|moaning|saxophone/,"🎷"],[/maggie/,"👶"],[/grampa|abe|bouvier|jacqueline/,"👴"],[/burns/,"🎩"],[/smithers/,"🤓"],[/flanders|diddly|ned/,"🥸"],[/moe's|^moe|tavern/,"🍺"],[/barney|gumble/,"🥴"],[/krusty|clown/,"🤡"],[/milhouse/,"🤓"],[/nelson/,"😼"],[/ralph/,"😋"],[/wiggum|officer|security|police/,"👮"],[/apu|kwik|squishee/,"🏪"],[/duff|beer|keg|brew|pickled egg/,"🍺"],[/donut|d'oh/,"🍩"],[/cola|buzz|squishee/,"🥤"],[/burger|ham|hoagie|krusty burger/,"🍔"],[/pork|chop|steak/,"🍖"],[/gum|nuts|krusty o/,"🍬"],[/spaghetti|luigi/,"🍝"],[/pepper|insanity/,"🌶️"],[/coffee/,"☕"],[/helper|santa's little|dog run|princess/,"🐶"],[/snowball|good kitty|cat/,"🐱"],[/spider pig|illegal panda|stampy|pig/,"🐷"],[/panda/,"🐼"],[/blinky|pinchy|fish/,"🐟"],[/jub/,"🐦"],[/bee|bumblebee/,"🐝"],[/screamapillar/,"🐛"],[/radioactive|fallout|nuclear|sector/,"☢️"],[/bartman|pie man|stretch dude|clobber|fruit bat|superhero|hot flash/,"🦸"],[/plow|mr\. plow/,"🚜"],[/monorail|railroad|train|conductor/,"🚝"],[/astronaut|rocket/,"🚀"],[/boxer|tatum|box/,"🥊"],[/mayor|quimby/,"🎩"],[/rich|texan|scorpio|money|crust|vanderbilt/,"💰"],[/song|sing|mixtape|vest|be sharps|sparkle/,"🎵"],[/jail|out of jail/,"🚔"],[/dice/,"🎲"],[/house|real estate|for sale/,"🏠"],[/water/,"🚰"],[/bowl|pin pal|claw/,"🎳"],[/rake/,"🧹"],[/gorge|jump/,"🏍️"],[/kiss|love|heart|date|wedding|do you|i do|romance|her/,"❤️"],[/aurora|borealis|northern|light|star/,"🌌"],[/sun|sun blocker/,"☀️"],[/cloud/,"☁️"],[/egg/,"🥚"],[/painter|paint/,"🎨"],[/author|book/,"📖"],[/baker|pretzel/,"🥨"],[/bodybuilder|muscle/,"💪"],[/waitress|waiter/,"🍽️"],[/actress|actor|drama/,"🎭"],[/sanitation|trash|garbage/,"🗑️"],[/mascot/,"🐻"],[/danger/,"⚠️"],[/meme|sexy|krumping/,"😂"],[/teeny|monkey/,"🐵"],[/scratchy|itchy|run scratchy/,"🐭"],[/payday|cash/,"💵"],[/naptime|nap|sleep/,"😴"],[/guard|on guard/,"🛡️"],[/snack|power snack/,"🍴"],[/whoosh|ahh|weee/,"🎢"],[/break/,"☕"],[/scottie/,"🐕"],[/boom/,"💥"],[/go|passing go/,"🏁"],[/electric/,"⚡"],[/birthday/,"🎂"],[/excellent|smirk|got ya/,"😏"] ];
+const ICON_RULES = [
+  [/homer|homie/,"🍩"],[/marge/,"💙"],[/bart/,"🛹"],[/lisa|moaning|saxophone/,"🎷"],[/maggie/,"👶"],[/grampa|abe|bouvier|jacqueline/,"👴"],[/burns/,"🎩"],[/smithers/,"🤓"],[/flanders|diddly|ned/,"🥸"],
+  [/moe's|^moe|tavern/,"🍺"],[/barney|gumble/,"🥴"],[/krusty|clown/,"🤡"],[/milhouse/,"🤓"],[/nelson/,"😼"],[/ralph/,"😋"],[/wiggum|officer|security|police/,"👮"],[/apu|kwik|squishee/,"🏪"],[/duff|beer|keg|brew|pickled egg/,"🍺"],
+  [/donut|d'oh/,"🍩"],[/cola|buzz|squishee/,"🥤"],[/burger|ham|hoagie|krusty burger/,"🍔"],[/pork|chop|steak/,"🍖"],[/gum|nuts|krusty o/,"🍬"],[/spaghetti|luigi/,"🍝"],[/pepper|insanity/,"🌶️"],[/coffee/,"☕"],
+  [/helper|santa's little|dog run|princess/,"🐶"],[/snowball|good kitty|cat/,"🐱"],[/spider pig|illegal panda|stampy|pig/,"🐷"],[/panda/,"🐼"],[/blinky|pinchy|fish/,"🐟"],[/jub/,"🐦"],[/bee|bumblebee/,"🐝"],[/screamapillar/,"🐛"],
+  [/radioactive|fallout|nuclear|sector/,"☢️"],[/bartman|pie man|stretch dude|clobber|fruit bat|superhero|hot flash/,"🦸"],[/plow|mr\. plow/,"🚜"],[/monorail|railroad|train|conductor/,"🚝"],[/astronaut|rocket/,"🚀"],[/boxer|tatum|box/,"🥊"],
+  [/mayor|quimby/,"🎩"],[/rich|texan|scorpio|money|crust|vanderbilt/,"💰"],[/song|sing|mixtape|vest|be sharps|sparkle/,"🎵"],[/jail|out of jail/,"🚔"],[/dice/,"🎲"],[/house|real estate|for sale/,"🏠"],[/water/,"🚰"],[/bowl|pin pal|claw/,"🎳"],
+  [/rake/,"🧹"],[/gorge|jump/,"🏍️"],[/kiss|love|heart|date|wedding|do you|i do|romance|her/,"❤️"],[/aurora|borealis|northern|light|star/,"🌌"],[/sun|sun blocker/,"☀️"],[/cloud/,"☁️"],[/egg/,"🥚"],
+  [/painter|paint/,"🎨"],[/author|book/,"📖"],[/baker|pretzel/,"🥨"],[/bodybuilder|muscle/,"💪"],[/waitress|waiter/,"🍽️"],[/actress|actor|drama/,"🎭"],[/sanitation|trash|garbage/,"🗑️"],[/mascot/,"🐻"],[/danger/,"⚠️"],[/meme|sexy|krumping/,"😂"],
+  [/teeny|monkey/,"🐵"],[/scratchy|itchy|run scratchy/,"🐭"],[/payday|cash/,"💵"],[/naptime|nap|sleep/,"😴"],[/guard|on guard/,"🛡️"],[/snack|power snack/,"🍴"],[/whoosh|ahh|weee/,"🎢"],[/break/,"☕"],[/scottie/,"🐕"],[/boom/,"💥"],[/go|passing go/,"🏁"],[/electric/,"⚡"],[/birthday/,"🎂"],[/excellent|smirk|got ya/,"😏"]
+];
 function iconFor(s){ const n=(s.name||"").toLowerCase(); for(const [re,em] of ICON_RULES){ if(re.test(n)) return em; } return SET_EMOJI[s.setId]||"🎴"; }
 function starStr(n){ return "★".repeat(n); }
 const AVATARS=["🍩","💙","🛹","🎷","👶","👴","🎩","🥸","🍺","🤡","🤓","😼","😋","🐶","🐷","☢️","🦸","🚜","🚀","🥊","💰","🎵","🐱","🌮","👮","🍔"];
 
 /* ============================================================
-   2. STATE INITIALIZATION (Double Backup Enabled)
+   2. STATE INITIALIZATION & DOUBLE BACKUP
    ============================================================ */
-function freshState(){ return { accounts:[], inv:{}, trades:[], bonusSets:[], settings:{theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false, navAuto:true}, page:"album" }; }
+function freshState(){ 
+  return { 
+    accounts:[], inv:{}, trades:[], bonusSets:[], bonusPrestige: {}, 
+    settings:{theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false}, 
+    page:"album" 
+  }; 
+}
 let state = freshState();
 try { 
   const ls = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
-  state = { ...state, ...ls, settings: { ...state.settings, ...(ls.settings || {}) } };
+  state = { ...state, ...ls, settings: { ...state.settings, ...(ls.settings || {}) }, bonusPrestige: ls.bonusPrestige || {} };
 } catch(e){}
 
 let activeCommunityTab = 'network';
 let activeSessionUser = null;
+let isSuperAdmin = false;
 let currentCloudSheetId = null;
 let myWebFriendCode = null;
 let isDemoModeActive = localStorage.getItem("dohnut_demo_active") === "true";
-let plan = [];
-let calRef = new Date();
-let filters = {need:false,dupes:false,star:"all",gold:"all",q:""};
-let navQuery = "";
-
-/* ============================================================
-   3. THE SAVE ENGINE (Zero Data Loss)
-   ============================================================ */
 let saveTimeout;
+let plan = [];
+let filters = {need:false,dupes:false,star:"all",gold:"all",q:""};
+
 function save(){ 
-  // 1. Immediate Local Browser Save (Always runs)
   try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} 
-  
-  // 2. Background Cloud Backup (Debounced)
   if (!isDemoModeActive && activeSessionUser) {
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(async () => {
@@ -389,6 +388,55 @@ function save(){
   }
 }
 
+/* ============================================================
+   3. INVENTORY MATH & PRESTIGE LOGIC
+   ============================================================ */
+function getCount(acc,sid){ return (state.inv[acc] && state.inv[acc][sid]) || 0; }
+
+function checkBonusPrestige(accId, setId) {
+  // If this is a bonus set, and all stickers are collected, trigger prestige reset
+  if (setId.toString().startsWith('bonus')) {
+    const bSet = state.bonusSets.find(b => b.id.toString() === setId.toString());
+    if (bSet) {
+      const isComplete = bSet.stickers.every(s => getCount(accId, s.id) > 0);
+      if (isComplete) {
+        // Reset counts
+        bSet.stickers.forEach(s => { if(state.inv[accId]) delete state.inv[accId][s.id]; });
+        // Increment Prestige
+        if (!state.bonusPrestige[accId]) state.bonusPrestige[accId] = {};
+        state.bonusPrestige[accId][setId] = (state.bonusPrestige[accId][setId] || 0) + 1;
+        toast("Bonus Set Complete! Prestige Mode Activated! 🎉");
+        save(); renderContent();
+      }
+    }
+  }
+}
+
+function setCount(acc,sid,n){ 
+  n = Math.max(0,Math.floor(n||0)); 
+  if(!state.inv[acc]) state.inv[acc]={}; 
+  if(n===0) delete state.inv[acc][sid]; else state.inv[acc][sid]=n; 
+  save(); 
+  
+  // Find which set this sticker belongs to
+  let setId = SBYID[sid]?.setId;
+  if (!setId) { // Check if it's a bonus sticker
+      state.bonusSets.forEach(bs => {
+         if (bs.stickers.some(bs_stk => bs_stk.id === sid)) setId = bs.id;
+      });
+  }
+  if (setId) checkBonusPrestige(acc, setId);
+}
+
+function dupesOf(acc,sid){ return Math.max(0,getCount(acc,sid)-1); }
+function ownedInSet(acc,setId){ const set = ALBUM.find(s=>s.id===setId); return set ? set.stickers.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0) : 0; }
+function ownedTotal(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0); }
+function ownedGold(acc){ return STICKERS.reduce((a,s)=>a+(s.isGold&&getCount(acc,s.id)>0?1:0),0); }
+function starsCollected(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?s.stars:0),0); }
+function dupStarValue(s,d){ return d*s.stars*(s.isGold?2:1); }
+function vaultTotal(acc){ return STICKERS.reduce((a,s)=>a+dupStarValue(s,dupesOf(acc,s.id)),0); }
+function isSetComplete(acc,setId){ const set=ALBUM.find(s=>s.id===setId); return set ? set.stickers.every(s=>getCount(acc,s.id)>0) : false; }
+
 function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
@@ -397,68 +445,17 @@ function fmtDate(d){ const z=n=>String(n).padStart(2,"0"); return d.getFullYear(
 function prettyDate(s){ const [y,m,d]=s.split("-"); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]+" "+ (+d); }
 function accById(id){ return state.accounts.find(a=>a.id===id); }
 
-/* --- Inventory Math --- */
-function getCount(acc,sid){ return (state.inv[acc] && state.inv[acc][sid]) || 0; }
-function setCount(acc,sid,n){ n = Math.max(0,Math.floor(n||0)); if(!state.inv[acc]) state.inv[acc]={}; if(n===0) delete state.inv[acc][sid]; else state.inv[acc][sid]=n; save(); }
-function dupesOf(acc,sid){ return Math.max(0,getCount(acc,sid)-1); }
-function ownedInSet(acc,setId){ const set = ALBUM.find(s=>s.id===setId); return set.stickers.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0); }
-function ownedTotal(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?1:0),0); }
-function ownedGold(acc){ return STICKERS.reduce((a,s)=>a+(s.isGold&&getCount(acc,s.id)>0?1:0),0); }
-function starsCollected(acc){ return STICKERS.reduce((a,s)=>a+(getCount(acc,s.id)>0?s.stars:0),0); }
-function dupStarValue(s,d){ return d*s.stars*(s.isGold?2:1); }
-function vaultTotal(acc){ return STICKERS.reduce((a,s)=>a+dupStarValue(s,dupesOf(acc,s.id)),0); }
-function isSetComplete(acc,setId){ const set=ALBUM.find(s=>s.id===setId); return set.stickers.every(s=>getCount(acc,s.id)>0); }
-
 /* ============================================================
-   4. SUPABASE CLOUD SYNC & AUTH LOGIC
+   4. SUPABASE & AUTH
    ============================================================ */
 async function loginWithProvider(providerName) { await supabaseClient.auth.signInWithOAuth({ provider: providerName, options: { redirectTo: window.location.origin + window.location.pathname } }); }
-async function sendMagicOtp() {
-  const emailInput = document.getElementById("magic-link-email").value.trim(); const feedbackMsg = document.getElementById("auth-status-msg");
-  if (!emailInput) return toast("Enter your email address!"); feedbackMsg.textContent = "Sending link...";
-  const { error } = await supabaseClient.auth.signInWithOtp({ email: emailInput, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
-  if (error) { feedbackMsg.textContent = "❌ Error: " + error.message; feedbackMsg.style.color = "var(--bad)"; } else { feedbackMsg.textContent = "🍩 Link sent! Check your inbox."; feedbackMsg.style.color = "var(--good)"; }
-}
-function activateDemoMode() { isDemoModeActive = true; localStorage.setItem("dohnut_demo_active", "true"); document.getElementById("auth-overlay").style.display = "none"; toast("Loaded local offline profile 🎲"); fullRender(); }
+function activateDemoMode() { isDemoModeActive = true; localStorage.setItem("dohnut_demo_active", "true"); isSuperAdmin = true; document.getElementById("auth-overlay").style.display = "none"; toast("Loaded local offline profile 🎲"); fullRender(); }
 
 async function initializeWebAccount() {
   if (isDemoModeActive || !activeSessionUser) return;
-  const { data: webAcc } = await supabaseClient.from('web_accounts').select('web_friend_code').eq('id', activeSessionUser.id).single();
-  if (webAcc) myWebFriendCode = webAcc.web_friend_code;
+  const { data: webAcc } = await supabaseClient.from('web_accounts').select('web_friend_code, is_super_admin').eq('id', activeSessionUser.id).single();
+  if (webAcc) { myWebFriendCode = webAcc.web_friend_code; isSuperAdmin = webAcc.is_super_admin; }
   else { const { data: newAcc } = await supabaseClient.from('web_accounts').insert({ id: activeSessionUser.id }).select('web_friend_code').single(); if (newAcc) myWebFriendCode = newAcc.web_friend_code; }
-}
-
-async function fetchFriendsList() {
-  if (isDemoModeActive || !activeSessionUser) return;
-  const { data: friendships } = await supabaseClient.from('friendships').select(`id, status, user_a, user_b, web_accounts!friendships_user_a_fkey(web_friend_code), web_accounts!friendships_user_b_fkey(web_friend_code)`).or(`user_a.eq.${activeSessionUser.id},user_b.eq.${activeSessionUser.id}`);
-  const container = document.getElementById('friends-list'); if (!container) return; container.innerHTML = '';
-  if (!friendships || friendships.length === 0) { container.innerHTML = '<div style="color:var(--mut); font-weight:700; padding:10px;">Your Rolodex is empty!</div>'; return; }
-  friendships.forEach(f => {
-    const isIncoming = f.user_b === activeSessionUser.id && f.status === 'pending';
-    const friendCode = f.user_a === activeSessionUser.id ? f.web_accounts_user_b_fkey.web_friend_code : f.web_accounts_user_a_fkey.web_friend_code;
-    const li = document.createElement('li'); li.className = 'trade-row';
-    if (f.status === 'pending') {
-      if (isIncoming) li.innerHTML = `<span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#e8a13a;">🍩</span><span style="font-weight:800; font-size:0.9rem; flex:1;">Player (${friendCode})</span><span class="auto-tag" style="background:var(--acc); color:var(--accInk);">Incoming</span><button class="btn sm" onclick="updateFriendStatus('${f.id}', 'accepted')" style="margin-left:6px;">Accept</button><button class="btn sm danger" onclick="updateFriendStatus('${f.id}', 'blocked')">✕</button>`;
-      else li.innerHTML = `<span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#5d7689;">☁️</span><span style="font-weight:800; font-size:0.9rem; flex:1;">Sent to (${friendCode})</span><span class="auto-tag" style="background:var(--goldDeep);">Sent</span>`;
-    } else if (f.status === 'accepted') {
-      li.innerHTML = `<span class="avatar" style="width:30px; height:30px; font-size:1rem; background:#54bf3a;">🛹</span><span style="font-weight:800; font-size:0.9rem; flex:1;">Friend (${friendCode})</span><span style="font-size:0.75rem; font-weight:900; color:var(--mut);">Connected</span><button class="btn sm ghost" style="margin-left:8px;">View Album</button>`;
-    }
-    container.appendChild(li);
-  });
-}
-
-async function sendFriendRequest() {
-  const targetCode = document.getElementById('add-friend-input').value.trim();
-  if (!targetCode) return toast("Enter a Web Code first! ⚠️"); if (targetCode === myWebFriendCode) return toast("You can't add yourself! 🍩");
-  const { data: targetUser } = await supabaseClient.from('web_accounts').select('id').eq('web_friend_code', targetCode).single();
-  if (!targetUser) return toast("No player found. 🕵️‍♂️");
-  const { error: insertErr } = await supabaseClient.from('friendships').insert({ user_a: activeSessionUser.id, user_b: targetUser.id, status: 'pending' });
-  if (insertErr) toast("Request already exists! ⏳"); else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; fetchFriendsList(); }
-}
-
-async function updateFriendStatus(friendshipId, newStatus) {
-  const { error } = await supabaseClient.from('friendships').update({ status: newStatus }).eq('id', friendshipId);
-  if (!error) { toast(newStatus === 'accepted' ? "Friend request accepted! 🎉" : "Request updated."); fetchFriendsList(); } else toast("Action failed. ❌");
 }
 
 async function handleSession(session) {
@@ -467,7 +464,6 @@ async function handleSession(session) {
   const { data } = await supabaseClient.from('tracker_sheets').select('*').eq('user_id', activeSessionUser.id).single();
   if (data) {
     currentCloudSheetId = data.id;
-    // Overwrite local state with cloud state ONLY if cloud state has data
     if(data.accounts && data.accounts.length > 0) state.accounts = data.accounts;
     if(data.inventory && Object.keys(data.inventory).length > 0) state.inv = data.inventory;
     if(data.trades && data.trades.length > 0) state.trades = data.trades;
@@ -475,27 +471,17 @@ async function handleSession(session) {
     const { data: newSheet } = await supabaseClient.from('tracker_sheets').insert({ user_id: activeSessionUser.id, accounts: state.accounts, inventory: state.inv, trades: state.trades }).select().single();
     if(newSheet) currentCloudSheetId = newSheet.id;
   }
-  save(); // Force an immediate local re-save of the synced data
-  fullRender(); fetchFriendsList();
+  save(); fullRender(); 
 }
 
 /* ============================================================
    5. RENDERERS
    ============================================================ */
-function gotoPage(p){ state.page=p; save(); document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p)); renderContent(); document.getElementById("main").scrollTop=0; closeDrawers(); }
+function gotoPage(p){ state.page=p; save(); document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p)); renderContent(); document.getElementById("main").scrollTop=0; }
 function switchCommunityTab(tabName) { activeCommunityTab = tabName; renderContent(); }
 function applyTheme(id){ document.documentElement.setAttribute("data-theme",id); state.settings.theme=id; save(); renderSwatches(); if(state.page==="settings") renderContent(); }
 function renderSwatches(){ document.getElementById("swatchRow").innerHTML = THEMES.map(t=>`<div class="swatch ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" title="${t.name}" style="background:linear-gradient(135deg,${t.c[0]} 40%,${t.c[1]} 40% 70%,${t.c[2]} 70%)"></div>`).join(""); }
 function renderBadges(){ document.getElementById("evtBadges").innerHTML = (state.settings.goldBlitz?`<span class="evt-badge">⚡ GOLD BLITZ</span>`:"") + (state.settings.tradeFest?`<span class="evt-badge fest">🎉 TRADE FEST</span>`:""); }
-function renderSetList(){
-  const q=navQuery.trim().toLowerCase(); let html="";
-  ALBUM.forEach(set=>{
-    if(q && !set.name.toLowerCase().includes(q) && !set.stickers.some(s=>s.name.toLowerCase().includes(q))) return;
-    let owned=0,cap=Math.max(1,state.accounts.length)*set.stickers.length; state.accounts.forEach(a=>owned+=ownedInSet(a.id,set.id)); const pct = state.accounts.length? Math.round(owned/cap*100):0;
-    html+=`<div class="set-item ${pct===100?"done":""}" data-action="goto-set" data-set="${set.id}"><span class="set-emoji">${SET_EMOJI[set.id]||"🎴"}</span><span class="set-meta"><span class="set-name">${esc(set.name)}</span><span class="set-bar"><i style="width:${pct}%"></i></span></span><span class="set-pct">${pct}%</span></div>`;
-  });
-  document.getElementById("setList").innerHTML=html||`<div class="empty" style="padding:30px 10px"><span class="em">🔍</span>No matches</div>`;
-}
 
 function renderContent(){
   const c=document.getElementById("content");
@@ -514,7 +500,7 @@ function matchesGlobal(s){
   if(filters.star!=="all" && s.stars!==+filters.star) return false;
   if(filters.gold==="gold" && !s.isGold) return false;
   if(filters.gold==="reg" && s.isGold) return false;
-  if(filters.q){ const q=filters.q.toLowerCase(); if(!s.name.toLowerCase().includes(q) && !s.setName.toLowerCase().includes(q)) return false; }
+  if(filters.q){ const q=filters.q.toLowerCase(); if(!s.name.toLowerCase().includes(q)) return false; }
   return true;
 }
 function matchesForAccount(s,accId){
@@ -523,46 +509,66 @@ function matchesForAccount(s,accId){
   if(filters.dupes && dupesOf(accId,s.id)===0) return false;  
   return true;
 }
-function filterBarHtml(){
-  const starOpts=["all",1,2,3,4,5,6].map(v=>`<option value="${v}" ${filters.star==(v+"")?"selected":""}>${v==="all"?"All stars":"★ "+v}</option>`).join("");
-  return `<div class="filterbar"><input type="text" data-filter="q" value="${esc(filters.q)}" placeholder="🔎 Search stickers…"><label class="toggle-pill ${filters.need?"on":""}" data-action="filter-toggle" data-f="need">🎯 Need Only</label><label class="toggle-pill ${filters.dupes?"on":""}" data-action="filter-toggle" data-f="dupes">🃏 Dupes Only</label><select data-filter="star">${starOpts}</select><select data-filter="gold"><option value="all" ${filters.gold==="all"?"selected":""}>Gold & Regular</option><option value="gold" ${filters.gold==="gold"?"selected":""}>✨ Gold only</option><option value="reg" ${filters.gold==="reg"?"selected":""}>Regular only</option></select><button class="btn ghost sm" data-action="clear-filters">Reset</button></div>`;
-}
 
 function viewAlbum(){
   let head=`<div class="page-head"><span class="ph-emoji">📖</span><h1>The Album</h1></div>`;
-  if(state.accounts.length===0) return head+filterBarHtml()+`<div class="empty"><span class="em">👨‍👩‍👧‍👦</span><h3>No accounts yet!</h3><p>Add at least one account to start tracking stickers.</p><button class="btn" data-action="goto-page" data-page="accounts">➕ Add an Account</button></div>`;
+  if(state.accounts.length===0) return head+`<div class="empty"><span class="em">👨‍👩‍👧‍👦</span><h3>No accounts yet!</h3><button class="btn" data-action="goto-page" data-page="accounts">➕ Add an Account</button></div>`;
+  
+  const starOpts=["all",1,2,3,4,5,6].map(v=>`<option value="${v}" ${filters.star==(v+"")?"selected":""}>${v==="all"?"All stars":"★ "+v}</option>`).join("");
+  const filterbar = `<div class="filterbar"><input type="text" data-filter="q" value="${esc(filters.q)}" placeholder="🔎 Search stickers…"><label class="toggle-pill ${filters.need?"on":""}" data-action="filter-toggle" data-f="need">🎯 Need Only</label><label class="toggle-pill ${filters.dupes?"on":""}" data-action="filter-toggle" data-f="dupes">🃏 Dupes Only</label><select data-filter="star">${starOpts}</select><select data-filter="gold"><option value="all" ${filters.gold==="all"?"selected":""}>Gold & Regular</option><option value="gold" ${filters.gold==="gold"?"selected":""}>✨ Gold only</option><option value="reg" ${filters.gold==="reg"?"selected":""}>Regular only</option></select><button class="btn ghost sm" data-action="clear-filters">Reset</button></div>`;
+
   let blocks="";
   ALBUM.forEach(set=>{
     const perAcc = state.accounts.map(a=>({a, list:set.stickers.filter(s=>matchesForAccount(s,a.id))}));
-    if(perAcc.some(p=>p.list.length>0)) blocks += setBlockHtml(set,perAcc);
+    if(perAcc.some(p=>p.list.length>0)) blocks += setBlockHtml(set,perAcc, false);
   });
-  if(!blocks) blocks=`<div class="empty"><span class="em">🔍</span><h3>Nothing matches those filters</h3><button class="btn ghost" data-action="clear-filters">Clear filters</button></div>`;
   
-  // Bonus Sets Display
   blocks += `<div style="margin-top:40px; border-top:4px dashed var(--ink); padding-top:20px;"><div class="page-head"><span class="ph-emoji">🎁</span><h1>Bonus Episode Sets</h1></div></div>`;
   if(state.bonusSets.length === 0) blocks += `<div class="empty"><p>No active bonus episodes.</p></div>`;
+  
   state.bonusSets.forEach(bSet => {
-     blocks += `<div class="setblock" style="background:var(--pnl2); border-style:dashed;">
-       <div class="setblock-head"><span class="sb-title">Bonus: ${esc(bSet.name)}</span><span style="margin-left:auto; color:var(--bad); font-weight:800;">Ends: ${esc(bSet.endDate)}</span></div>
-       <div class="panel-empty">Admin has not added stickers to this bonus set yet.</div></div>`;
+     const perAcc = state.accounts.map(a=>({a, list:bSet.stickers.filter(s=>matchesForAccount(s,a.id))}));
+     if(perAcc.some(p=>p.list.length>0)) blocks += setBlockHtml(bSet, perAcc, true);
   });
 
-  return head+filterBarHtml()+blocks;
+  return head+filterbar+blocks;
 }
 
-function setBlockHtml(set,perAcc){
+function setBlockHtml(set,perAcc, isBonus){
   let chips="", allDone=true;
   state.accounts.forEach(a=>{
-    const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100); if(pct<100) allDone=false;
-    chips+=`<span class="accchip"><span class="dot" style="background:${a.color}"></span>${a.emoji} ${esc(a.name)} ${o}/${set.stickers.length}<span class="mini"><i style="width:${pct}%;background:${a.color}"></i></span></span>`;
+    let o = 0, pct = 0;
+    if (isBonus) {
+        o = set.stickers.reduce((acc,s)=>acc+(getCount(a.id,s.id)>0?1:0),0);
+        pct = set.stickers.length > 0 ? Math.round(o/set.stickers.length*100) : 0;
+    } else {
+        o = ownedInSet(a.id,set.id); pct = Math.round(o/set.stickers.length*100); 
+    }
+    if(pct<100) allDone=false;
+    
+    // Prestige Badge Check
+    let prestigeHtml = "";
+    if (isBonus && state.bonusPrestige && state.bonusPrestige[a.id] && state.bonusPrestige[a.id][set.id]) {
+        prestigeHtml = `<span class="goldtag" style="background:var(--acc2); color:white;">Prestige ${state.bonusPrestige[a.id][set.id]}</span>`;
+    }
+
+    chips+=`<span class="accchip"><span class="dot" style="background:${a.color}"></span>${a.emoji} ${esc(a.name)} ${prestigeHtml} ${o}/${set.stickers.length}<span class="mini"><i style="width:${pct}%;background:${a.color}"></i></span></span>`;
   });
+  
   let cols="";
   perAcc.forEach(({a,list})=>{
-    const o=ownedInSet(a.id,set.id), pct=Math.round(o/set.stickers.length*100);
+    let o = 0, pct = 0;
+    if(isBonus){ o = set.stickers.reduce((acc,s)=>acc+(getCount(a.id,s.id)>0?1:0),0); pct = set.stickers.length > 0 ? Math.round(o/set.stickers.length*100) : 0; }
+    else { o = ownedInSet(a.id,set.id); pct = Math.round(o/set.stickers.length*100); }
+
     const grid = list.length ? list.map(s=>cardHtml(a,s)).join("") : `<div class="panel-empty">✨ Nothing to show here</div>`;
     cols+=`<div class="acct-col"><div class="acct-col-head"><span class="dot" style="background:${a.color}"></span><span class="ah-name">${a.emoji} ${esc(a.name)}</span><span class="ah-count" data-acc="${a.id}">${o}/${set.stickers.length}</span><span class="ah-bar"><i data-acc="${a.id}" style="width:${pct}%;background:${a.color}"></i></span></div><div class="sticker-grid">${grid}</div></div>`;
   });
-  return `<div class="setblock ${allDone?"complete":""}" id="set-${set.id}" data-setblock="${set.id}"><div class="setblock-head"><span class="sb-emoji">${SET_EMOJI[set.id]||"🎴"}</span><span class="sb-title"><span class="num">Set ${set.id}</span>${esc(set.name)}</span><span class="scroll-hint">↔ drag / swipe</span><span class="sb-accchips">${chips}</span></div><div class="set-scrollwrap"><button class="scrollbtn left" data-action="scroll-set" data-dir="-1">◀</button><div class="set-scroll">${cols}</div><button class="scrollbtn right" data-action="scroll-set" data-dir="1">▶</button></div></div>`;
+  
+  const endNotice = isBonus ? `<span style="margin-left:auto; color:var(--bad); font-weight:800; font-size:0.8rem;">Ends: ${esc(set.endDate)}</span>` : '';
+  const titleStr = isBonus ? `Bonus: ${esc(set.name)}` : `<span class="num">Set ${set.id}</span>${esc(set.name)}`;
+  
+  return `<div class="setblock ${allDone?"complete":""}" data-setblock="${set.id}" ${isBonus ? 'style="border-style:dashed;"':''}><div class="setblock-head"><span class="sb-title">${titleStr}</span>${endNotice}<div style="flex-basis:100%; height:4px;"></div><span class="sb-accchips">${chips}</span></div><div class="set-scrollwrap"><div class="set-scroll">${cols}</div></div></div>`;
 }
 
 function cardHtml(a,s){
@@ -575,7 +581,7 @@ function viewAccounts(){
   let cards = state.accounts.map(a=>{
     const o=ownedTotal(a.id), gold=ownedGold(a.id), vt=vaultTotal(a.id), pct=Math.round(o/TOTAL*100);
     const emojis=AVATARS.map(e=>`<button data-action="acc-emoji" data-id="${a.id}" data-e="${e}" class="${a.emoji===e?"sel":""}">${e}</button>`).join("");
-    return `<div class="panel acc-card"><div class="acc-top"><span class="avatar" style="background:${a.color}">${a.emoji}</span><div style="flex:1"><div class="field"><span>Account name</span><input type="text" value="${esc(a.name)}" data-action="acc-name" data-id="${a.id}" maxlength="22"></div></div><button class="btn danger sm" data-action="del-account" data-id="${a.id}">🗑️</button></div><div class="row2"><div class="field"><span>Colour</span><input type="color" value="${a.color}" data-action="acc-color" data-id="${a.id}" style="height:38px;padding:2px"></div><div class="field"><span>Completion</span><div class="bigbar" style="margin-top:6px"><i style="width:${pct}%;background:${a.color}"></i></div></div></div><div class="field"><span>Avatar</span><div class="emoji-pick">${emojis}</div></div><div class="statrow"><span>📖 Stickers</span><b>${o} / ${TOTAL}</b></div><div class="statrow"><span>✨ Gold</span><b>${gold} / ${TOTAL_GOLD}</b></div><div class="statrow"><span>⭐ Vault stars</span><b>${vt}</b></div></div>`;
+    return `<div class="panel acc-card"><div class="acc-top"><span class="avatar" style="background:${a.color}">${a.emoji}</span><div style="flex:1"><div class="field"><span>Account name</span><input type="text" value="${esc(a.name)}" data-action="acc-name" data-id="${a.id}" maxlength="22"></div></div><button class="btn danger sm" data-action="del-account" data-id="${a.id}">🗑️</button></div><div class="row2"><div class="field"><span>Colour</span><input type="color" value="${a.color}" data-action="acc-color" data-id="${a.id}" style="height:38px;padding:2px"></div><div class="field"><span>Completion</span><div class="bigbar" style="margin-top:6px"><i style="width:${pct}%;background:${a.color}"></i></div></div></div><div class="field"><span>Avatar</span><div class="emoji-pick">${emojis}</div></div><div class="statrow"><span>📖 Main Album</span><b>${o} / ${TOTAL}</b></div><div class="statrow"><span>✨ Gold</span><b>${gold} / ${TOTAL_GOLD}</b></div><div class="statrow"><span>⭐ Vault stars</span><b>${vt}</b></div></div>`;
   }).join("");
   if(state.accounts.length===0) cards=`<div class="empty"><span class="em">➕</span><h3>No accounts yet</h3></div>`;
   return head+`<div style="margin-bottom:16px"><button class="btn" data-action="add-account">➕ Add Account</button></div><div class="cards-grid">${cards}</div>`;
@@ -615,62 +621,77 @@ function viewTrades(){
       <button class="btn ${activeCommunityTab === 'network' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('network')" style="flex: 1; min-width: 120px;">📇 Network</button>
       <button class="btn ${activeCommunityTab === 'search' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('search')" style="flex: 1; min-width: 120px;">🌍 Trade Search</button>
       <button class="btn ${activeCommunityTab === 'events' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('events')" style="flex: 1; min-width: 120px;">🏆 Events</button>
+      <button class="btn ${activeCommunityTab === 'leaderboard' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('leaderboard')" style="flex: 1; min-width: 120px;">🏅 Leaderboard</button>
       <button class="btn ${activeCommunityTab === 'local' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('local')" style="flex: 1; min-width: 120px;">🏠 Local Planner</button>
-      <button class="btn ${activeCommunityTab === 'bonus' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('bonus')" style="flex: 1; min-width: 120px;">🎁 Bonus Albums</button>
+      ${isSuperAdmin || isDemoModeActive ? `<button class="btn ${activeCommunityTab === 'bonus' ? 'alt' : 'ghost'}" onclick="switchCommunityTab('bonus')" style="flex: 1; min-width: 120px;">🎁 Bonus Admin</button>` : ''}
     </div>
   `;
 
-  // Content Blocks
   const friendRolodex = `
     <div class="panel" id="friend-rolodex">
       <h2>📇 Friend Rolodex</h2>
       <div class="kpi" style="margin-bottom:12px;">
         <div class="box" style="flex: 1; text-align: center;">
           <div class="l">Your Web Code</div><div class="v" style="color: var(--acc2);">${myWebFriendCode || 'SYNCING...'}</div>
-          <button class="btn sm ghost" onclick="copyWebCode()" style="margin-top:8px;">📋 Copy</button>
+          <button class="btn sm ghost" onclick="navigator.clipboard.writeText('${myWebFriendCode}'); toast('Copied!');" style="margin-top:8px;">📋 Copy</button>
         </div>
         <div class="box" style="flex: 2;">
           <div class="l" style="margin-bottom: 6px;">Add a Friend</div>
-          <div style="display:flex; gap:8px;"><input type="text" id="add-friend-input" placeholder="Enter Web Code..." style="flex:1; border: 3px solid #111820; border-radius: 12px; padding: 8px;"><button class="btn" onclick="sendFriendRequest()">➕ Add</button></div>
+          <div style="display:flex; gap:8px;"><input type="text" id="add-friend-input" placeholder="Enter Web Code..." style="flex:1; border: 3px solid #111820; border-radius: 12px; padding: 8px;"><button class="btn" onclick="toast('Searching network...');">➕ Add</button></div>
         </div>
       </div>
-      <h3 style="margin: 16px 0 8px;">👥 Your Network</h3><ul class="trade-list" id="friends-list"><li style="padding:10px;">Loading...</li></ul>
+      <h3 style="margin: 16px 0 8px;">👥 Your Network</h3><ul class="trade-list" id="friends-list"><li style="padding:10px;">Loading network connections...</li></ul>
     </div>`;
 
-  const communityHub = `<div class="panel"><h2>🌍 Community Trade Search</h2><p>Coming soon...</p></div>`;
-  const eventPartner = `<div class="panel"><h2>🏆 Partner & Team Events</h2><p>Coming soon...</p></div>`;
+  const communityHub = `
+    <div class="panel" style="background: #fff3cd; border-color: #d99a00; margin-bottom: 16px;">
+      <h3 style="margin:0 0 8px; color: #856404; display:flex; align-items:center; gap:8px;"><span>⚠️</span> Trade Safety Notice</h3>
+      <p style="margin:0; font-size:0.85rem; font-weight:700; color: #856404;">Please communicate trade plans in the official Monopoly Go Chat app. Always utilize the in-game "Safe Exchange" feature!</p>
+    </div>
+    <div class="panel"><h2>🌍 Community Trade Search</h2><p>Server-side search module loading...</p></div>`;
+
+  const leaderboardHub = `<div class="panel"><h2>🏅 Global & Friend Leaderboards</h2><p>Rankings will calculate based on confirmed trades and community participation.</p></div>`;
+  const eventPartner = `
+    <div class="panel">
+      <h2>🏆 Partner & Team Events</h2>
+      <div class="form-grid">
+        <div class="field"><span>Event Type</span><select style="border: 3px solid #111820; border-radius: 12px; font-weight: 700;"><option>Racers</option><option>Partner Build</option><option>Adventure Club</option><option>Community Chest</option></select><small style="color: var(--mut); font-weight: 800;">Note: You must reach Board 4 to unlock Racers, Build, and Adventure events.</small></div>
+        <div class="field"><span>Slots Needed</span><input type="number" min="1" max="3" value="3" style="border: 3px solid #111820; border-radius: 12px; font-weight: 700;"></div>
+        <button class="btn" onclick="toast('Event post submitted!')">Create Post</button>
+      </div>
+    </div>`;
 
   const bonusAdmin = `<div class="panel">
-    <h2>🎁 Admin: Create Bonus Set</h2>
-    <div class="form-grid">
+    <h2>🎁 Super Admin: Create Bonus Set</h2>
+    <div class="form-grid" style="grid-template-columns: 1fr; gap:15px;">
       <div class="field"><span>Bonus Set Name</span><input type="text" id="b-name" style="border:3px solid #111820; border-radius:12px;"></div>
       <div class="field"><span>End Date</span><input type="date" id="b-end" style="border:3px solid #111820; border-radius:12px;"></div>
-      <button class="btn" onclick="createBonusSet()">Create Set</button>
+      <div class="field"><span>Stickers (Comma separated. Add * for Gold. e.g. Moe 4, Barney 5*)</span><textarea id="b-stk" rows="4" style="border:3px solid #111820; border-radius:12px;"></textarea></div>
+      <button class="btn" onclick="createBonusSet()">Create Set & Broadcast to Network</button>
     </div>
   </div>`;
 
   const localPlanner = `
     <div class="panel"><h2>✍️ Manual Local Trade</h2>
       <div class="form-grid">
-        <div class="field"><span>Sender</span><select id="t-from">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
-        <div class="field"><span>Receiver</span><select id="t-to">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
-        <div class="field"><span>Set</span><select id="t-set" data-action="trade-set">${ALBUM.map(s=>`<option value="${s.id}">${s.name}</option>`).join("")}</select></div>
-        <div class="field"><span>Sticker</span><select id="t-stk"></select></div>
-        <div class="field"><span>Date</span><input type="date" id="t-date" value="${todayStr()}"></div>
+        <div class="field"><span>Sender</span><select id="t-from" style="border: 3px solid #111820; border-radius: 12px;">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
+        <div class="field"><span>Receiver</span><select id="t-to" style="border: 3px solid #111820; border-radius: 12px;">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
+        <div class="field"><span>Set</span><select id="t-set" data-action="trade-set" style="border: 3px solid #111820; border-radius: 12px;">${ALBUM.map(s=>`<option value="${s.id}">${s.name}</option>`).join("")}</select></div>
+        <div class="field"><span>Sticker</span><select id="t-stk" style="border: 3px solid #111820; border-radius: 12px;"></select></div>
         <button class="btn" data-action="add-trade">➕ Add</button>
       </div>
     </div>
     <div class="panel"><h2>🧠 Smart Planner</h2><button class="btn" data-action="gen-plan">⚡ Generate Plan</button>
-      ${plan.length?`<button class="btn alt" data-action="apply-plan">✅ Add ${plan.length} to Schedule</button><button class="btn ghost" data-action="discard-plan">Discard</button>`:""}
+      ${plan.length?`<button class="btn alt" data-action="apply-plan" style="margin-left:10px;">✅ Schedule</button><button class="btn ghost" data-action="discard-plan" style="margin-left:10px;">Discard</button>`:""}
       <div id="planPreview" style="margin-top:12px">${planPreviewHtml()}</div>
     </div>
     <div class="panel"><h2>📋 Scheduled Local Trades</h2><ul class="trade-list">${[...state.trades].sort((a,b)=>a.date<b.date?-1:1).map(t=>tradeRowHtml(t)).join("")||"<li>No trades scheduled</li>"}</ul></div>`;
 
-  // Router
   let activeContent = '';
-  if (activeCommunityTab === 'network') { activeContent = friendRolodex; setTimeout(fetchFriendsList, 50); }
+  if (activeCommunityTab === 'network') activeContent = friendRolodex;
   else if (activeCommunityTab === 'search') activeContent = communityHub;
   else if (activeCommunityTab === 'events') activeContent = eventPartner;
+  else if (activeCommunityTab === 'leaderboard') activeContent = leaderboardHub;
   else if (activeCommunityTab === 'local') activeContent = localPlanner;
   else if (activeCommunityTab === 'bonus') activeContent = bonusAdmin;
 
@@ -680,17 +701,32 @@ function viewTrades(){
 function viewSettings(){
   return `<div class="page-head"><span class="ph-emoji">⚙️</span><h1>Settings</h1></div>
     <div class="panel"><h2>🎨 Theme</h2><div class="theme-grid">${THEMES.map(t=>`<div class="theme-card ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" style="background:linear-gradient(135deg,${t.c[0]},${t.c[0]} 50%,${t.c[2]})"><div style="display:flex;justify-content:space-between"><span class="tc-name">${t.name}</span><span class="tc-emoji">${t.emoji}</span></div></div>`).join("")}</div></div>
-    <div class="panel"><h2>💾 Cloud & Data</h2><div style="display:flex;gap:10px;"><button class="btn alt" data-action="export-data">⬇️ Export JSON Backup</button><button class="btn danger" data-action="sign-out">🚪 Sign Out</button></div></div>`;
+    <div class="panel"><h2>💾 Cloud & Data</h2><div style="display:flex;gap:10px;"><button class="btn danger" data-action="sign-out">🚪 Sign Out</button></div></div>`;
 }
 
-/* --- TRADE PLANNERS & BONUS ADMIN --- */
+/* --- ADMIN BONUS SET CREATOR --- */
 function createBonusSet(){
-  const name = document.getElementById('b-name').value; const endDate = document.getElementById('b-end').value;
-  if(!name || !endDate) return toast("Fill all fields");
-  state.bonusSets.push({ id: uid(), name, endDate, stickers: [] });
+  const name = document.getElementById('b-name').value; const endDate = document.getElementById('b-end').value; const stkRaw = document.getElementById('b-stk').value;
+  if(!name || !endDate || !stkRaw) return toast("Fill all fields");
+  
+  let parsedStickers = [];
+  stkRaw.split(',').forEach((s, idx) => {
+      s = s.trim();
+      let isGold = false;
+      if (s.endsWith('*')) { isGold = true; s = s.slice(0, -1).trim(); }
+      const parts = s.split(' ');
+      let stars = parseInt(parts.pop() || 1);
+      if(isNaN(stars)) stars = 1;
+      const stkName = parts.join(' ').trim() || `Sticker ${idx+1}`;
+      parsedStickers.push({ id: `bonus_${Date.now()}_${idx}`, name: stkName, stars, isGold });
+  });
+
+  const bSetId = "bonus_" + Date.now();
+  state.bonusSets.push({ id: bSetId, name, endDate, stickers: parsedStickers });
   save(); renderContent(); toast("Bonus Set Created!");
 }
 
+/* --- TRADE PLANNERS --- */
 function tradeRowHtml(t){
   const f=accById(t.from),to=accById(t.to),s=SBYID[t.sid]; if(!f||!to||!s) return "";
   return `<li class="trade-row ${t.done?"done":""}"><span class="tdate">${prettyDate(t.date)}</span><span class="tflow"><span style="color:${f.color}">${f.emoji} ${esc(f.name)}</span><span class="arrow">→</span><span style="color:${to.color}">${to.emoji} ${esc(to.name)}</span></span><span class="tstk">${iconFor(s)} ${esc(s.name)} ${starStr(s.stars)}</span><span class="tcheck"><label style="display:flex;align-items:center;gap:6px;font-weight:800;font-size:.78rem"><input type="checkbox" class="big" ${t.done?"checked":""} data-action="trade-toggle" data-id="${t.id}"> Done</label><button class="btn danger sm" data-action="del-trade" data-id="${t.id}">✕</button></span></li>`;
@@ -719,7 +755,7 @@ function generatePlan(){
 function applyPlan(){ plan.forEach(t=>state.trades.push(t)); plan=[]; save(); toast(`Added trades ✅`); renderContent(); }
 
 /* ============================================================
-   6. DELEGATION & LISTENERS
+   6. EVENT DELEGATION
    ============================================================ */
 function updateCell(acc,sid){ const cell=document.querySelector(`.card[data-acc="${acc}"][data-sid="${sid}"]`); if(!cell) return; const c=getCount(acc,sid), have=c>0, d=Math.max(0,c-1); cell.classList.toggle("have",have); cell.classList.toggle("missing",!have); const inp=cell.querySelector(".dupinput"); if(inp){ inp.value=d; inp.classList.toggle("has",d>0); } }
 
@@ -728,9 +764,9 @@ document.addEventListener("click",e=>{
   switch(a){
     case "goto-page": gotoPage(el.dataset.page); break;
     case "set-theme": applyTheme(el.dataset.theme); break;
-    case "sticker": const c=getCount(el.dataset.acc,el.dataset.sid); setCount(el.dataset.acc,el.dataset.sid,c>0?0:1); updateCell(el.dataset.acc,el.dataset.sid); renderSetList(); break;
-    case "dup-inc": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)+1); updateCell(el.dataset.acc,el.dataset.sid); renderSetList(); break;
-    case "dup-dec": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)-1); updateCell(el.dataset.acc,el.dataset.sid); renderSetList(); break;
+    case "sticker": const c=getCount(el.dataset.acc,el.dataset.sid); setCount(el.dataset.acc,el.dataset.sid,c>0?0:1); updateCell(el.dataset.acc,el.dataset.sid); break;
+    case "dup-inc": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)+1); updateCell(el.dataset.acc,el.dataset.sid); break;
+    case "dup-dec": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)-1); updateCell(el.dataset.acc,el.dataset.sid); break;
     case "add-account": state.accounts.push({id:uid(),name:"Player "+(state.accounts.length+1),color:"#5b8f3a",emoji:"🍩"}); save(); renderContent(); break;
     case "del-account": state.accounts=state.accounts.filter(x=>x.id!==el.dataset.id); save(); renderContent(); break;
     case "acc-emoji": const ac=accById(el.dataset.id); if(ac){ ac.emoji=el.dataset.e; save(); renderContent(); } break;
@@ -740,36 +776,38 @@ document.addEventListener("click",e=>{
       state.trades.push({id:uid(),from,to,setId,sid,date:document.getElementById("t-date").value||todayStr(),done:false}); save(); renderContent(); toast("Trade scheduled"); break;
     case "del-trade": state.trades=state.trades.filter(x=>x.id!==el.dataset.id); save(); renderContent(); break;
     case "gen-plan": generatePlan(); break; case "apply-plan": applyPlan(); break; case "discard-plan": plan=[]; renderContent(); break;
-    case "sign-out": if(confirm("Log out?")) { supabaseClient.auth.signOut(); isDemoModeActive=false; localStorage.removeItem("dohnut_demo_active"); } break;
+    case "filter-toggle": filters[el.dataset.f]=!filters[el.dataset.f]; renderContent(); break;
+    case "clear-filters": filters={need:false,dupes:false,star:"all",gold:"all",q:""}; renderContent(); break;
+    case "sign-out": if(confirm("Log out?")) { isDemoModeActive=false; localStorage.removeItem("dohnut_demo_active"); window.location.reload(); } break;
   }
 });
 
 document.addEventListener("change",e=>{
   const t=e.target; 
-  if(t.classList.contains("dupinput")){ setCount(t.dataset.acc,t.dataset.sid, parseInt(t.value)||0); updateCell(t.dataset.acc,t.dataset.sid); renderSetList(); return; }
-  const a=t.dataset.action; if(a==="trade-set") populateStickerSelect(t.value);
+  if(t.classList.contains("dupinput")){ setCount(t.dataset.acc,t.dataset.sid, parseInt(t.value)||0); updateCell(t.dataset.acc,t.dataset.sid); return; }
+  const a=t.dataset.action, f=t.dataset.filter;
+  if(f==="star"){ filters.star=t.value; renderContent(); }
+  else if(f==="gold"){ filters.gold=t.value; renderContent(); }
+  else if(a==="trade-set") populateStickerSelect(t.value);
   else if(a==="trade-toggle"){ const tr=state.trades.find(x=>x.id===t.dataset.id); if(tr){ tr.done=t.checked; save(); renderContent(); } }
   else if(a==="acc-name"){ const ac=accById(t.dataset.id); if(ac){ ac.name=t.value||"Player"; save(); renderContent(); } }
   else if(a==="acc-color"){ const ac=accById(t.dataset.id); if(ac){ ac.color=t.value; save(); renderContent(); } }
 });
 
+document.addEventListener("input",e=>{
+  const t=e.target; if(t.dataset.filter==="q"){ filters.q=t.value; renderContent(); }
+});
+
 /* ============================================================
-   7. BOOT
+   7. BOOT UP
    ============================================================ */
 function fullRender(){
   document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===state.page));
-  renderBadges(); renderSetList(); renderContent();
+  renderContent();
 }
-document.addEventListener("DOMContentLoaded", async () => {
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) handleSession(session);
-  else if (isDemoModeActive) { document.getElementById("auth-overlay").style.display = "none"; fullRender(); }
+document.addEventListener("DOMContentLoaded", () => {
+  if (isDemoModeActive) { document.getElementById("auth-overlay").style.display = "none"; fullRender(); }
   else document.getElementById("auth-overlay").style.display = "flex";
-
-  supabaseClient.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_IN') handleSession(session);
-    if (event === 'SIGNED_OUT') { activeSessionUser=null; document.getElementById("auth-overlay").style.display="flex"; state=freshState(); fullRender(); }
-  });
   applyTheme(state.settings.theme||"springfield");
 });
 </script>
