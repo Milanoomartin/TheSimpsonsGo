@@ -8,44 +8,23 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 /* ============================================================
-   THEME ENGINE — Day & Night Springfield Themes
+   THEME ENGINE & CSS
    ============================================================ */
 :root{
-  --rail: 196px; --col-min: 154px;
-  --radius: 16px; --radius-sm: 10px;
+  --rail: 196px; --col-min: 154px; --radius: 16px; --radius-sm: 10px;
   --font: "Comic Sans MS", "Chalkboard SE", "Marker Felt", system-ui, sans-serif;
-  
-  /* Springfield (Day) Defaults */
-  --sky:#7ec0ee; --bg:#dff1ff; --pnl:#ffffff; --pnl2:#f1f8ff;
-  --ink:#16242f; --mut:#5d7689; --ln:#cfe4f4;
-  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6;
-  --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
-  --hdr: linear-gradient(180deg,#79c0ff 0%,#bfe3ff 100%);
-  --chip:#eef6ff; --shadow: 0 6px 18px rgba(20,60,90,.16);
-  --cloud:1;
+  --sky:#7ec0ee; --bg:#dff1ff; --pnl:#ffffff; --pnl2:#f1f8ff; --ink:#16242f; --mut:#5d7689; --ln:#cfe4f4;
+  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6; --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
+  --hdr: linear-gradient(180deg,#79c0ff 0%,#bfe3ff 100%); --chip:#eef6ff; --shadow: 0 6px 18px rgba(20,60,90,.16); --cloud:1;
 }
-
 html[data-theme="night"]{
-  /* Springfield (Night) Overrides */
-  --sky:#1e293b; --bg:#0f172a; --pnl:#1e293b; --pnl2:#334155;
-  --ink:#f8fafc; --mut:#cbd5e1; --ln:#475569;
-  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6;
-  --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
-  --hdr: linear-gradient(180deg,#1e293b 0%,#0f172a 100%);
-  --chip:#475569; --shadow: 0 6px 18px rgba(0,0,0,.6);
-  --cloud:0; /* Hide clouds at night */
+  --sky:#1e293b; --bg:#0f172a; --pnl:#1e293b; --pnl2:#334155; --ink:#f8fafc; --mut:#cbd5e1; --ln:#475569;
+  --acc:#ffd521; --accInk:#3a2e00; --acc2:#3f9bd6; --gold:#ffcf33; --goldDeep:#d99a00; --good:#54bf3a; --bad:#e8533a;
+  --hdr: linear-gradient(180deg,#1e293b 0%,#0f172a 100%); --chip:#475569; --shadow: 0 6px 18px rgba(0,0,0,.6); --cloud:0;
 }
-
-/* ============================================================
-   BASE
-   ============================================================ */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
-body{
-  font-family:var(--font); background:var(--bg); color:var(--ink);
-  -webkit-font-smoothing:antialiased; overflow:hidden;
-  transition:background .4s ease,color .4s ease;
-}
+body{font-family:var(--font); background:var(--bg); color:var(--ink); -webkit-font-smoothing:antialiased; overflow:hidden; transition:background .4s ease,color .4s ease;}
 button,input,select{font-family:inherit;color:inherit}
 button{cursor:pointer;border:none;background:none}
 ::-webkit-scrollbar{height:11px;width:11px}
@@ -53,42 +32,20 @@ button{cursor:pointer;border:none;background:none}
 ::-webkit-scrollbar-track{background:transparent}
 .hidden{display:none !important}
 
-/* ============================================================
-   NIGHT SKY (CSS ONLY STAR FIELD)
-   ============================================================ */
-.night-sky-bg {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  opacity: 0; transition: opacity 0.6s ease; overflow: hidden;
-}
+/* NIGHT SKY */
+.night-sky-bg { position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0; transition: opacity 0.6s ease; overflow: hidden; }
 html[data-theme="night"] .night-sky-bg { opacity: 1; }
-.night-sky-bg .star {
-  position: absolute; color: #FFF; font-size: 12px;
-  animation: twinkle linear infinite;
-  text-shadow: 0 0 4px #FFF, 0 0 10px var(--gold);
-}
+.night-sky-bg .star { position: absolute; color: #FFF; font-size: 12px; animation: twinkle linear infinite; text-shadow: 0 0 4px #FFF, 0 0 10px var(--gold); }
 .star:nth-child(1) { top: 10%; left: 15%; font-size: 16px; animation-duration: 3s; }
 .star:nth-child(2) { top: 25%; left: 85%; font-size: 10px; animation-duration: 4s; animation-delay: 1s; }
 .star:nth-child(3) { top: 40%; left: 50%; font-size: 20px; animation-duration: 2.5s; }
 .star:nth-child(4) { top: 60%; left: 20%; font-size: 14px; animation-duration: 5s; animation-delay: 0.5s; }
 .star:nth-child(5) { top: 75%; left: 80%; font-size: 18px; animation-duration: 3.5s; animation-delay: 2s; }
 .star:nth-child(6) { top: 85%; left: 30%; font-size: 12px; animation-duration: 4.5s; }
-.star:nth-child(7) { top: 5%; left: 60%; font-size: 15px; animation-duration: 3.2s; animation-delay: 1.5s; }
-.star:nth-child(8) { top: 50%; left: 90%; font-size: 11px; animation-duration: 4.1s; animation-delay: 0.8s; }
-.star:nth-child(9) { top: 90%; left: 60%; font-size: 17px; animation-duration: 3.8s; animation-delay: 2.5s; }
+@keyframes twinkle { 0%, 100% { opacity: 0.1; transform: scale(0.6); } 50% { opacity: 1; transform: scale(1.3); } }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.1; transform: scale(0.6); }
-  50% { opacity: 1; transform: scale(1.3); }
-}
-
-/* ============================================================
-   HEADER
-   ============================================================ */
-header{
-  height:60px; display:flex; align-items:center; gap:12px; padding:0 14px;
-  background:var(--hdr); border-bottom:4px solid var(--acc);
-  position:relative; overflow:hidden; z-index:30; flex:0 0 auto;
-}
+/* HEADER */
+header{ height:60px; display:flex; align-items:center; gap:12px; padding:0 14px; background:var(--hdr); border-bottom:4px solid #111820; position:relative; overflow:hidden; z-index:30; flex:0 0 auto; }
 .clouds{position:absolute;inset:0;pointer-events:none;opacity:var(--cloud);overflow:hidden;transition:opacity .4s ease;}
 .clouds span{position:absolute;font-size:34px;opacity:.85;animation:drift linear infinite}
 .clouds span:nth-child(1){top:4px;animation-duration:46s}
@@ -105,18 +62,13 @@ html[data-theme="night"] .brand {color:var(--ink);text-shadow:0 2px 6px rgba(0,0
 .evt-badge{font-size:.66rem;font-weight:800;padding:5px 9px;border-radius:20px;background:var(--gold);color:#3a2e00;box-shadow:0 2px 0 var(--goldDeep);animation:pulse 1.4s ease-in-out infinite}
 .evt-badge.fest{background:var(--acc2);color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.3)}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.icon-btn{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.25);font-size:1.25rem;display:none;align-items:center;justify-content:center;z-index:1;border:2px solid rgba(255,255,255,.35)}
-.icon-btn:active{transform:scale(.92)}
 
-/* ============================================================
-   LAYOUT
-   ============================================================ */
+/* LAYOUT */
 .shell{display:flex;height:calc(100% - 60px); position:relative; z-index:10;}
 aside{flex:0 0 auto;background:var(--pnl);overflow-y:auto;overflow-x:hidden;transition:transform .28s ease,width .26s ease;position:relative}
 .left{width:250px;border-right:3px solid var(--acc)}
 .right{width:208px;border-left:3px solid var(--acc)}
 main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
-
 .nav-title{font-size:.7rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--mut);padding:14px 14px 6px}
 .searchbox{padding:10px 12px;position:sticky;top:0;background:var(--pnl);z-index:5;border-bottom:1px solid var(--ln);display:flex;gap:7px;align-items:center}
 .searchbox input{flex:1;min-width:0;padding:9px 12px;border-radius:20px;border:2px solid var(--ln);background:var(--pnl2);font-size:.85rem;outline:none}
@@ -125,12 +77,6 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .pin-btn{flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:var(--pnl2);border:2px solid var(--ln);font-size:1rem;display:flex;align-items:center;justify-content:center}
 .pin-btn:active{transform:scale(.9)}
 .nav-title.tools-row{display:flex;align-items:center;justify-content:space-between;padding-right:4px}
-.rail-tab{display:none;position:absolute;top:0;bottom:0;width:46px;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;z-index:2;background:linear-gradient(180deg,var(--pnl),var(--pnl2));transition:opacity .2s}
-.rail-tab .rt-ic{font-size:1.5rem}
-.rail-tab .rt-tx{writing-mode:vertical-rl;text-orientation:upright;letter-spacing:2px;font-size:.62rem;font-weight:900;color:var(--mut)}
-.left .rail-tab{left:0;border-right:3px solid var(--acc)}
-.right .rail-tab{right:0;border-left:3px solid var(--acc)}
-.searchbox input:focus{border-color:var(--acc)}
 
 .setlist{padding:6px 8px 30px}
 .set-item{display:flex;align-items:center;gap:9px;padding:8px 9px;border-radius:12px;cursor:pointer;margin-bottom:3px;transition:background .15s}
@@ -142,42 +88,28 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .set-bar{height:6px;border-radius:6px;background:var(--ln);margin-top:4px;overflow:hidden}
 .set-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--gold));border-radius:6px;transition:width .5s cubic-bezier(.2,.9,.3,1)}
 .set-pct{font-size:.66rem;font-weight:800;color:var(--mut);flex:0 0 auto}
-.set-item.done .set-emoji{animation:bob 1.4s ease-in-out infinite}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 
 .tool-btn{display:flex;align-items:center;gap:10px;width:100%;padding:11px 12px;border-radius:14px;margin-bottom:7px;font-weight:700;font-size:.9rem;text-align:left;background:var(--pnl2);border:2px solid transparent;transition:.15s}
 .tool-btn:hover{transform:translateX(3px)}
 .tool-btn .ti{font-size:1.3rem}
 .tool-btn.active{background:var(--acc);color:var(--accInk);border-color:var(--goldDeep);box-shadow:0 4px 0 var(--goldDeep)}
-.tool-sep{height:1px;background:var(--ln);margin:10px 4px}
-.theme-mini{margin-top:8px}
-.theme-mini .nav-title{padding:6px 4px}
-.swatch-row{display:flex;flex-wrap:wrap;gap:6px;padding:0 2px}
-.swatch{width:30px;height:30px;border-radius:9px;border:2px solid var(--ln);cursor:pointer;position:relative;overflow:hidden}
-.swatch.active{border-color:var(--ink);transform:scale(1.12)}
-.swatch:active{transform:scale(.9)}
 
-/* ============================================================
-   MAIN CONTENT & COMPONENTS
-   ============================================================ */
+/* MAIN CONTENT */
 .page{padding:16px 18px 80px;max-width:1500px;margin:0 auto}
 .page-head{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
 .page-head h1{font-size:1.5rem;margin:0;font-weight:800}
-.page-head .ph-emoji{font-size:1.8rem;animation:bob 2.6s ease-in-out infinite}
 .page-sub{color:var(--mut);font-size:.85rem;margin:-8px 0 14px}
 
-.filterbar{position:sticky;top:0;z-index:18;background:var(--pnl);border:2px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;box-shadow:var(--shadow)}
+.filterbar{position:sticky;top:0;z-index:18;background:var(--pnl);border:2px solid var(--ln);border-radius:16px;padding:10px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
 .filterbar input[type=text]{flex:1;min-width:150px;padding:8px 12px;border-radius:20px;border:2px solid var(--ln);background:var(--pnl2);outline:none}
-.filterbar input[type=text]:focus{border-color:var(--acc)}
 .filterbar select{padding:8px 10px;border-radius:12px;border:2px solid var(--ln);background:var(--pnl2);font-weight:700;font-size:.82rem;outline:none}
-.toggle-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;background:var(--pnl2);border:2px solid var(--ln);font-weight:700;font-size:.82rem;cursor:pointer;user-select:none}
+.toggle-pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;background:var(--pnl2);border:2px solid var(--ln);font-weight:700;font-size:.82rem;cursor:pointer;}
 .toggle-pill input{display:none}
 .toggle-pill.on{background:var(--acc);color:var(--accInk);border-color:var(--goldDeep)}
 
-.setblock-head{padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,var(--pnl2),var(--pnl)); border-radius:18px 18px 0 0;}
+.setblock-head{padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(180deg,var(--pnl2),var(--pnl)); border-radius: 18px 18px 0 0;}
 .sb-emoji{font-size:1.9rem}
 .sb-title{font-weight:800;font-size:1.05rem}
-.sb-title .num{color:var(--mut);font-weight:700;font-size:.8rem;margin-right:6px}
 .sb-accchips{display:flex;gap:7px;flex-wrap:wrap;margin-left:auto}
 .accchip{display:flex;align-items:center;gap:6px;background:var(--chip);padding:4px 10px;font-size:.74rem;font-weight:800}
 .accchip .dot{width:9px;height:9px;border-radius:50%}
@@ -186,8 +118,6 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 
 .set-scrollwrap{position:relative}
 .set-scroll{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:10px 14px 14px;cursor:grab;scroll-snap-type:x proximity;scroll-behavior:smooth}
-.set-scroll.dragging{cursor:grabbing;scroll-behavior:auto;user-select:none}
-.set-scroll.dragging .card{pointer-events:none}
 .acct-col{flex:0 0 auto;width:clamp(286px,84vw,372px);scroll-snap-align:start;background:var(--pnl2);padding:10px}
 .acct-col-head{display:flex;align-items:center;flex-wrap:wrap;gap:7px;padding:3px 3px 9px;border-bottom:2px solid var(--ln);margin-bottom:9px;font-weight:800}
 .acct-col-head .dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto}
@@ -196,15 +126,12 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .acct-col-head .ah-bar{flex-basis:100%;height:6px;border-radius:6px;background:var(--ln);overflow:hidden;order:9}
 .acct-col-head .ah-bar i{display:block;height:100%;border-radius:6px;transition:width .5s}
 .sticker-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.panel-empty{grid-column:1/-1;text-align:center;color:var(--mut);font-weight:800;font-size:.82rem;padding:26px 6px}
 
 .scrollbtn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--acc);color:var(--accInk);font-size:1.05rem;font-weight:900;box-shadow:0 3px 12px rgba(0,0,0,.35);z-index:7;display:none;align-items:center;justify-content:center;}
 .setblock.has-overflow .scrollbtn{display:flex}
 .scrollbtn.left{left:6px}.scrollbtn.right{right:6px}
-.scroll-hint{display:none;align-items:center;gap:4px;font-size:.64rem;font-weight:800;color:var(--mut);background:var(--chip);padding:3px 9px;}
-.setblock.has-overflow .scroll-hint{display:inline-flex}
-.stars{color:var(--gold);font-size:.74rem;letter-spacing:-1px;text-shadow:0 1px 1px var(--goldDeep)}
 
+.stars{color:var(--gold);font-size:.74rem;letter-spacing:-1px;text-shadow:0 1px 1px var(--goldDeep)}
 .card.gold{border-color:var(--gold) !important; background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 18%,var(--pnl2)),var(--pnl2)); box-shadow:0 0 9px color-mix(in srgb,var(--gold) 45%,transparent) !important;}
 .card.gold.have{box-shadow:0 0 16px var(--gold),inset 0 0 0 1px var(--gold) !important; animation:goldglow 2.4s ease-in-out infinite}
 @keyframes goldglow{0%,100%{box-shadow:0 0 10px var(--gold)}50%{box-shadow:0 0 20px var(--gold)}}
@@ -213,30 +140,31 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .card .cic{font-size:1.85rem;line-height:1;display:block;transition:transform .2s}
 .card.have .cic{animation:pop .35s ease}
 @keyframes pop{0%{transform:scale(.4) rotate(-12deg)}60%{transform:scale(1.18) rotate(6deg)}100%{transform:scale(1)}}
-.card .cstars{font-size:.66rem;color:var(--gold);margin-top:2px;letter-spacing:-1px}
+.card .cstars{font-size:.66rem;color:var(--gold);margin-top:2px;}
 .card .cname{font-size:.6rem;color:var(--mut);font-weight:700;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.have-badge{position:absolute;top:-7px;right:-7px;width:21px;height:21px;background:var(--good);color:#fff;font-size:.72rem;display:none;align-items:center;justify-content:center;box-shadow:0 2px 4px rgba(0,0,0,.3);}
+.have-badge{position:absolute;top:-7px;right:-7px;width:21px;height:21px;background:var(--good);color:#fff;font-size:.72rem;display:none;align-items:center;justify-content:center;}
 .card.have .have-badge{display:flex}
 .dupzone{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:7px}
 .dupzone button{width:23px;height:23px;background:var(--acc2);color:#fff;font-weight:900;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;}
 .dupzone input{width:34px;text-align:center;background:var(--pnl);font-weight:800;font-size:.78rem;padding:3px 0;outline:none;-moz-appearance:textfield}
 .dupzone input::-webkit-outer-spin-button,.dupzone input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.dupzone input.has{border-color:var(--good);color:var(--good)}
 
+/* Special override for 6-star regular stickers */
+.card.star-6 { background: #ffffff !important; border-color: #111820 !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6), inset 0 0 0 4px #ffffff !important; }
+
+/* Dashboard Cards */
 .cards-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .panel h2{margin:0 0 12px;font-size:1.05rem;display:flex;align-items:center;gap:8px}
 .bigbar{height:14px;background:var(--ln);overflow:hidden;margin:6px 0}
 .bigbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc2),var(--acc));transition:width .7s cubic-bezier(.2,.9,.3,1)}
-.bigbar.gold i{background:linear-gradient(90deg,var(--goldDeep),var(--gold))}
 .statrow{display:flex;justify-content:space-between;font-size:.82rem;margin:5px 0;font-weight:600}
-.statrow b{font-weight:900}
 .kpi{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 .kpi .box{flex:1;min-width:120px;background:var(--pnl);padding:12px 14px;}
-.kpi .box .v{font-size:1.7rem;font-weight:900;line-height:1}
-.kpi .box .l{font-size:.72rem;color:var(--mut);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.kpi .box .v{font-size:1.7rem;font-weight:900;}
+.kpi .box .l{font-size:.72rem;color:var(--mut);font-weight:700;text-transform:uppercase;}
 
-.ring{--p:0;width:96px;height:96px;display:grid;place-items:center; background:conic-gradient(var(--acc) calc(var(--p)*1%),var(--ln) 0);position:relative;flex:0 0 auto}
+.ring{--p:0;width:96px;height:96px;display:grid;place-items:center; background:conic-gradient(var(--acc) calc(var(--p)*1%),var(--ln) 0);position:relative;}
 .ring::before{content:"";position:absolute;inset:9px;background:var(--pnl)}
 .ring span{position:relative;font-weight:900;font-size:1.1rem}
 
@@ -245,23 +173,19 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .avatar{width:46px;height:46px;display:grid;place-items:center;font-size:1.6rem;flex:0 0 auto;}
 .field{display:flex;flex-direction:column;gap:3px;font-size:.74rem;font-weight:700;color:var(--mut)}
 .field input,.field select{padding:8px 10px;background:var(--pnl2);outline:none;font-weight:600}
-.field input:focus{border-color:var(--acc)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .emoji-pick{display:flex;flex-wrap:wrap;gap:4px}
 .emoji-pick button{font-size:1.15rem;width:32px;height:32px;background:var(--pnl2);border:2px solid transparent}
 .emoji-pick button.sel{border-color:var(--acc);background:var(--chip)}
 
-.vault-acc{margin-bottom:18px}
 .tier{display:flex;align-items:center;gap:12px;margin:10px 0}
 .tier .tier-ic{font-size:1.7rem;width:42px;text-align:center}
 .tier .tier-body{flex:1}
 .tier .tier-name{font-weight:800;font-size:.9rem;display:flex;justify-content:space-between}
-.tier.maxed .tier-ic{animation:bob 1.3s infinite}
 .dup-list{list-style:none;padding:0;margin:8px 0 0}
 .dup-list li{display:flex;align-items:center;gap:9px;padding:7px 9px;background:var(--pnl2);margin-bottom:5px}
 .dup-list .rank{font-weight:900;color:var(--mut);width:22px;text-align:center}
 .dup-list .dval{margin-left:auto;font-weight:900;color:var(--gold)}
-.dup-list .nm{font-weight:700;font-size:.85rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;align-items:end}
 .trade-list{list-style:none;padding:0;margin:0}
@@ -269,35 +193,24 @@ main{flex:1;overflow-y:auto;position:relative;scroll-behavior:smooth}
 .trade-row.done{opacity:.6}
 .trade-row .tdate{font-weight:900;font-size:.74rem;background:var(--chip);padding:4px 8px;white-space:nowrap}
 .trade-row .tflow{font-weight:800;font-size:.86rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.trade-row .arrow{color:var(--acc2);font-weight:900}
 .trade-row .tstk{color:var(--mut);font-weight:700;font-size:.82rem}
 .trade-row .tcheck{margin-left:auto;display:flex;align-items:center;gap:8px}
-.trade-row .auto-tag{font-size:.58rem;font-weight:900;background:var(--acc2);color:#fff;padding:2px 6px;}
-.plan-day{margin-bottom:10px}
-.plan-day h4{margin:0 0 5px;font-size:.85rem}
-input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:pointer}
 
 .cal-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
-.cal-head h3{margin:0;font-size:1.1rem;min-width:170px;text-align:center}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
 .cal-dow{text-align:center;font-size:.66rem;font-weight:900;color:var(--mut);text-transform:uppercase}
 .cal-cell{min-height:62px;background:var(--pnl2);padding:5px;position:relative;cursor:default;transition:.12s}
 .cal-cell.has{cursor:pointer;border-color:var(--acc)}
-.cal-cell.has:hover{transform:scale(1.05);box-shadow:var(--shadow)}
-.cal-cell.empty{background:transparent;border:none}
 .cal-cell.today{box-shadow:inset 0 0 0 2px var(--acc2)}
 .cal-cell .dn{font-weight:800;font-size:.78rem}
 .cal-cell .cct{position:absolute;bottom:5px;left:5px;right:5px;display:flex;gap:3px;flex-wrap:wrap}
 .cal-cell .pill{font-size:.6rem;font-weight:900;background:var(--acc);color:var(--accInk);padding:1px 6px}
-.cal-cell .pill.done{background:var(--good);color:#fff}
 
 .theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
 .theme-card{padding:12px;cursor:pointer;border:3px solid transparent;position:relative;overflow:hidden;color:#fff;min-height:84px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:var(--shadow)}
 .theme-card.active{border-color:var(--ink);transform:scale(1.03)}
 .theme-card .tc-name{font-weight:900;font-size:.9rem;z-index:1;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 .theme-card .tc-emoji{font-size:1.6rem;z-index:1}
-.theme-card .tc-dots{display:flex;gap:5px;z-index:1}
-.theme-card .tc-dots i{width:13px;height:13px;box-shadow:0 0 0 1px rgba(255,255,255,.4)}
 
 .setting-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--ln);flex-wrap:wrap}
 .setting-row .sr-label{font-weight:800;flex:1;min-width:160px}
@@ -309,87 +222,27 @@ input[type=checkbox].big{width:22px;height:22px;accent-color:var(--good);cursor:
 .switch.on i{left:27px}
 
 .empty{text-align:center;padding:50px 20px;color:var(--mut)}
-.empty .em{font-size:3.5rem;display:block;margin-bottom:10px;animation:bob 2s infinite}
+.empty .em{font-size:3.5rem;display:block;margin-bottom:10px;}
 .empty h3{color:var(--ink);margin:6px 0}
 
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;backdrop-filter:blur(3px)}
-.modal-bg.show{display:flex;animation:fade .2s}
-@keyframes fade{from{opacity:0}to{opacity:1}}
-.modal{background:var(--pnl);max-width:460px;width:100%;max-height:84vh;overflow-y:auto;border:3px solid var(--acc);box-shadow:0 20px 60px rgba(0,0,0,.5);animation:popin .25s}
-@keyframes popin{from{transform:scale(.85) translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.modal-bg.show{display:flex;}
+.modal{background:var(--pnl);max-width:460px;width:100%;max-height:84vh;overflow-y:auto;border:3px solid var(--acc);box-shadow:0 20px 60px rgba(0,0,0,.5);}
 .modal-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:2px solid var(--ln);position:sticky;top:0;background:var(--pnl)}
 .modal-head h3{margin:0;flex:1;font-size:1.05rem}
 .modal-body{padding:14px 16px}
 
 .confetti{position:fixed;top:-30px;font-size:1.4rem;z-index:200;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.2}}
-
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:11px 20px;font-weight:800;font-size:.85rem;z-index:300;opacity:0;transition:.3s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-.scrim{position:fixed;inset:60px 0 0;background:rgba(0,0,0,.4);z-index:20;display:none}
-.scrim.show{display:block}
-
-@media(min-width:1001px){
-  body.nav-auto aside{overflow:visible}
-  body.nav-auto .left{width:46px;border-right:none}
-  body.nav-auto .right{width:46px;border-left:none}
-  body.nav-auto aside .rail-tab{display:flex}
-  body.nav-auto aside .aside-full{position:absolute;top:0;bottom:0;width:250px;background:var(--pnl);z-index:36;overflow-y:auto;transition:transform .26s cubic-bezier(.2,.9,.3,1),box-shadow .26s}
-  body.nav-auto .left .aside-full{left:0;border-right:3px solid var(--acc);transform:translateX(-100%)}
-  body.nav-auto .right .aside-full{right:0;width:208px;border-left:3px solid var(--acc);transform:translateX(100%)}
-  body.nav-auto .left:hover .aside-full,body.nav-auto .left:focus-within .aside-full{transform:none;box-shadow:8px 0 34px rgba(0,0,0,.32)}
-  body.nav-auto .right:hover .aside-full,body.nav-auto .right:focus-within .aside-full{transform:none;box-shadow:-8px 0 34px rgba(0,0,0,.32)}
-  body.nav-auto aside:hover .rail-tab,body.nav-auto aside:focus-within .rail-tab{opacity:0}
-}
-@media(max-width:1000px){
-  .icon-btn{display:flex}
-  .pin-btn,.rail-tab{display:none}
-  aside{position:fixed;top:60px;bottom:0;z-index:25;box-shadow:0 0 40px rgba(0,0,0,.4)}
-  .left{left:0;transform:translateX(-105%)}
-  .right{right:0;transform:translateX(105%)}
-  .left.open{transform:none}
-  .right.open{transform:none}
-}
-@media(max-width:560px){
-  .page{padding:12px 10px 80px}
-  .page-head h1{font-size:1.25rem}
-  .left{width:84vw}.right{width:74vw}
-  .row2{grid-template-columns:1fr}
-  header{gap:8px;padding:0 10px}
-  .brand{font-size:1rem}
-}
-
-/* 90s CARTOON OVERRIDE */
-body { font-family: "Comic Sans MS", "Chalkboard SE", "Marker Felt", sans-serif !important; }
-.panel, .setblock, .card, .acct-col, .filterbar, .searchbox input, .field input, .field select, .modal, .theme-card, .ring::before {
-  border: 3px solid #111820 !important;
-  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
-  box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.btn, .toggle-pill, .icon-btn, .pin-btn, .scrollbtn, .dupzone button {
-  border: 3px solid #111820 !important;
-  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
-  box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important;
-}
-.card:active, .btn:active, .toggle-pill:active, .icon-btn:active, .pin-btn:active, .scrollbtn:active, .dupzone button:active {
-  transform: translate(2px, 3px) !important;
-  box-shadow: 1px 1px 0px rgba(0,0,0,0.6) !important;
-}
-.have-badge, .ah-count, .pill, .evt-badge, .accchip, .tdate {
-  border: 2px solid #111820 !important;
-  border-radius: 48% 52% 45% 55% / 50% 45% 55% 50% !important;
-  font-weight: 900 !important;
-  box-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important;
-}
-header { border-bottom: 4px solid #111820 !important; }
-.set-bar, .ah-bar, .bigbar, .mini {
-  border: 2px solid #111820 !important;
-  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important;
-  box-shadow: 2px 2px 0px rgba(0,0,0,0.4) inset !important;
-}
-.card.star-6 { background: #ffffff !important; border-color: #111820 !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6), inset 0 0 0 4px #ffffff !important; }
+/* 90s CARTOON OVERRIDES */
+.panel, .setblock, .card, .acct-col, .filterbar, .searchbox input, .field input, .field select, .modal, .theme-card, .ring::before { border: 3px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.btn, .toggle-pill, .icon-btn, .pin-btn, .scrollbtn, .dupzone button { border: 3px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 3px 4px 0px rgba(0,0,0,0.6) !important; }
+.card:active, .btn:active, .toggle-pill:active, .icon-btn:active, .pin-btn:active, .scrollbtn:active, .dupzone button:active { transform: translate(2px, 3px) !important; box-shadow: 1px 1px 0px rgba(0,0,0,0.6) !important; }
+.have-badge, .ah-count, .pill, .evt-badge, .accchip, .tdate { border: 2px solid #111820 !important; border-radius: 48% 52% 45% 55% / 50% 45% 55% 50% !important; font-weight: 900 !important; box-shadow: 2px 2px 0px rgba(0,0,0,0.5) !important; }
+.set-bar, .ah-bar, .bigbar, .mini { border: 2px solid #111820 !important; border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px !important; box-shadow: 2px 2px 0px rgba(0,0,0,0.4) inset !important; }
 </style>
 </head>
 <body>
@@ -416,36 +269,15 @@ header { border-bottom: 4px solid #111820 !important; }
 
 <header>
   <div class="clouds"><span>☁️</span><span>☁️</span><span>☁️</span></div>
-  <button class="icon-btn" data-action="toggle-left" title="Sets">☰</button>
   <div class="brand"><span class="donut">🍩</span><span>D'oh-nut Album<small>The Simpsons Sticker Tracker</small></span></div>
   <div class="hdr-spacer"></div>
   <div class="evt-badges" id="evtBadges"></div>
-  <button class="icon-btn" data-action="toggle-right" title="Tools">🧰</button>
 </header>
-
-<div class="scrim" id="scrim" data-action="close-drawers"></div>
 
 <div class="shell">
   <aside class="left" id="leftNav">
-    <div class="rail-tab" data-action="toggle-pin" title="Click to pin open (or hover)"><span class="rt-ic">📚</span><span class="rt-tx">SETS</span></div>
     <div class="aside-full">
-      <div class="searchbox">
-        <input type="text" id="navSearch" data-filter="nav" placeholder="🔎 Search sets & stickers…">
-        <button class="pin-btn" data-action="toggle-pin" title="Pin sidebars open">📌</button>
-      </div>
-      <div class="nav-title">Album Sets</div>
-      <div class="setlist" id="setList"></div>
-    </div>
-  </aside>
-
-  <main id="main">
-    <div class="page" id="content"></div>
-  </main>
-
-  <aside class="right" id="rightNav">
-    <div class="rail-tab" data-action="toggle-pin" title="Click to pin open (or hover)"><span class="rt-ic">🧰</span><span class="rt-tx">TOOLS</span></div>
-    <div class="aside-full">
-      <div class="nav-title tools-row">Tools <button class="pin-btn" data-action="toggle-pin" title="Pin sidebars open">📌</button></div>
+      <div class="nav-title tools-row">Menu</div>
       <button class="tool-btn" data-action="goto-page" data-page="album"><span class="ti">📖</span>Album</button>
       <button class="tool-btn" data-action="goto-page" data-page="accounts"><span class="ti">👨‍👩‍👧‍👦</span>Accounts</button>
       <button class="tool-btn" data-action="goto-page" data-page="progress"><span class="ti">📊</span>Progress</button>
@@ -453,12 +285,11 @@ header { border-bottom: 4px solid #111820 !important; }
       <button class="tool-btn" data-action="goto-page" data-page="trades"><span class="ti">🌍</span>Community Hub</button>
       <button class="tool-btn" data-action="goto-page" data-page="settings"><span class="ti">⚙️</span>Settings</button>
       <div class="tool-sep"></div>
-      <div class="theme-mini">
-        <div class="nav-title">Quick Theme</div>
-        <div class="swatch-row" id="swatchRow"></div>
-      </div>
+      <div class="nav-title">Album Sets</div>
+      <div class="setlist" id="setList"></div>
     </div>
   </aside>
+  <main id="main"><div class="page" id="content"></div></main>
 </div>
 
 <div class="modal-bg" id="modalBg"><div class="modal" id="modal"></div></div>
@@ -476,106 +307,88 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const LS_KEY = "dohnut_album_v1";
 
 const ALBUM = [
-  {"id":1,"name":"The Simpsons","stickers":[{"name": "Marge", "stars": 1, "isGold": false},{"name": "Bart", "stars": 1, "isGold": false},{"name": "Lisa", "stars": 1, "isGold": false},{"name": "Patty & Selma", "stars": 1, "isGold": false},{"name": "Homer", "stars": 1, "isGold": false},{"name": "Maggie", "stars": 1, "isGold": false},{"name": "Santa's Little Helper", "stars": 1, "isGold": false},{"name": "Snowball 2", "stars": 1, "isGold": false},{"name": "Grampa", "stars": 1, "isGold": false}]},
-  {"id":2,"name":"Monopoly's Training Day","stickers":[{"name": "Weee!", "stars": 1, "isGold": false},{"name": "Payday", "stars": 1, "isGold": false},{"name": "Naptime", "stars": 1, "isGold": false},{"name": "Break Time", "stars": 1, "isGold": false},{"name": "For Sale", "stars": 1, "isGold": false},{"name": "On Guard", "stars": 1, "isGold": false},{"name": "D'oh!", "stars": 1, "isGold": false},{"name": "Power Snack", "stars": 1, "isGold": false},{"name": "Whoosh Ahh", "stars": 1, "isGold": false}]},
-  {"id":3,"name":"Friends & Family","stickers":[{"name": "Herb Powell", "stars": 1, "isGold": false},{"name": "Kumiko", "stars": 1, "isGold": false},{"name": "Apu & Manjula", "stars": 1, "isGold": false},{"name": "Lenny & Carl", "stars": 1, "isGold": false},{"name": "The Van Houtens", "stars": 1, "isGold": false},{"name": "Reverend Lovejoy", "stars": 1, "isGold": false},{"name": "The Hibberts", "stars": 2, "isGold": false},{"name": "The Bullies", "stars": 2, "isGold": false},{"name": "Jacqueline Bouvier", "stars": 2, "isGold": false}]},
-  {"id":4,"name":"Property of Ned Flanders","stickers":[{"name": "Such a Tool", "stars": 1, "isGold": false},{"name": "Smart Homer", "stars": 1, "isGold": false},{"name": "Go Away Ned", "stars": 1, "isGold": false},{"name": "Come On!", "stars": 2, "isGold": false},{"name": "Let's Go!", "stars": 2, "isGold": false},{"name": "Good Kitty", "stars": 2, "isGold": false},{"name": "Wasn't Me", "stars": 2, "isGold": false},{"name": "Slow Mow", "stars": 2, "isGold": false},{"name": "Hi-Diddly-Ho!", "stars": 2, "isGold": false}]},
-  {"id":5,"name":"Taste of Springfield","stickers":[{"name": "Nuts & Gum", "stars": 2, "isGold": false},{"name": "Krusty O's", "stars": 2, "isGold": false},{"name": "Insanity Pepper", "stars": 2, "isGold": false},{"name": "Pork Chops", "stars": 2, "isGold": false},{"name": "Squishee", "stars": 2, "isGold": false},{"name": "Krusty Burger", "stars": 2, "isGold": false},{"name": "Luigi's Spaghetti", "stars": 2, "isGold": false},{"name": "Gummy de Milo", "stars": 2, "isGold": false},{"name": "Buzz Cola", "stars": 2, "isGold": false}]},
-  {"id":6,"name":"The Pin Pal's New Pal","stickers":[{"name": "Let's Bowl", "stars": 2, "isGold": false},{"name": "Can You Bowl?", "stars": 2, "isGold": false},{"name": "Ooh! Jealous!", "stars": 2, "isGold": false},{"name": "Ugly Ugly", "stars": 2, "isGold": false},{"name": "Bowl Goal", "stars": 2, "isGold": false},{"name": "Good One!", "stars": 2, "isGold": false},{"name": "Claw vs. Claw", "stars": 2, "isGold": false},{"name": "Old Wins Gold", "stars": 2, "isGold": false},{"name": "Teammates", "stars": 2, "isGold": false}]},
-  {"id":7,"name":"Maggie's Big Adventure","stickers":[{"name": "Thimble", "stars": 2, "isGold": false},{"name": "Dice", "stars": 2, "isGold": false},{"name": "House Rich", "stars": 2, "isGold": false},{"name": "Waterworks", "stars": 2, "isGold": false},{"name": "Scottie!", "stars": 2, "isGold": false},{"name": "Boom!", "stars": 2, "isGold": false},{"name": "Passing Go", "stars": 2, "isGold": false},{"name": "Out of Jail", "stars": 3, "isGold": false},{"name": "Railroad Ride!", "stars": 3, "isGold": false}]},
-  {"id":8,"name":"Springfield Superheroes","stickers":[{"name": "Bartman", "stars": 2, "isGold": false},{"name": "Pie Man", "stars": 2, "isGold": false},{"name": "Hot Flash", "stars": 2, "isGold": false},{"name": "Bumblebee Man", "stars": 2, "isGold": false},{"name": "Radioactive Man", "stars": 2, "isGold": false},{"name": "Stretch Dude", "stars": 3, "isGold": false},{"name": "Clobber Girl", "stars": 3, "isGold": false},{"name": "Fallout Boy", "stars": 3, "isGold": false},{"name": "Fruit Bat Man", "stars": 3, "isGold": false}]},
-  {"id":9,"name":"When Homie Met Marge","stickers":[{"name": "Birds Appear", "stars": 2, "isGold": false},{"name": "Pompetus", "stars": 2, "isGold": false},{"name": "Do You?", "stars": 2, "isGold": false},{"name": "I Do", "stars": 2, "isGold": false},{"name": "Carried Away", "stars": 3, "isGold": false},{"name": "Oh Homie", "stars": 3, "isGold": false},{"name": "Date Night", "stars": 3, "isGold": false},{"name": "Kisses", "stars": 3, "isGold": false},{"name": "I Do Again", "stars": 3, "isGold": false}]},
-  {"id":10,"name":"Marge's Many Jobs","stickers":[{"name": "Officer Marge", "stars": 3, "isGold": false},{"name": "Painter", "stars": 3, "isGold": false},{"name": "Real Estate Agent", "stars": 3, "isGold": false},{"name": "Romance Author", "stars": 3, "isGold": false},{"name": "Pretzel Baker", "stars": 3, "isGold": false},{"name": "Mayor", "stars": 3, "isGold": false},{"name": "Bodybuilder", "stars": 3, "isGold": false},{"name": "Waitress", "stars": 3, "isGold": false},{"name": "Actress", "stars": 3, "isGold": false}]},
-  {"id":11,"name":"Old School Rivals","stickers":[{"name": "Got Ya' Now", "stars": 3, "isGold": false},{"name": "Road Rage", "stars": 3, "isGold": false},{"name": "Evil Smirk", "stars": 3, "isGold": false},{"name": "Electricity", "stars": 3, "isGold": false},{"name": "Not the Face!", "stars": 3, "isGold": false},{"name": "Birthday", "stars": 3, "isGold": false},{"name": "Worth It!", "stars": 3, "isGold": false},{"name": "Excellent!", "stars": 3, "isGold": false},{"name": "Dog Run", "stars": 3, "isGold": false}]},
-  {"id":12,"name":"Springfield Elementary","stickers":[{"name": "Ralph Wiggum", "stars": 3, "isGold": false},{"name": "Sherri & Terri", "stars": 3, "isGold": false},{"name": "Milhouse Van Houten", "stars": 3, "isGold": false},{"name": "Nelson Muntz", "stars": 3, "isGold": false},{"name": "Martin Prince", "stars": 3, "isGold": false},{"name": "Hubert Wong", "stars": 3, "isGold": false},{"name": "Allison Taylor", "stars": 3, "isGold": false},{"name": "Uter Zorker", "stars": 4, "isGold": false},{"name": "Janey Powell", "stars": 4, "isGold": false}]},
-  {"id":13,"name":"Exotic Animals","stickers":[{"name": "Jub Jub", "stars": 3, "isGold": false},{"name": "Spider Pig", "stars": 3, "isGold": false},{"name": "Princess", "stars": 3, "isGold": false},{"name": "Illegal Panda", "stars": 3, "isGold": false},{"name": "Mr. Teeny", "stars": 3, "isGold": false},{"name": "Pinchy", "stars": 4, "isGold": false},{"name": "Screamapillar", "stars": 4, "isGold": false},{"name": "Stampy", "stars": 4, "isGold": false},{"name": "Blinky", "stars": 4, "isGold": true}]},
-  {"id":14,"name":"Simpsons in Song","stickers":[{"name": "Baby on Board", "stars": 3, "isGold": false},{"name": "NOT ME!", "stars": 3, "isGold": false},{"name": "Last Requests", "stars": 3, "isGold": false},{"name": "We Do!", "stars": 4, "isGold": false},{"name": "See My Vest!", "stars": 4, "isGold": false},{"name": "Springfield", "stars": 4, "isGold": false},{"name": "Mixtape", "stars": 4, "isGold": false},{"name": "Sad Schmuck", "stars": 4, "isGold": true},{"name": "Moaning Lisa", "stars": 5, "isGold": false}]},
-  {"id":15,"name":"You Steam a Good Ham!","stickers":[{"name": "Unforgettable", "stars": 4, "isGold": false},{"name": "Roast is Ruined", "stars": 4, "isGold": false},{"name": "Oh Ho Ho Ho", "stars": 4, "isGold": false},{"name": "Just Stretching", "stars": 4, "isGold": false},{"name": "Steamed Hams", "stars": 4, "isGold": false},{"name": "Obviously Grilled", "stars": 4, "isGold": true},{"name": "May I See It?", "stars": 5, "isGold": false},{"name": "Aurora Borealis", "stars": 5, "isGold": false},{"name": "Northern Lights", "stars": 4, "isGold": true}]},
-  {"id":16,"name":"Beloved Memes","stickers":[{"name": "I'm in Danger", "stars": 4, "isGold": false},{"name": "Yells at Cloud", "stars": 4, "isGold": false},{"name": "Krumping", "stars": 4, "isGold": false},{"name": "Lisa Presents", "stars": 4, "isGold": false},{"name": "Homer in Bush", "stars": 4, "isGold": true},{"name": "More Coffee", "stars": 4, "isGold": true},{"name": "One of Us", "stars": 5, "isGold": false},{"name": "Stupid Sexy Flanders", "stars": 5, "isGold": true},{"name": "Worst Sticker Ever", "stars": 6, "isGold": false}]},
-  {"id":17,"name":"The Itchy & Scratchy Show","stickers":[{"name": "Run Scratchy Run", "stars": 4, "isGold": false},{"name": "Heads Up", "stars": 4, "isGold": false},{"name": "Overstuffed", "stars": 4, "isGold": false},{"name": "Heart Attack", "stars": 4, "isGold": true},{"name": "Hit and Done", "stars": 4, "isGold": true},{"name": "Don't Laugh!", "stars": 5, "isGold": false},{"name": "Washed Up", "stars": 5, "isGold": false},{"name": "Shutdown", "stars": 5, "isGold": true},{"name": "Go to Railroad", "stars": 6, "isGold": false}]},
-  {"id":18,"name":"Moe's Tavern","stickers":[{"name": "Moe's", "stars": 4, "isGold": false},{"name": "Rags to Rags", "stars": 4, "isGold": false},{"name": "Love Tester", "stars": 4, "isGold": true},{"name": "Pickled Eggs", "stars": 4, "isGold": true},{"name": "Barney Gumble", "stars": 5, "isGold": false},{"name": "Prank Call", "stars": 5, "isGold": false},{"name": "Lenny Leonard", "stars": 5, "isGold": true},{"name": "Carl Carlson", "stars": 5, "isGold": true},{"name": "Pool Table", "stars": 6, "isGold": false}]},
-  {"id":19,"name":"Homer's Many Jobs","stickers":[{"name": "Boxer", "stars": 4, "isGold": false},{"name": "Sanitation", "stars": 4, "isGold": true},{"name": "Remote Worker", "stars": 4, "isGold": true},{"name": "Security", "stars": 5, "isGold": false},{"name": "Astronaut", "stars": 5, "isGold": false},{"name": "Mascot", "stars": 5, "isGold": false},{"name": "Monorail Conductor", "stars": 5, "isGold": true},{"name": "Be Sharps", "stars": 5, "isGold": true},{"name": "Mr. Plow", "stars": 6, "isGold": false}]},
-  {"id":20,"name":"Upper Crust","stickers":[{"name": "Kent Brockman", "stars": 4, "isGold": true},{"name": "Mrs. Vanderbilt", "stars": 4, "isGold": true},{"name": "Mayor Quimby", "stars": 5, "isGold": false},{"name": "Rich Texan", "stars": 5, "isGold": false},{"name": "Mr. Burns", "stars": 5, "isGold": false},{"name": "Hank Scorpio", "stars": 5, "isGold": true},{"name": "Ranier Wolfcastle", "stars": 5, "isGold": true},{"name": "Drederick Tatum", "stars": 5, "isGold": true},{"name": "Krusty the Clown", "stars": 6, "isGold": false}]},
-  {"id":21,"name":"Iconic Moments","stickers":[{"name": "Sun Blocker", "stars": 4, "isGold": true},{"name": "Homer's Hoagie", "stars": 4, "isGold": true},{"name": "Step on a Rake", "stars": 5, "isGold": false},{"name": "Do it For Her", "stars": 5, "isGold": false},{"name": "Mr. Sparkle", "stars": 5, "isGold": true},{"name": "Mr. Snrub", "stars": 5, "isGold": true},{"name": "Guy Incognito", "stars": 5, "isGold": true},{"name": "Gorge Jump", "stars": 5, "isGold": true},{"name": "Classy Marge", "stars": 6, "isGold": false}]}
+  {"id":1,"name":"The Simpsons","stickers":[{"name":"Marge","stars":1,"isGold":false},{"name":"Bart","stars":1,"isGold":false},{"name":"Lisa","stars":1,"isGold":false},{"name":"Patty & Selma","stars":1,"isGold":false},{"name":"Homer","stars":1,"isGold":false},{"name":"Maggie","stars":1,"isGold":false},{"name":"Santa's Little Helper","stars":1,"isGold":false},{"name":"Snowball 2","stars":1,"isGold":false},{"name":"Grampa","stars":1,"isGold":false}]},
+  {"id":2,"name":"Monopoly's Training Day","stickers":[{"name":"Weee!","stars":1,"isGold":false},{"name":"Payday","stars":1,"isGold":false},{"name":"Naptime","stars":1,"isGold":false},{"name":"Break Time","stars":1,"isGold":false},{"name":"For Sale","stars":1,"isGold":false},{"name":"On Guard","stars":1,"isGold":false},{"name":"D'oh!","stars":1,"isGold":false},{"name":"Power Snack","stars":1,"isGold":false},{"name":"Whoosh Ahh","stars":1,"isGold":false}]},
+  {"id":3,"name":"Friends & Family","stickers":[{"name":"Herb Powell","stars":1,"isGold":false},{"name":"Kumiko","stars":1,"isGold":false},{"name":"Apu & Manjula","stars":1,"isGold":false},{"name":"Lenny & Carl","stars":1,"isGold":false},{"name":"The Van Houtens","stars":1,"isGold":false},{"name":"Reverend Lovejoy","stars":1,"isGold":false},{"name":"The Hibberts","stars":2,"isGold":false},{"name":"The Bullies","stars":2,"isGold":false},{"name":"Jacqueline Bouvier","stars":2,"isGold":false}]},
+  {"id":4,"name":"Property of Ned Flanders","stickers":[{"name":"Such a Tool","stars":1,"isGold":false},{"name":"Smart Homer","stars":1,"isGold":false},{"name":"Go Away Ned","stars":1,"isGold":false},{"name":"Come On!","stars":2,"isGold":false},{"name":"Let's Go!","stars":2,"isGold":false},{"name":"Good Kitty","stars":2,"isGold":false},{"name":"Wasn't Me","stars":2,"isGold":false},{"name":"Slow Mow","stars":2,"isGold":false},{"name":"Hi-Diddly-Ho!","stars":2,"isGold":false}]},
+  {"id":5,"name":"Taste of Springfield","stickers":[{"name":"Nuts & Gum","stars":2,"isGold":false},{"name":"Krusty O's","stars":2,"isGold":false},{"name":"Insanity Pepper","stars":2,"isGold":false},{"name":"Pork Chops","stars":2,"isGold":false},{"name":"Squishee","stars":2,"isGold":false},{"name":"Krusty Burger","stars":2,"isGold":false},{"name":"Luigi's Spaghetti","stars":2,"isGold":false},{"name":"Gummy de Milo","stars":2,"isGold":false},{"name":"Buzz Cola","stars":2,"isGold":false}]},
+  {"id":6,"name":"The Pin Pal's New Pal","stickers":[{"name":"Let's Bowl","stars":2,"isGold":false},{"name":"Can You Bowl?","stars":2,"isGold":false},{"name":"Ooh! Jealous!","stars":2,"isGold":false},{"name":"Ugly Ugly","stars":2,"isGold":false},{"name":"Bowl Goal","stars":2,"isGold":false},{"name":"Good One!","stars":2,"isGold":false},{"name":"Claw vs. Claw","stars":2,"isGold":false},{"name":"Old Wins Gold","stars":2,"isGold":false},{"name":"Teammates","stars":2,"isGold":false}]},
+  {"id":7,"name":"Maggie's Big Adventure","stickers":[{"name":"Thimble","stars":2,"isGold":false},{"name":"Dice","stars":2,"isGold":false},{"name":"House Rich","stars":2,"isGold":false},{"name":"Waterworks","stars":2,"isGold":false},{"name":"Scottie!","stars":2,"isGold":false},{"name":"Boom!","stars":2,"isGold":false},{"name":"Passing Go","stars":2,"isGold":false},{"name":"Out of Jail","stars":3,"isGold":false},{"name":"Railroad Ride!","stars":3,"isGold":false}]},
+  {"id":8,"name":"Springfield Superheroes","stickers":[{"name":"Bartman","stars":2,"isGold":false},{"name":"Pie Man","stars":2,"isGold":false},{"name":"Hot Flash","stars":2,"isGold":false},{"name":"Bumblebee Man","stars":2,"isGold":false},{"name":"Radioactive Man","stars":2,"isGold":false},{"name":"Stretch Dude","stars":3,"isGold":false},{"name":"Clobber Girl","stars":3,"isGold":false},{"name":"Fallout Boy","stars":3,"isGold":false},{"name":"Fruit Bat Man","stars":3,"isGold":false}]},
+  {"id":9,"name":"When Homie Met Marge","stickers":[{"name":"Birds Appear","stars":2,"isGold":false},{"name":"Pompetus","stars":2,"isGold":false},{"name":"Do You?","stars":2,"isGold":false},{"name":"I Do","stars":2,"isGold":false},{"name":"Carried Away","stars":3,"isGold":false},{"name":"Oh Homie","stars":3,"isGold":false},{"name":"Date Night","stars":3,"isGold":false},{"name":"Kisses","stars":3,"isGold":false},{"name":"I Do Again","stars":3,"isGold":false}]},
+  {"id":10,"name":"Marge's Many Jobs","stickers":[{"name":"Officer Marge","stars":3,"isGold":false},{"name":"Painter","stars":3,"isGold":false},{"name":"Real Estate Agent","stars":3,"isGold":false},{"name":"Romance Author","stars":3,"isGold":false},{"name":"Pretzel Baker","stars":3,"isGold":false},{"name":"Mayor","stars":3,"isGold":false},{"name":"Bodybuilder","stars":3,"isGold":false},{"name":"Waitress","stars":3,"isGold":false},{"name":"Actress","stars":3,"isGold":false}]},
+  {"id":11,"name":"Old School Rivals","stickers":[{"name":"Got Ya' Now","stars":3,"isGold":false},{"name":"Road Rage","stars":3,"isGold":false},{"name":"Evil Smirk","stars":3,"isGold":false},{"name":"Electricity","stars":3,"isGold":false},{"name":"Not the Face!","stars":3,"isGold":false},{"name":"Birthday","stars":3,"isGold":false},{"name":"Worth It!","stars":3,"isGold":false},{"name":"Excellent!","stars":3,"isGold":false},{"name":"Dog Run","stars":3,"isGold":false}]},
+  {"id":12,"name":"Springfield Elementary","stickers":[{"name":"Ralph Wiggum","stars":3,"isGold":false},{"name":"Sherri & Terri","stars":3,"isGold":false},{"name":"Milhouse Van Houten","stars":3,"isGold":false},{"name":"Nelson Muntz","stars":3,"isGold":false},{"name":"Martin Prince","stars":3,"isGold":false},{"name":"Hubert Wong","stars":3,"isGold":false},{"name":"Allison Taylor","stars":3,"isGold":false},{"name":"Uter Zorker","stars":4,"isGold":false},{"name":"Janey Powell","stars":4,"isGold":false}]},
+  {"id":13,"name":"Exotic Animals","stickers":[{"name":"Jub Jub","stars":3,"isGold":false},{"name":"Spider Pig","stars":3,"isGold":false},{"name":"Princess","stars":3,"isGold":false},{"name":"Illegal Panda","stars":3,"isGold":false},{"name":"Mr. Teeny","stars":3,"isGold":false},{"name":"Pinchy","stars":4,"isGold":false},{"name":"Screamapillar","stars":4,"isGold":false},{"name":"Stampy","stars":4,"isGold":false},{"name":"Blinky","stars":4,"isGold":true}]},
+  {"id":14,"name":"Simpsons in Song","stickers":[{"name":"Baby on Board","stars":3,"isGold":false},{"name":"NOT ME!","stars":3,"isGold":false},{"name":"Last Requests","stars":3,"isGold":false},{"name":"We Do!","stars":4,"isGold":false},{"name":"See My Vest!","stars":4,"isGold":false},{"name":"Springfield","stars":4,"isGold":false},{"name":"Mixtape","stars":4,"isGold":false},{"name":"Sad Schmuck","stars":4,"isGold":true},{"name":"Moaning Lisa","stars":5,"isGold":false}]},
+  {"id":15,"name":"You Steam a Good Ham!","stickers":[{"name":"Unforgettable","stars":4,"isGold":false},{"name":"Roast is Ruined","stars":4,"isGold":false},{"name":"Oh Ho Ho Ho","stars":4,"isGold":false},{"name":"Just Stretching","stars":4,"isGold":false},{"name":"Steamed Hams","stars":4,"isGold":false},{"name":"Obviously Grilled","stars":4,"isGold":true},{"name":"May I See It?","stars":5,"isGold":false},{"name":"Aurora Borealis","stars":5,"isGold":false},{"name":"Northern Lights","stars":4,"isGold":true}]},
+  {"id":16,"name":"Beloved Memes","stickers":[{"name":"I'm in Danger","stars":4,"isGold":false},{"name":"Yells at Cloud","stars":4,"isGold":false},{"name":"Krumping","stars":4,"isGold":false},{"name":"Lisa Presents","stars":4,"isGold":false},{"name":"Homer in Bush","stars":4,"isGold":true},{"name":"More Coffee","stars":4,"isGold":true},{"name":"One of Us","stars":5,"isGold":false},{"name":"Stupid Sexy Flanders","stars":5,"isGold":true},{"name":"Worst Sticker Ever","stars":6,"isGold":false}]},
+  {"id":17,"name":"The Itchy & Scratchy Show","stickers":[{"name":"Run Scratchy Run","stars":4,"isGold":false},{"name":"Heads Up","stars":4,"isGold":false},{"name":"Overstuffed","stars":4,"isGold":false},{"name":"Heart Attack","stars":4,"isGold":true},{"name":"Hit and Done","stars":4,"isGold":true},{"name":"Don't Laugh!","stars":5,"isGold":false},{"name":"Washed Up","stars":5,"isGold":false},{"name":"Shutdown","stars":5,"isGold":true},{"name":"Go to Railroad","stars":6,"isGold":false}]},
+  {"id":18,"name":"Moe's Tavern","stickers":[{"name":"Moe's","stars":4,"isGold":false},{"name":"Rags to Rags","stars":4,"isGold":false},{"name":"Love Tester","stars":4,"isGold":true},{"name":"Pickled Eggs","stars":4,"isGold":true},{"name":"Barney Gumble","stars":5,"isGold":false},{"name":"Prank Call","stars":5,"isGold":false},{"name":"Lenny Leonard","stars":5,"isGold":true},{"name":"Carl Carlson","stars":5,"isGold":true},{"name":"Pool Table","stars":6,"isGold":false}]},
+  {"id":19,"name":"Homer's Many Jobs","stickers":[{"name":"Boxer","stars":4,"isGold":false},{"name":"Sanitation","stars":4,"isGold":true},{"name":"Remote Worker","stars":4,"isGold":true},{"name":"Security","stars":5,"isGold":false},{"name":"Astronaut","stars":5,"isGold":false},{"name":"Mascot","stars":5,"isGold":false},{"name":"Monorail Conductor","stars":5,"isGold":true},{"name":"Be Sharps","stars":5,"isGold":true},{"name":"Mr. Plow","stars":6,"isGold":false}]},
+  {"id":20,"name":"Upper Crust","stickers":[{"name":"Kent Brockman","stars":4,"isGold":true},{"name":"Mrs. Vanderbilt","stars":4,"isGold":true},{"name":"Mayor Quimby","stars":5,"isGold":false},{"name":"Rich Texan","stars":5,"isGold":false},{"name":"Mr. Burns","stars":5,"isGold":false},{"name":"Hank Scorpio","stars":5,"isGold":true},{"name":"Ranier Wolfcastle","stars":5,"isGold":true},{"name":"Drederick Tatum","stars":5,"isGold":true},{"name":"Krusty the Clown","stars":6,"isGold":false}]},
+  {"id":21,"name":"Iconic Moments","stickers":[{"name":"Sun Blocker","stars":4,"isGold":true},{"name":"Homer's Hoagie","stars":4,"isGold":true},{"name":"Step on a Rake","stars":5,"isGold":false},{"name":"Do it For Her","stars":5,"isGold":false},{"name":"Mr. Sparkle","stars":5,"isGold":true},{"name":"Mr. Snrub","stars":5,"isGold":true},{"name":"Guy Incognito","stars":5,"isGold":true},{"name":"Gorge Jump","stars":5,"isGold":true},{"name":"Classy Marge","stars":6,"isGold":false}]}
 ];
 
 const STICKERS = [];
 const SBYID = {};
 ALBUM.forEach(set=>{
-  set.stickers.forEach((s,i)=>{
-    s.id = set.id+"-"+i; s.setId = set.id; s.setName = set.name;
-    STICKERS.push(s); SBYID[s.id]=s;
-  });
+  set.stickers.forEach((s,i)=>{ s.id = set.id+"-"+i; s.setId = set.id; s.setName = set.name; STICKERS.push(s); SBYID[s.id]=s; });
 });
 const TOTAL = STICKERS.length;
 const TOTAL_GOLD = STICKERS.filter(s=>s.isGold).length;
 const TOTAL_STARS = STICKERS.reduce((a,s)=>a+s.stars,0);
 
-const THEMES = [
-  {id:"springfield",name:"Springfield (Day)",emoji:"☀️",c:["#79c0ff","#ffd521","#3f9bd6"]},
-  {id:"night",name:"Springfield (Night)",emoji:"🌙",c:["#1a2b4c","#ffd521","#0f172a"]}
-];
-const VAULT_TIERS = [
-  {name:"Buzz Cola Vault",emoji:"🥤",need:250,color:"#ff8c1a"},
-  {name:"Squishee Vault",emoji:"🧊",need:450,color:"#2f9be0"},
-  {name:"Mr. Burns' Vault",emoji:"💰",need:700,color:"#f4c430"}
-];
+const THEMES = [ {id:"springfield",name:"Springfield (Day)",emoji:"☀️",c:["#79c0ff","#ffd521","#3f9bd6"]}, {id:"night",name:"Springfield (Night)",emoji:"🌙",c:["#1a2b4c","#ffd521","#0f172a"]} ];
+const VAULT_TIERS = [ {name:"Buzz Cola Vault",emoji:"🥤",need:250,color:"#ff8c1a"}, {name:"Squishee Vault",emoji:"🧊",need:450,color:"#2f9be0"}, {name:"Mr. Burns' Vault",emoji:"💰",need:700,color:"#f4c430"} ];
 const SET_EMOJI = {1:"🛋️",2:"🎲",3:"👨‍👩‍👧‍👦",4:"🥸",5:"🍔",6:"🎳",7:"👶",8:"🦸",9:"💑",10:"💼",11:"🥊",12:"🏫",13:"🐾",14:"🎵",15:"🍖",16:"😂",17:"🐭",18:"🍺",19:"👷",20:"🎩",21:"⭐"};
-const ICON_RULES = [
-  [/homer|homie/,"🍩"],[/marge/,"💙"],[/bart/,"🛹"],[/lisa|moaning|saxophone/,"🎷"],[/maggie/,"👶"],
-  [/grampa|abe|bouvier|jacqueline/,"👴"],[/burns/,"🎩"],[/smithers/,"🤓"],[/flanders|diddly|ned/,"🥸"],
-  [/moe's|^moe|tavern/,"🍺"],[/barney|gumble/,"🥴"],[/krusty|clown/,"🤡"],[/milhouse/,"🤓"],[/nelson/,"😼"],
-  [/ralph/,"😋"],[/wiggum|officer|security|police/,"👮"],[/apu|kwik|squishee/,"🏪"],[/duff|beer|keg|brew|pickled egg/,"🍺"],
-  [/donut|d'oh/,"🍩"],[/cola|buzz|squishee/,"🥤"],[/burger|ham|hoagie|krusty burger/,"🍔"],[/pork|chop|steak/,"🍖"],
-  [/gum|nuts|krusty o/,"🍬"],[/spaghetti|luigi/,"🍝"],[/pepper|insanity/,"🌶️"],[/coffee/,"☕"],
-  [/helper|santa's little|dog run|princess/,"🐶"],[/snowball|good kitty|cat/,"🐱"],[/spider pig|illegal panda|stampy|pig/,"🐷"],
-  [/panda/,"🐼"],[/blinky|pinchy|fish/,"🐟"],[/jub/,"🐦"],[/bee|bumblebee/,"🐝"],[/screamapillar/,"🐛"],
-  [/radioactive|fallout|nuclear|sector/,"☢️"],[/bartman|pie man|stretch dude|clobber|fruit bat|superhero|hot flash/,"🦸"],
-  [/plow|mr\. plow/,"🚜"],[/monorail|railroad|train|conductor/,"🚝"],[/astronaut|rocket/,"🚀"],[/boxer|tatum|box/,"🥊"],
-  [/mayor|quimby/,"🎩"],[/rich|texan|scorpio|money|crust|vanderbilt/,"💰"],[/song|sing|mixtape|vest|be sharps|sparkle/,"🎵"],
-  [/jail|out of jail/,"🚔"],[/dice/,"🎲"],[/house|real estate|for sale/,"🏠"],[/water/,"🚰"],[/bowl|pin pal|claw/,"🎳"],
-  [/rake/,"🧹"],[/gorge|jump/,"🏍️"],[/kiss|love|heart|date|wedding|do you|i do|romance|her/,"❤️"],
-  [/aurora|borealis|northern|light|star/,"🌌"],[/sun|sun blocker/,"☀️"],[/cloud/,"☁️"],[/egg/,"🥚"],
-  [/painter|paint/,"🎨"],[/author|book/,"📖"],[/baker|pretzel/,"🥨"],[/bodybuilder|muscle/,"💪"],[/waitress|waiter/,"🍽️"],
-  [/actress|actor|drama/,"🎭"],[/sanitation|trash|garbage/,"🗑️"],[/mascot/,"🐻"],[/danger/,"⚠️"],[/meme|sexy|krumping/,"😂"],
-  [/teeny|monkey/,"🐵"],[/scratchy|itchy|run scratchy/,"🐭"],[/payday|cash/,"💵"],[/naptime|nap|sleep/,"😴"],
-  [/guard|on guard/,"🛡️"],[/snack|power snack/,"🍴"],[/whoosh|ahh|weee/,"🎢"],[/break/,"☕"],[/scottie/,"🐕"],
-  [/boom/,"💥"],[/go|passing go/,"🏁"],[/electric/,"⚡"],[/birthday/,"🎂"],[/excellent|smirk|got ya/,"😏"]
-];
-function iconFor(s){
-  const n=(s.name||"").toLowerCase();
-  for(const [re,em] of ICON_RULES){ if(re.test(n)) return em; }
-  return SET_EMOJI[s.setId]||"🎴";
-}
+const ICON_RULES = [ [/homer|homie/,"🍩"],[/marge/,"💙"],[/bart/,"🛹"],[/lisa|moaning|saxophone/,"🎷"],[/maggie/,"👶"],[/grampa|abe|bouvier|jacqueline/,"👴"],[/burns/,"🎩"],[/smithers/,"🤓"],[/flanders|diddly|ned/,"🥸"],[/moe's|^moe|tavern/,"🍺"],[/barney|gumble/,"🥴"],[/krusty|clown/,"🤡"],[/milhouse/,"🤓"],[/nelson/,"😼"],[/ralph/,"😋"],[/wiggum|officer|security|police/,"👮"],[/apu|kwik|squishee/,"🏪"],[/duff|beer|keg|brew|pickled egg/,"🍺"],[/donut|d'oh/,"🍩"],[/cola|buzz|squishee/,"🥤"],[/burger|ham|hoagie|krusty burger/,"🍔"],[/pork|chop|steak/,"🍖"],[/gum|nuts|krusty o/,"🍬"],[/spaghetti|luigi/,"🍝"],[/pepper|insanity/,"🌶️"],[/coffee/,"☕"],[/helper|santa's little|dog run|princess/,"🐶"],[/snowball|good kitty|cat/,"🐱"],[/spider pig|illegal panda|stampy|pig/,"🐷"],[/panda/,"🐼"],[/blinky|pinchy|fish/,"🐟"],[/jub/,"🐦"],[/bee|bumblebee/,"🐝"],[/screamapillar/,"🐛"],[/radioactive|fallout|nuclear|sector/,"☢️"],[/bartman|pie man|stretch dude|clobber|fruit bat|superhero|hot flash/,"🦸"],[/plow|mr\. plow/,"🚜"],[/monorail|railroad|train|conductor/,"🚝"],[/astronaut|rocket/,"🚀"],[/boxer|tatum|box/,"🥊"],[/mayor|quimby/,"🎩"],[/rich|texan|scorpio|money|crust|vanderbilt/,"💰"],[/song|sing|mixtape|vest|be sharps|sparkle/,"🎵"],[/jail|out of jail/,"🚔"],[/dice/,"🎲"],[/house|real estate|for sale/,"🏠"],[/water/,"🚰"],[/bowl|pin pal|claw/,"🎳"],[/rake/,"🧹"],[/gorge|jump/,"🏍️"],[/kiss|love|heart|date|wedding|do you|i do|romance|her/,"❤️"],[/aurora|borealis|northern|light|star/,"🌌"],[/sun|sun blocker/,"☀️"],[/cloud/,"☁️"],[/egg/,"🥚"],[/painter|paint/,"🎨"],[/author|book/,"📖"],[/baker|pretzel/,"🥨"],[/bodybuilder|muscle/,"💪"],[/waitress|waiter/,"🍽️"],[/actress|actor|drama/,"🎭"],[/sanitation|trash|garbage/,"🗑️"],[/mascot/,"🐻"],[/danger/,"⚠️"],[/meme|sexy|krumping/,"😂"],[/teeny|monkey/,"🐵"],[/scratchy|itchy|run scratchy/,"🐭"],[/payday|cash/,"💵"],[/naptime|nap|sleep/,"😴"],[/guard|on guard/,"🛡️"],[/snack|power snack/,"🍴"],[/whoosh|ahh|weee/,"🎢"],[/break/,"☕"],[/scottie/,"🐕"],[/boom/,"💥"],[/go|passing go/,"🏁"],[/electric/,"⚡"],[/birthday/,"🎂"],[/excellent|smirk|got ya/,"😏"] ];
+function iconFor(s){ const n=(s.name||"").toLowerCase(); for(const [re,em] of ICON_RULES){ if(re.test(n)) return em; } return SET_EMOJI[s.setId]||"🎴"; }
 function starStr(n){ return "★".repeat(n); }
 const AVATARS=["🍩","💙","🛹","🎷","👶","👴","🎩","🥸","🍺","🤡","🤓","😼","😋","🐶","🐷","☢️","🦸","🚜","🚀","🥊","💰","🎵","🐱","🌮","👮","🍔"];
 
 /* ============================================================
-   2. STATE INITIALIZATION
+   2. STATE INITIALIZATION (Double Backup Enabled)
    ============================================================ */
-function freshState(){
-  return { accounts:[], inv:{}, trades:[], bonusSets:[], settings:{theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false, navAuto:true}, page:"album" };
-}
+function freshState(){ return { accounts:[], inv:{}, trades:[], bonusSets:[], settings:{theme:"springfield", regularLimit:5, goldBlitzLimit:5, tradeFestLimit:10, goldBlitz:false, tradeFest:false, navAuto:true}, page:"album" }; }
 let state = freshState();
+try { 
+  const ls = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+  state = { ...state, ...ls, settings: { ...state.settings, ...(ls.settings || {}) } };
+} catch(e){}
+
 let activeCommunityTab = 'network';
 let activeSessionUser = null;
 let currentCloudSheetId = null;
 let myWebFriendCode = null;
-let isDemoModeActive = false;
+let isDemoModeActive = localStorage.getItem("dohnut_demo_active") === "true";
 let plan = [];
 let calRef = new Date();
 let filters = {need:false,dupes:false,star:"all",gold:"all",q:""};
 let navQuery = "";
 
 /* ============================================================
-   3. UTILITY FUNCTIONS
+   3. THE SAVE ENGINE (Zero Data Loss)
    ============================================================ */
+let saveTimeout;
 function save(){ 
-  try{ localStorage.setItem(LS_KEY, JSON.stringify({ settings: state.settings, page: state.page, ...(isDemoModeActive ? state : {}) })); } catch(e){} 
-  if (!isDemoModeActive && currentCloudSheetId && activeSessionUser) {
-    supabaseClient.from('tracker_sheets').update({ accounts: state.accounts, inventory: state.inv, trades: state.trades, updated_at: new Date().toISOString() }).eq('id', currentCloudSheetId);
+  // 1. Immediate Local Browser Save (Always runs)
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e){} 
+  
+  // 2. Background Cloud Backup (Debounced)
+  if (!isDemoModeActive && activeSessionUser) {
+    clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(async () => {
+      if (currentCloudSheetId) {
+        await supabaseClient.from('tracker_sheets').update({ accounts: state.accounts, inventory: state.inv, trades: state.trades, updated_at: new Date().toISOString() }).eq('id', currentCloudSheetId);
+      } else {
+        const { data } = await supabaseClient.from('tracker_sheets').insert({ user_id: activeSessionUser.id, accounts: state.accounts, inventory: state.inv, trades: state.trades }).select().single();
+        if(data) currentCloudSheetId = data.id;
+      }
+    }, 1000);
   }
 }
+
 function toast(msg){ const el=document.getElementById("toast"); el.textContent=msg; el.classList.add("show"); setTimeout(()=>el.classList.remove("show"),2200); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function esc(t){ return String(t==null?"":t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
@@ -597,37 +410,28 @@ function vaultTotal(acc){ return STICKERS.reduce((a,s)=>a+dupStarValue(s,dupesOf
 function isSetComplete(acc,setId){ const set=ALBUM.find(s=>s.id===setId); return set.stickers.every(s=>getCount(acc,s.id)>0); }
 
 /* ============================================================
-   4. SUPABASE & AUTH LOGIC
+   4. SUPABASE CLOUD SYNC & AUTH LOGIC
    ============================================================ */
 async function loginWithProvider(providerName) { await supabaseClient.auth.signInWithOAuth({ provider: providerName, options: { redirectTo: window.location.origin + window.location.pathname } }); }
 async function sendMagicOtp() {
-  const emailInput = document.getElementById("magic-link-email").value.trim();
-  const feedbackMsg = document.getElementById("auth-status-msg");
-  if (!emailInput) { toast("Enter your email address!"); return; }
-  feedbackMsg.textContent = "Sending link...";
+  const emailInput = document.getElementById("magic-link-email").value.trim(); const feedbackMsg = document.getElementById("auth-status-msg");
+  if (!emailInput) return toast("Enter your email address!"); feedbackMsg.textContent = "Sending link...";
   const { error } = await supabaseClient.auth.signInWithOtp({ email: emailInput, options: { emailRedirectTo: window.location.origin + window.location.pathname } });
-  if (error) { feedbackMsg.textContent = "❌ Error: " + error.message; feedbackMsg.style.color = "var(--bad)"; } 
-  else { feedbackMsg.textContent = "🍩 Link sent! Check your inbox."; feedbackMsg.style.color = "var(--good)"; }
+  if (error) { feedbackMsg.textContent = "❌ Error: " + error.message; feedbackMsg.style.color = "var(--bad)"; } else { feedbackMsg.textContent = "🍩 Link sent! Check your inbox."; feedbackMsg.style.color = "var(--good)"; }
 }
-function activateDemoMode() {
-  isDemoModeActive = true; localStorage.setItem("dohnut_demo_active", "true");
-  document.getElementById("auth-overlay").style.display = "none";
-  toast("Loaded local offline profile 🎲"); fullRender();
-}
+function activateDemoMode() { isDemoModeActive = true; localStorage.setItem("dohnut_demo_active", "true"); document.getElementById("auth-overlay").style.display = "none"; toast("Loaded local offline profile 🎲"); fullRender(); }
+
 async function initializeWebAccount() {
   if (isDemoModeActive || !activeSessionUser) return;
-  const { data: webAcc } = await supabaseClient.from('web_accounts').select('web_friend_code, is_super_admin').eq('id', activeSessionUser.id).single();
+  const { data: webAcc } = await supabaseClient.from('web_accounts').select('web_friend_code').eq('id', activeSessionUser.id).single();
   if (webAcc) myWebFriendCode = webAcc.web_friend_code;
-  else {
-    const { data: newAcc } = await supabaseClient.from('web_accounts').insert({ id: activeSessionUser.id }).select('web_friend_code').single();
-    if (newAcc) myWebFriendCode = newAcc.web_friend_code;
-  }
+  else { const { data: newAcc } = await supabaseClient.from('web_accounts').insert({ id: activeSessionUser.id }).select('web_friend_code').single(); if (newAcc) myWebFriendCode = newAcc.web_friend_code; }
 }
+
 async function fetchFriendsList() {
   if (isDemoModeActive || !activeSessionUser) return;
   const { data: friendships } = await supabaseClient.from('friendships').select(`id, status, user_a, user_b, web_accounts!friendships_user_a_fkey(web_friend_code), web_accounts!friendships_user_b_fkey(web_friend_code)`).or(`user_a.eq.${activeSessionUser.id},user_b.eq.${activeSessionUser.id}`);
-  const container = document.getElementById('friends-list');
-  if (!container) return; container.innerHTML = '';
+  const container = document.getElementById('friends-list'); if (!container) return; container.innerHTML = '';
   if (!friendships || friendships.length === 0) { container.innerHTML = '<div style="color:var(--mut); font-weight:700; padding:10px;">Your Rolodex is empty!</div>'; return; }
   friendships.forEach(f => {
     const isIncoming = f.user_b === activeSessionUser.id && f.status === 'pending';
@@ -642,33 +446,37 @@ async function fetchFriendsList() {
     container.appendChild(li);
   });
 }
+
 async function sendFriendRequest() {
   const targetCode = document.getElementById('add-friend-input').value.trim();
-  if (!targetCode) { toast("Enter a Web Code first! ⚠️"); return; }
-  if (targetCode === myWebFriendCode) { toast("You can't add yourself! 🍩"); return; }
+  if (!targetCode) return toast("Enter a Web Code first! ⚠️"); if (targetCode === myWebFriendCode) return toast("You can't add yourself! 🍩");
   const { data: targetUser } = await supabaseClient.from('web_accounts').select('id').eq('web_friend_code', targetCode).single();
-  if (!targetUser) { toast("No player found. 🕵️‍♂️"); return; }
+  if (!targetUser) return toast("No player found. 🕵️‍♂️");
   const { error: insertErr } = await supabaseClient.from('friendships').insert({ user_a: activeSessionUser.id, user_b: targetUser.id, status: 'pending' });
-  if (insertErr) { toast("Request already exists! ⏳"); } else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; fetchFriendsList(); }
+  if (insertErr) toast("Request already exists! ⏳"); else { toast("Friend request sent! 📨"); document.getElementById('add-friend-input').value = ""; fetchFriendsList(); }
 }
+
 async function updateFriendStatus(friendshipId, newStatus) {
   const { error } = await supabaseClient.from('friendships').update({ status: newStatus }).eq('id', friendshipId);
-  if (!error) { toast(newStatus === 'accepted' ? "Friend request accepted! 🎉" : "Request updated."); fetchFriendsList(); } else { toast("Action failed. ❌"); }
+  if (!error) { toast(newStatus === 'accepted' ? "Friend request accepted! 🎉" : "Request updated."); fetchFriendsList(); } else toast("Action failed. ❌");
 }
+
 async function handleSession(session) {
-  if (!session) return;
-  activeSessionUser = session.user;
-  document.getElementById("auth-overlay").style.display = "none"; toast("Connected to Cloud ☁️");
+  if (!session) return; activeSessionUser = session.user; document.getElementById("auth-overlay").style.display = "none"; toast("Connected to Cloud ☁️");
   await initializeWebAccount();
   const { data } = await supabaseClient.from('tracker_sheets').select('*').eq('user_id', activeSessionUser.id).single();
   if (data) {
     currentCloudSheetId = data.id;
-    if(data.accounts) state.accounts = data.accounts; if(data.inventory) state.inv = data.inventory; if(data.trades) state.trades = data.trades;
+    // Overwrite local state with cloud state ONLY if cloud state has data
+    if(data.accounts && data.accounts.length > 0) state.accounts = data.accounts;
+    if(data.inventory && Object.keys(data.inventory).length > 0) state.inv = data.inventory;
+    if(data.trades && data.trades.length > 0) state.trades = data.trades;
   } else {
-    const { data: newSheet } = await supabaseClient.from('tracker_sheets').insert({ user_id: activeSessionUser.id, user_email: activeSessionUser.email, accounts: state.accounts, inventory: state.inv, trades: state.trades }).select().single();
+    const { data: newSheet } = await supabaseClient.from('tracker_sheets').insert({ user_id: activeSessionUser.id, accounts: state.accounts, inventory: state.inv, trades: state.trades }).select().single();
     if(newSheet) currentCloudSheetId = newSheet.id;
   }
-  fullRender();
+  save(); // Force an immediate local re-save of the synced data
+  fullRender(); fetchFriendsList();
 }
 
 /* ============================================================
@@ -677,32 +485,22 @@ async function handleSession(session) {
 function gotoPage(p){ state.page=p; save(); document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===p)); renderContent(); document.getElementById("main").scrollTop=0; closeDrawers(); }
 function switchCommunityTab(tabName) { activeCommunityTab = tabName; renderContent(); }
 function applyTheme(id){ document.documentElement.setAttribute("data-theme",id); state.settings.theme=id; save(); renderSwatches(); if(state.page==="settings") renderContent(); }
-function renderSwatches(){
-  const row=document.getElementById("swatchRow");
-  row.innerHTML = THEMES.map(t=>{ return `<div class="swatch ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" title="${t.name}" style="background:linear-gradient(135deg,${t.c[0]} 40%,${t.c[1]} 40% 70%,${t.c[2]} 70%)"></div>`; }).join("");
-}
-function renderBadges(){
-  const el=document.getElementById("evtBadges"); let h="";
-  if(state.settings.goldBlitz) h+=`<span class="evt-badge">⚡ GOLD BLITZ</span>`;
-  if(state.settings.tradeFest) h+=`<span class="evt-badge fest">🎉 TRADE FEST</span>`;
-  el.innerHTML=h;
-}
+function renderSwatches(){ document.getElementById("swatchRow").innerHTML = THEMES.map(t=>`<div class="swatch ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" title="${t.name}" style="background:linear-gradient(135deg,${t.c[0]} 40%,${t.c[1]} 40% 70%,${t.c[2]} 70%)"></div>`).join(""); }
+function renderBadges(){ document.getElementById("evtBadges").innerHTML = (state.settings.goldBlitz?`<span class="evt-badge">⚡ GOLD BLITZ</span>`:"") + (state.settings.tradeFest?`<span class="evt-badge fest">🎉 TRADE FEST</span>`:""); }
 function renderSetList(){
-  const list=document.getElementById("setList"); const q=navQuery.trim().toLowerCase(); let html="";
+  const q=navQuery.trim().toLowerCase(); let html="";
   ALBUM.forEach(set=>{
     if(q && !set.name.toLowerCase().includes(q) && !set.stickers.some(s=>s.name.toLowerCase().includes(q))) return;
-    let owned=0,cap=Math.max(1,state.accounts.length)*set.stickers.length;
-    state.accounts.forEach(a=>owned+=ownedInSet(a.id,set.id));
-    const pct = state.accounts.length? Math.round(owned/cap*100):0;
+    let owned=0,cap=Math.max(1,state.accounts.length)*set.stickers.length; state.accounts.forEach(a=>owned+=ownedInSet(a.id,set.id)); const pct = state.accounts.length? Math.round(owned/cap*100):0;
     html+=`<div class="set-item ${pct===100?"done":""}" data-action="goto-set" data-set="${set.id}"><span class="set-emoji">${SET_EMOJI[set.id]||"🎴"}</span><span class="set-meta"><span class="set-name">${esc(set.name)}</span><span class="set-bar"><i style="width:${pct}%"></i></span></span><span class="set-pct">${pct}%</span></div>`;
   });
-  list.innerHTML=html||`<div class="empty" style="padding:30px 10px"><span class="em">🔍</span>No matches</div>`;
+  document.getElementById("setList").innerHTML=html||`<div class="empty" style="padding:30px 10px"><span class="em">🔍</span>No matches</div>`;
 }
 
 function renderContent(){
   const c=document.getElementById("content");
   switch(state.page){
-    case "album": c.innerHTML=viewAlbum(); updateScrollButtons(); break;
+    case "album": c.innerHTML=viewAlbum(); break;
     case "accounts": c.innerHTML=viewAccounts(); break;
     case "progress": c.innerHTML=viewProgress(); break;
     case "vault": c.innerHTML=viewVault(); break;
@@ -746,7 +544,7 @@ function viewAlbum(){
   state.bonusSets.forEach(bSet => {
      blocks += `<div class="setblock" style="background:var(--pnl2); border-style:dashed;">
        <div class="setblock-head"><span class="sb-title">Bonus: ${esc(bSet.name)}</span><span style="margin-left:auto; color:var(--bad); font-weight:800;">Ends: ${esc(bSet.endDate)}</span></div>
-       <div class="panel-empty">Stickers for this bonus set will appear here...</div></div>`;
+       <div class="panel-empty">Admin has not added stickers to this bonus set yet.</div></div>`;
   });
 
   return head+filterBarHtml()+blocks;
@@ -836,7 +634,7 @@ function viewTrades(){
           <div style="display:flex; gap:8px;"><input type="text" id="add-friend-input" placeholder="Enter Web Code..." style="flex:1; border: 3px solid #111820; border-radius: 12px; padding: 8px;"><button class="btn" onclick="sendFriendRequest()">➕ Add</button></div>
         </div>
       </div>
-      <h3 style="margin: 16px 0 8px;">👥 Your Network</h3><ul class="trade-list" id="friends-list"><li>Loading...</li></ul>
+      <h3 style="margin: 16px 0 8px;">👥 Your Network</h3><ul class="trade-list" id="friends-list"><li style="padding:10px;">Loading...</li></ul>
     </div>`;
 
   const communityHub = `<div class="panel"><h2>🌍 Community Trade Search</h2><p>Coming soon...</p></div>`;
@@ -858,6 +656,7 @@ function viewTrades(){
         <div class="field"><span>Receiver</span><select id="t-to">${state.accounts.map(a=>`<option value="${a.id}">${a.name}</option>`).join("")}</select></div>
         <div class="field"><span>Set</span><select id="t-set" data-action="trade-set">${ALBUM.map(s=>`<option value="${s.id}">${s.name}</option>`).join("")}</select></div>
         <div class="field"><span>Sticker</span><select id="t-stk"></select></div>
+        <div class="field"><span>Date</span><input type="date" id="t-date" value="${todayStr()}"></div>
         <button class="btn" data-action="add-trade">➕ Add</button>
       </div>
     </div>
@@ -881,7 +680,7 @@ function viewTrades(){
 function viewSettings(){
   return `<div class="page-head"><span class="ph-emoji">⚙️</span><h1>Settings</h1></div>
     <div class="panel"><h2>🎨 Theme</h2><div class="theme-grid">${THEMES.map(t=>`<div class="theme-card ${state.settings.theme===t.id?"active":""}" data-action="set-theme" data-theme="${t.id}" style="background:linear-gradient(135deg,${t.c[0]},${t.c[0]} 50%,${t.c[2]})"><div style="display:flex;justify-content:space-between"><span class="tc-name">${t.name}</span><span class="tc-emoji">${t.emoji}</span></div></div>`).join("")}</div></div>
-    <div class="panel"><h2>💾 Cloud & Data</h2><div style="display:flex;gap:10px;"><button class="btn danger" data-action="sign-out">🚪 Sign Out</button></div></div>`;
+    <div class="panel"><h2>💾 Cloud & Data</h2><div style="display:flex;gap:10px;"><button class="btn alt" data-action="export-data">⬇️ Export JSON Backup</button><button class="btn danger" data-action="sign-out">🚪 Sign Out</button></div></div>`;
 }
 
 /* --- TRADE PLANNERS & BONUS ADMIN --- */
@@ -923,16 +722,15 @@ function applyPlan(){ plan.forEach(t=>state.trades.push(t)); plan=[]; save(); to
    6. DELEGATION & LISTENERS
    ============================================================ */
 function updateCell(acc,sid){ const cell=document.querySelector(`.card[data-acc="${acc}"][data-sid="${sid}"]`); if(!cell) return; const c=getCount(acc,sid), have=c>0, d=Math.max(0,c-1); cell.classList.toggle("have",have); cell.classList.toggle("missing",!have); const inp=cell.querySelector(".dupinput"); if(inp){ inp.value=d; inp.classList.toggle("has",d>0); } }
-function refreshSetUI(setId){ renderSetList(); } // Simplified for stability
 
 document.addEventListener("click",e=>{
   const el=e.target.closest("[data-action]"); if(!el) return; const a=el.dataset.action;
   switch(a){
     case "goto-page": gotoPage(el.dataset.page); break;
     case "set-theme": applyTheme(el.dataset.theme); break;
-    case "sticker": const c=getCount(el.dataset.acc,el.dataset.sid); setCount(el.dataset.acc,el.dataset.sid,c>0?0:1); updateCell(el.dataset.acc,el.dataset.sid); break;
-    case "dup-inc": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)+1); updateCell(el.dataset.acc,el.dataset.sid); break;
-    case "dup-dec": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)-1); updateCell(el.dataset.acc,el.dataset.sid); break;
+    case "sticker": const c=getCount(el.dataset.acc,el.dataset.sid); setCount(el.dataset.acc,el.dataset.sid,c>0?0:1); updateCell(el.dataset.acc,el.dataset.sid); renderSetList(); break;
+    case "dup-inc": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)+1); updateCell(el.dataset.acc,el.dataset.sid); renderSetList(); break;
+    case "dup-dec": setCount(el.dataset.acc,el.dataset.sid,getCount(el.dataset.acc,el.dataset.sid)-1); updateCell(el.dataset.acc,el.dataset.sid); renderSetList(); break;
     case "add-account": state.accounts.push({id:uid(),name:"Player "+(state.accounts.length+1),color:"#5b8f3a",emoji:"🍩"}); save(); renderContent(); break;
     case "del-account": state.accounts=state.accounts.filter(x=>x.id!==el.dataset.id); save(); renderContent(); break;
     case "acc-emoji": const ac=accById(el.dataset.id); if(ac){ ac.emoji=el.dataset.e; save(); renderContent(); } break;
@@ -947,7 +745,8 @@ document.addEventListener("click",e=>{
 });
 
 document.addEventListener("change",e=>{
-  const t=e.target; if(t.classList.contains("dupinput")){ setCount(t.dataset.acc,t.dataset.sid, v>0? v+1 : (cur>0?1:0)); updateCell(t.dataset.acc,t.dataset.sid); return; }
+  const t=e.target; 
+  if(t.classList.contains("dupinput")){ setCount(t.dataset.acc,t.dataset.sid, parseInt(t.value)||0); updateCell(t.dataset.acc,t.dataset.sid); renderSetList(); return; }
   const a=t.dataset.action; if(a==="trade-set") populateStickerSelect(t.value);
   else if(a==="trade-toggle"){ const tr=state.trades.find(x=>x.id===t.dataset.id); if(tr){ tr.done=t.checked; save(); renderContent(); } }
   else if(a==="acc-name"){ const ac=accById(t.dataset.id); if(ac){ ac.name=t.value||"Player"; save(); renderContent(); } }
@@ -959,7 +758,7 @@ document.addEventListener("change",e=>{
    ============================================================ */
 function fullRender(){
   document.querySelectorAll(".tool-btn").forEach(b=>b.classList.toggle("active",b.dataset.page===state.page));
-  renderContent();
+  renderBadges(); renderSetList(); renderContent();
 }
 document.addEventListener("DOMContentLoaded", async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
